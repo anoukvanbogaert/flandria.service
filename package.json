@@ -1,10 +1,12 @@
 {
   "name": "service-page",
   "version": "1.0.0",
+  "proxy": "http://localhost:5000",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/anoukvanbogaert/FlandriaServicePage/issues"
   },
-  "homepage": "https://github.com/anoukvanbogaert/FlandriaServicePage#readme"
+  "homepage": "https://github.com/anoukvanbogaert/FlandriaServicePage#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
