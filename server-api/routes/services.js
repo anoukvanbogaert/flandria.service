@@ -1,5 +1,5 @@
 const express = require('express');
-const {getCategories} = require('../db/queries/categories');
+const {getServices} = require('../db/queries/services');
 
 const router = express.Router();
 
