@@ -4,8 +4,11 @@ const sassMiddleware = require('./lib/sass-middleware');
 const express = require("express");
 const morgan = require('morgan');
 
+
 const app = express();
-const PORT = 8080; // default port 8080
+const cors = require('cors');
+app.use(cors());
+const PORT = 5000; // default port 5000
 
 app.set('view engine', 'ejs');
 

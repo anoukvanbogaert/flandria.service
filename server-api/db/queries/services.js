@@ -3,7 +3,10 @@ const db = require('../connection');
 
 const getServices = () => {
   return db
-    .query(`SELECT overview_id FROM services`)
+    .query(`SELECT services.*, boats.boat_name 
+    FROM services
+    INNER JOIN boats
+    ON services.boat_id=boats.id`)
     .then(services => {
       return services.rows;
     })
@@ -13,3 +16,4 @@ const getServices = () => {
 };
 
 module.exports = {getServices};
+
