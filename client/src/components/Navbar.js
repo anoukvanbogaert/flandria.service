@@ -1,4 +1,5 @@
 import React from 'react';
+import './Navbar.scss';
 
 const Navbar = () => {
   return (
@@ -6,7 +7,7 @@ const Navbar = () => {
       <div className="navbar__logo">
         <img src="/images/logo1.png" alt="logo"></img>
       </div>
-      <div>
+      <div className="navbar__contact">
         <p>INFO@FLANDRIAYACHTS.COM</p>
         <p>+34 965 270285</p>
       </div>

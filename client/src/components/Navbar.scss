@@ -1,0 +1,23 @@
+.navbar {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  background-color: #032433;
+
+  img {
+    max-height: 75px;
+    padding-left: 15px
+  }
+
+  .navbar__contact {
+    display: flex;
+    color: white;
+
+    p {
+      padding-right: 30px
+    }
+  }
+}

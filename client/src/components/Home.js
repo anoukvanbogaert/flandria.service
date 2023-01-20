@@ -21,7 +21,7 @@ const Home = () => {
     // );
   }, []);
   return (
-    <div>
+    <div className="home">
       {/* {(typeof backendData === 'undefined') ? (
         <p>Loading...</p>
       ) : (
