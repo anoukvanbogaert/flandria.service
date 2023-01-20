@@ -2,13 +2,19 @@ import './App.scss';
 
 import {React, useEffect, useState} from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+
+import useApplicationData from './hooks/useApplicationData';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 
 function App() {
 
+  const {
+    state
+  } = useApplicationData();
+
   return (
-    <div>
+    <main className="App">
       <Router>
         <Routes>
           <Route path='/home' element={
@@ -17,7 +23,9 @@ function App() {
                 <Navbar />
               </section>
               <section className="home-block">
-                <Home />
+                <Home
+                  state={state}
+                />
               </section>
             </>
           } />
@@ -25,7 +33,7 @@ function App() {
       </Router>
 
 
-    </div>
+    </main>
   );
 }
 
