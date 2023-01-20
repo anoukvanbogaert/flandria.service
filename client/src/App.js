@@ -13,6 +13,7 @@ function App() {
     state
   } = useApplicationData();
 
+  console.log('state', state);
   return (
     <main className="App">
       <Router>
@@ -24,7 +25,7 @@ function App() {
               </section>
               <section className="home-block">
                 <Home
-                  state={state}
+                  services={state.services}
                 />
               </section>
             </>
