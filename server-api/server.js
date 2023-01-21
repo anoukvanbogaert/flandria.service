@@ -26,9 +26,11 @@ app.use(express.static('public'));
 
 //declaring resource routes
 const servicesRoutes = require('./routes/services');
+const overviewRoutes = require('./routes/overview');
 
 //mounting resource routes
 app.use('/services', servicesRoutes);
+app.use('/overview', overviewRoutes);
 
 //checking if connection works
 app.get("/", (req, res) => {

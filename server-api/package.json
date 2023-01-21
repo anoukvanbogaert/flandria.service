@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server"
+    "start": "nodemon server",
+    "db:reset": "db-migrate reset --env test && db-migrate up --env test"
   },
   "repository": {
     "type": "git",
