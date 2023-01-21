@@ -1,7 +1,10 @@
 .nav-block {
   height: 100px;
   width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
   position: static;
   top: 0px
 }
+
+.home-block {}

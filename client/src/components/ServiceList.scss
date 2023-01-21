@@ -1,0 +1,29 @@
+.table__latitude {
+  width: 100%;
+
+  caption {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #272727;
+    font-size: 50px;
+  }
+
+  thead {
+    padding: 10px;
+    text-align: left;
+    font-size: 20px;
+
+    th {
+      text-transform: uppercase;
+      border: 1px solid #F1F1F1;
+      color: #272727;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 10px;
+      border: 1px solid #F1F1F1;
+    }
+  }
+}

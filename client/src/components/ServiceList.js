@@ -1,5 +1,6 @@
 import React from 'react';
 import ServiceItem from './ServiceItem';
+import './ServiceList.scss';
 
 const ServiceList = ({services}) => {
   const serviceTable = services.map(service => {
@@ -14,15 +15,18 @@ const ServiceList = ({services}) => {
     );
   });
   return (
-    <tbody>
-      <tr>
+    <table className="table__latitude">
+      <caption>Service Overview for Diddlina</caption>
+      <thead>
         <th>Date</th>
         <th>Service</th>
         <th>Remark</th>
-      </tr>
-      {serviceTable}
+      </thead>
+      <tbody>
+        {serviceTable}
+      </tbody>
 
-    </tbody>
+    </table>
 
 
   );
