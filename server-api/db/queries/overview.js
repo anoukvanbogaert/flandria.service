@@ -3,7 +3,7 @@ const db = require('../connection');
 
 const getOverview = () => {
   return db
-    .query(`SELECT service_name
+    .query(`SELECT *
     FROM overview`)
     .then(services => {
       return services.rows;

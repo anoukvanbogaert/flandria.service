@@ -3,7 +3,9 @@ import ServiceItem from './ServiceItem';
 import './ServiceList.scss';
 
 const ServiceList = ({services}) => {
+
   const serviceTable = services.map(service => {
+
 
     return (
       <ServiceItem

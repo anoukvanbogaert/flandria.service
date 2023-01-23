@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server",
-    "db:reset": "db-migrate reset --env test && db-migrate up --env test"
+    "db:reset": "node bin/resetdb.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "morgan": "^1.10.0",
-    "sass": "^1.57.1"
+    "sass": "^1.57.1",
+    "chalk": "^2.4.2"
   }
 }

@@ -26,6 +26,7 @@ function App() {
               <section className="home-block">
                 <Home
                   services={state.services}
+                  overview={state.overview}
                 />
               </section>
             </>

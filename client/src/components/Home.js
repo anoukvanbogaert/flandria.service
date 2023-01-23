@@ -1,15 +1,17 @@
 import React from 'react';
+import OverviewList from './OverviewList';
 import ServiceList from './ServiceList';
 
-const Home = ({services}) => {
-  console.log('state', services);
-  const test = services[0];
-  // console.log('services[0]', test.id);
+const Home = ({services, overview}) => {
 
   return (
     <div className="home__container">
       <div className="home__welcome">
-        <p>Service overview for {services.boat_name}</p>
+        <OverviewList
+          key={overview.id}
+          overview={overview}
+          services={services}
+        />
       </div>
       <div className="home__table">
         {(services.length === 0) ? (
