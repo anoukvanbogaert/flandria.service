@@ -11,24 +11,27 @@ const ServiceList = ({services}) => {
       <ServiceItem
         key={service.id}
         date={service.date}
-        service={service.service_name}
         remark={service.remark}
       />
     );
   });
   return (
-    <table className="table__latitude">
-      <caption>Service Overview for Diddlina</caption>
-      <thead>
-        <th>Date</th>
-        <th>Service</th>
-        <th>Remark</th>
-      </thead>
-      <tbody>
-        {serviceTable}
-      </tbody>
+    <>
+      {(services.length === 0) ? (
+        <p>This service hasn't been performed yet</p>
+      ) : (
+        <table className="table__latitude">
+          <thead>
+            <th className="date__column">Date</th>
+            <th>Remark</th>
+          </thead>
+          <tbody>
+            {serviceTable}
+          </tbody>
 
-    </table>
+        </table>
+      )}
+    </>
 
 
   );

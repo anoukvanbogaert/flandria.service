@@ -1,0 +1,64 @@
+.form__background {
+  // width: 100vw;
+  height: 100vh;
+  top: 100px;
+  background-color: rgba(255, 255, 255, 0.3);
+  // backdrop-filter: blur(15px);
+  position: fixed;
+  display: flex;
+  margin-left: 550px;
+  padding: 0px 50px;
+  align-items: flex-start;
+}
+
+form div {
+  float: left;
+  width: 49%;
+  margin: 20px 0px;
+  font-weight: bolder;
+}
+
+form div:not(:nth-child(2n)) {
+  margin-right: 2%;
+}
+
+form div:last-child {
+  display: flex;
+  clear: both;
+  width: 80%;
+  justify-content: center;
+  height: 3em;
+}
+
+
+//displaying label on top of input
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: larger;
+
+}
+
+//form styling (form itself)
+input {
+  padding: 0.5em;
+  font-size: larger;
+  border-radius: 5px;
+  width: 75%
+}
+
+input:focus {
+  outline: 3px solid #446084
+}
+
+button {
+  width: 50%;
+  font-weight: bold;
+  font-size: x-large
+}
+
+//form div styling (form in page)
+.admin__form {
+  width: 100%;
+  padding: 1em;
+}

@@ -1,0 +1,47 @@
+.admin__container {
+  padding: 100px 0px;
+  position: absolute;
+  background-image: url('../../public/images/wave1.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.admin__options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  transition: transform 0.3s ease-in;
+
+  &--left {
+    transform: translateX(-35%)
+  }
+
+  &--middle {
+    transform: translateX(0%)
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 3px #ffffff;
+    color: #032433;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    width: 400px;
+    height: 150px;
+    font-size: 2.25em;
+    font-weight: bold;
+    margin: 10px 0px;
+  }
+
+  div:hover {
+    background: #032433;
+    color: white;
+    cursor: pointer;
+  }
+}

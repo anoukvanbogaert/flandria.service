@@ -2,32 +2,25 @@ import React from 'react';
 import OverviewItem from './OverviewItem';
 
 const OverviewList = ({overview, services}) => {
-  const overviewTable = overview.map(serviceItem => {
+  const overviewTable = overview.map(overviewItem => {
 
     return (
       <OverviewItem
-        key={serviceItem.id}
-        serviceItem={serviceItem.service_name}
+        key={overviewItem.id}
+        overviewItem={overviewItem.service_name}
+        overviewId={overviewItem.id}
         services={services}
       />
     );
   });
   return (
-    // <table className="table__latitude">
-    //   <caption>Service Overview for Diddlina</caption>
-    //   {/* <thead>
-    //     <th>Date</th>
-    //     <th>Service</th>
-    //     <th>Remark</th>
-    //   </thead> */}
-    //   <tbody>
-    //     {overviewTable}
-    //   </tbody>
+    <>
+      <h1>Service overview for [Boat Name]</h1>
+      <div>
+        {overviewTable}
+      </div>
 
-    // </table>
-    <div>
-      {overviewTable}
-    </div>
+    </>
   );
 };
 

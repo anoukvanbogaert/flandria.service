@@ -1,6 +1,16 @@
-.home__table {
+.home__container {
   display: flex;
   width: 100%;
-  align-items: center;
+  justify-content: center;
+}
 
+.home__welcome {
+  h1 {
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #272727;
+    font-size: 50px;
+  }
 }

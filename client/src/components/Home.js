@@ -1,6 +1,6 @@
 import React from 'react';
 import OverviewList from './OverviewList';
-import ServiceList from './ServiceList';
+import './Home.scss';
 
 const Home = ({services, overview}) => {
 
@@ -12,15 +12,6 @@ const Home = ({services, overview}) => {
           overview={overview}
           services={services}
         />
-      </div>
-      <div className="home__table">
-        {(services.length === 0) ? (
-          <p>Loading...</p>
-        ) : (
-          <ServiceList
-            key={services.id}
-            services={services} />
-        )}
       </div>
     </div>
   );

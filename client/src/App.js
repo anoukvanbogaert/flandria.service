@@ -1,11 +1,12 @@
 import './App.scss';
 
-import {React, useEffect, useState} from 'react';
+import {React} from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import useApplicationData from './hooks/useApplicationData';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
+import Admin from './components/Admin';
 
 function App() {
 
@@ -28,6 +29,17 @@ function App() {
                   services={state.services}
                   overview={state.overview}
                 />
+              </section>
+            </>
+          } />
+
+          <Route path='/admin' element={
+            <>
+              <section className='nav-block'>
+                <Navbar />
+              </section>
+              <section className="admin-block">
+                <Admin />
               </section>
             </>
           } />

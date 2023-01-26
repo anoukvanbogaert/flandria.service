@@ -1,11 +1,14 @@
 import React from 'react';
 
-const ServiceItem = ({date, service, remark}) => {
+const ServiceItem = ({date, remark}) => {
+
+  const styledDate = date.slice(0, 10);
+  const styledRemark = remark[0].toUpperCase() + remark.substring(1);
+
   return (
     <tr>
-      <td>{date}</td>
-      <td>{service}</td>
-      <td>{remark}</td>
+      <td className="date__column">{styledDate}</td>
+      <td>{styledRemark}</td>
     </tr>
   );
 };
