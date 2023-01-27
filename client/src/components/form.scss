@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .form__background {
   // width: 100vw;
   height: 100vh;
@@ -7,7 +11,8 @@
   position: fixed;
   display: flex;
   margin-left: 550px;
-  padding: 0px 50px;
+  margin-right: auto;
+  padding: 0px 75px;
   align-items: flex-start;
 
 }
@@ -34,6 +39,14 @@ form div {
 form div:not(:nth-child(2n)) {
   margin-right: 2%;
 }
+
+.form__item__large {
+  display: inline-block;
+  width: 100%;
+  height: 10em
+}
+
+
 
 form div:last-child {
   display: flex;
@@ -68,4 +81,9 @@ button {
   width: 50%;
   font-weight: bold;
   font-size: x-large
+}
+
+.admin__form {
+  margin-left: auto;
+  margin-right: auto;
 }

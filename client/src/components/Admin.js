@@ -41,9 +41,9 @@ const Admin = () => {
         <div onClick={() => handleClick(3)}>Add service offer</div>
       </div>
       <div className={formClass}>
-        {activeComponent === 1 && <AdminAddClient
+        {activeComponent === 1 && <AdminAddClient />}
+        {activeComponent === 2 && <AdminAddExService
           open={afterClick} />}
-        {activeComponent === 2 && <AdminAddExService />}
         {activeComponent === 3 && <AdminAddOffer />}
       </div>
 
