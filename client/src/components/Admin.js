@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import './Admin.scss';
 import classNames from 'classnames';
 
@@ -7,14 +7,19 @@ import AdminAddExService from './AdminAddExService';
 import AdminAddOffer from './AdminAddOffer';
 
 const Admin = () => {
-  const [oneActive, setOneActive] = useState(false);
-  const [twoActive, setTwoActive] = useState(false);
-  const [threeActive, setThreeActive] = useState(false);
+
+  const [activeComponent, setActiveComponent] = useState();
+
+  const handleClick = (component) => {
+    activeComponent === component ? setActiveComponent('') :
+      setActiveComponent(component);
+  };
+
 
   let afterClick = '';
-  if (oneActive || twoActive || threeActive) {
+  if (activeComponent) {
     afterClick = true;
-  } else if (oneActive && twoActive && threeActive) {
+  } else {
     afterClick = false;
   }
 
@@ -31,15 +36,15 @@ const Admin = () => {
   return (
     <div className="admin__container">
       <div className={optionsClass}>
-        <div onClick={() => setOneActive(!oneActive)}>Add client</div>
-        <div onClick={() => setTwoActive(!twoActive)}>Add executed service</div>
-        <div onClick={() => setThreeActive(!threeActive)}>Add service offer</div>
+        <div onClick={() => handleClick(1)}>Add client</div>
+        <div onClick={() => handleClick(2)}>Add executed service</div>
+        <div onClick={() => handleClick(3)}>Add service offer</div>
       </div>
       <div className={formClass}>
-        {oneActive && <AdminAddClient
+        {activeComponent === 1 && <AdminAddClient
           open={afterClick} />}
-        {twoActive && <AdminAddExService />}
-        {threeActive && <AdminAddOffer />}
+        {activeComponent === 2 && <AdminAddExService />}
+        {activeComponent === 3 && <AdminAddOffer />}
       </div>
 
     </div>
