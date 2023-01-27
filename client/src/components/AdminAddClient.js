@@ -1,11 +1,19 @@
 import React from 'react';
 import './form.scss';
+import classNames from 'classnames';
 
-const AdminAddClient = () => {
+
+const AdminAddClient = ({open}) => {
+
+  const formClass = classNames("admin__form", {
+    "admin__form--open": open,
+    "admin__form--close": !open
+  });
+
   return (
     <div className="form__background">
 
-      <div className="admin__form">
+      <div className={formClass}>
         <h2 className="admin__form__title">Add a client</h2>
         <div className="admin__form__body">
           <form>

@@ -9,7 +9,20 @@
   margin-left: 550px;
   padding: 0px 50px;
   align-items: flex-start;
+
 }
+
+// .admin__form {
+//   transition: transform 0.3s ease-in;
+
+//   &--open {
+//     transform: translateX(0%)
+//   }
+
+//   &--close {
+//     transform: translateX(180%)
+//   }
+// }
 
 form div {
   float: left;
@@ -55,10 +68,4 @@ button {
   width: 50%;
   font-weight: bold;
   font-size: x-large
-}
-
-//form div styling (form in page)
-.admin__form {
-  width: 100%;
-  padding: 1em;
 }

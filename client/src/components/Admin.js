@@ -18,6 +18,11 @@ const Admin = () => {
     afterClick = false;
   }
 
+  const formClass = classNames("admin__form", {
+    "admin__form--open": afterClick,
+    "admin__form--close": !afterClick
+  });
+
   const optionsClass = classNames("admin__options", {
     "admin__options--middle": !afterClick,
     "admin__options--left": afterClick
@@ -30,8 +35,9 @@ const Admin = () => {
         <div onClick={() => setTwoActive(!twoActive)}>Add executed service</div>
         <div onClick={() => setThreeActive(!threeActive)}>Add service offer</div>
       </div>
-      <div className="admin__form">
-        {oneActive && <AdminAddClient />}
+      <div className={formClass}>
+        {oneActive && <AdminAddClient
+          open={afterClick} />}
         {twoActive && <AdminAddExService />}
         {threeActive && <AdminAddOffer />}
       </div>
