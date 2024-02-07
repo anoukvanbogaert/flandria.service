@@ -72,18 +72,15 @@ const Login = () => {
                         sx={{ mb: 2, minWidth: '100%' }}
                     />
                     <TextField
-                        margin='normal'
-                        required
-                        fullWidth
-                        name='password'
-                        label='Password'
-                        type='password'
                         id='password'
-                        autoComplete='current-password'
+                        label='Password'
+                        variant='outlined'
+                        sx={{ mb: 3, width: '100%' }}
+                        type='password'
+                        placeholder='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        variant='outlined'
-                        sx={{ mb: 3 }}
+                        required
                     />
                     <Button
                         type='submit'
