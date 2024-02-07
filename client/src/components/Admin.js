@@ -30,7 +30,7 @@ const Admin = () => {
 
   const optionsClass = classNames("admin__options", {
     "admin__options--middle": !afterClick,
-    "admin__options--left": afterClick
+    "admin__options--left": afterClick,
   });
 
   return (
@@ -39,6 +39,7 @@ const Admin = () => {
         <div onClick={() => handleClick(1)}>Add client</div>
         <div onClick={() => handleClick(2)}>Add executed service</div>
         <div onClick={() => handleClick(3)}>Add service offer</div>
+        <div onClick={() => handleClick(4)}>Check database</div>
       </div>
       <div className={formClass}>
         {activeComponent === 1 && <AdminAddClient />}

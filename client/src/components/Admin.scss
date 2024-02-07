@@ -1,63 +1,67 @@
 .admin__container {
-  padding: 100px 0px;
-  position: absolute;
-  background-image: url('../../public/images/wave1.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100%;
-  width: 100%;
+    height: 100vh;
+    width: 100vw;
+
+    margin: 0;
+    background: linear-gradient(45deg, #8dd5f7, #41bcf5, #7ad0f8);
+    background-size: 100%;
 }
 
 .admin__options {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  transition: transform 0.3s ease-in;
-
-  &--left {
-    transform: translateX(-35%)
-  }
-
-  &--middle {
-    transform: translateX(0%)
-  }
-
-  div {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: solid 3px #ffffff;
-    color: #032433;
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 10px;
-    width: 400px;
-    height: 150px;
-    font-size: 2.25em;
-    font-weight: bold;
-    margin: 10px 0px;
-  }
+    padding-top: 4rem;
 
-  div:hover {
-    background: #032433;
-    color: white;
-    cursor: pointer;
-  }
+    transition: transform 0.3s ease-in;
 
-  //form div styling (form in page)
-  // .admin__form {
-  //   width: 100%;
-  //   padding: 1em;
+    &--left {
+        transform: translateX(-35%);
+    }
 
-  //   transition: transform 0.3s ease-in;
+    &--middle {
+        transform: translateX(0%);
+    }
 
-  //   &--open {
-  //     transform: translateX(0%)
-  //   }
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: solid 3px #ffffff;
+        color: #032433;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 10px;
+        width: 400px;
+        height: 150px;
+        font-size: 2.25em;
+        font-weight: bold;
+        margin: 10px 0px;
+    }
 
-  //   &--close {
-  //     transform: translateX(180%)
-  //   }
-  // }
+    div:hover {
+        background: #032433;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+//form div styling (form in page)
+.admin__form {
+    //   width: 100%;
+    //   padding: 1em;
+
+    //   transition: transform 0.3s ease-in;
+
+    //   &--open {
+    //     transform: translateX(0%)
+    //   }
+
+    //   &--close {
+    //     transform: translateX(180%)
+    //   }
+    // }
+    width: 75%;
+    margin: 0 2rem;
+    padding: 0 3rem;
 }
