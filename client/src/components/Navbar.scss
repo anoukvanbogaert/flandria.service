@@ -1,25 +1,34 @@
 .navbar {
-  position: fixed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100px;
-  width: 100%;
-  background-color: #032433;
-
-  img {
-    max-height: 75px;
-    padding-left: 15px
-  }
-
-  .navbar__contact {
+    position: fixed;
     display: flex;
-    font-weight: bolder;
-    color: white;
-    font-size: 1.25rem;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    background-color: #032433;
 
-    p {
-      padding-right: 30px
+    img {
+        max-height: 75px;
+        padding-left: 15px;
     }
-  }
+
+    .navbar__contact {
+        display: flex;
+        font-weight: bolder;
+        color: white;
+        font-size: 1.25rem;
+        min-width: min-content;
+        overflow: visible;
+        white-space: nowrap;
+        margin-right: 30px;
+        p {
+            margin-right: 30px;
+        }
+    }
+
+    .navbar__right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
 }

@@ -1,22 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithGooglePopup, handleEmailLogin } from '../firebase';
+import {
+    signInWithGooglePopup,
+    handleEmailLogin,
+    sendPasswordResetEmail,
+    registerWithEmailPassword,
+    auth,
+} from '../firebase';
 import Logo from '../assets/images/logo1.png';
-import { Container, Box, Typography, TextField, Button } from '@mui/material';
+import { Container, Box, Typography, TextField, Button, Link, Alert } from '@mui/material';
+import { useStoreState } from 'pullstate';
+import { AppStore } from '../stores/AppStore';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { userDoc } = useStoreState(AppStore);
 
-    const handleEmailSignIn = async (event) => {
+    const handleAction = async (event) => {
         event.preventDefault();
+        setError('');
         try {
-            const user = await handleEmailLogin(email, password);
-            console.log(user);
-            navigate('/home');
+            if (isSignUp) {
+                await registerWithEmailPassword(email, password);
+            } else {
+                await handleEmailLogin(email, password);
+            }
+            navigate('/admin' || '/home');
         } catch (error) {
             console.error('Login error:', error);
+            setError('An error occurred. Please try again.');
+        }
+    };
+
+    const toggleForm = () => {
+        setIsSignUp(!isSignUp);
+        setError('');
+    };
+
+    const handleForgotPassword = async () => {
+        if (!email) {
+            setError('Please enter your email address to reset your password.');
+            return;
+        }
+        try {
+            const actionCodeSettings = {
+                url: 'http://localhost:3000/home',
+                handleCodeInApp: false,
+            };
+            await sendPasswordResetEmail(email, actionCodeSettings);
+            setError('Password reset email sent. Please check your inbox.');
+        } catch (error) {
+            setError('An error occurred while sending the password reset email. Please try again.');
         }
     };
 
@@ -30,6 +68,7 @@ const Login = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center',
             }}
         >
             <img
@@ -40,72 +79,97 @@ const Login = () => {
             <Box
                 sx={{
                     maxWidth: '768px',
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: 4,
-                    paddingTop: 8,
-                    paddingBottom: 8,
                     borderRadius: 2,
                     boxShadow: 3,
-                    mt: '2rem',
                     bgcolor: 'background.paper',
                 }}
             >
                 <Typography component='h1' variant='h5' marginBottom={3}>
-                    Sign in
+                    {isSignUp ? 'Sign Up' : 'Sign In'}
                 </Typography>
-                <Box component='form' onSubmit={handleEmailSignIn} sx={{ mt: 1, width: '100%' }}>
+                {error && (
+                    <Alert severity='error' sx={{ width: '100%', mb: 2 }}>
+                        {error}
+                    </Alert>
+                )}
+
+                <Box sx={{ mt: 1, width: '100%' }}>
                     <TextField
                         margin='normal'
                         required
                         fullWidth
                         id='email'
-                        label='Email Address'
+                        placeholder='Email Address'
                         name='email'
                         autoComplete='email'
                         autoFocus
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         variant='outlined'
-                        sx={{ mb: 2, minWidth: '100%' }}
+                        sx={{ mb: '1rem', minWidth: '100%' }}
                     />
                     <TextField
                         id='password'
-                        label='Password'
                         variant='outlined'
-                        sx={{ mb: 3, width: '100%' }}
+                        sx={{ mb: 1, width: '100%' }}
+                        fullWidth
                         type='password'
-                        placeholder='password'
+                        placeholder='Password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                    {!isSignUp && (
+                        <Link
+                            component='button'
+                            variant='body2'
+                            onClick={handleForgotPassword} // Changed to call handleForgotPassword
+                            sx={{ mb: 2, width: '1', textAlign: 'end' }}
+                        >
+                            Forgot password?
+                        </Link>
+                    )}
                     <Button
-                        type='submit'
+                        onClick={handleAction}
                         fullWidth
                         variant='contained'
                         color='primary'
                         sx={{ mb: 2, py: 1.5 }}
                     >
-                        Sign In with Email
+                        {isSignUp ? 'Sign Up' : 'Sign In with Email'}
                     </Button>
-                    <Button
-                        onClick={() =>
-                            signInWithGooglePopup()
-                                .then((user) => {
-                                    console.log(user);
-                                    navigate('/home');
-                                })
-                                .catch((error) => console.error('Login error:', error))
-                        }
-                        fullWidth
-                        variant='outlined'
-                        sx={{ py: 1.5 }}
+                    {!isSignUp && (
+                        <Button
+                            onClick={() =>
+                                signInWithGooglePopup()
+                                    .then((user) => {
+                                        navigate('/home');
+                                    })
+                                    .catch((error) => console.error('Login error:', error))
+                            }
+                            fullWidth
+                            variant='outlined'
+                            sx={{ py: 1.5 }}
+                        >
+                            Login with Google
+                        </Button>
+                    )}
+                    <Link
+                        component='button'
+                        variant='body2'
+                        onClick={toggleForm}
+                        sx={{ mt: 2, width: '1', textAlign: 'end' }}
                     >
-                        Login with Google
-                    </Button>
+                        {isSignUp
+                            ? 'Already have an account? Sign In'
+                            : "Don't have an account? Sign Up"}
+                    </Link>
                 </Box>
             </Box>
         </Container>

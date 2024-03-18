@@ -6,6 +6,7 @@ import {
     signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
+    sendPasswordResetEmail as firebaseSendPasswordResetEmail,
 } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -13,13 +14,13 @@ import {
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyBbHQrXLroru3nTIGSb1Fc62kKazRF56pE',
-    authDomain: 'flandria-yachts.firebaseapp.com',
-    projectId: 'flandria-yachts',
-    storageBucket: 'flandria-yachts.appspot.com',
-    messagingSenderId: '1014227351431',
-    appId: '1:1014227351431:web:909aaed54b04b33bb94522',
-    measurementId: 'G-7J8L45S9KQ',
+    apiKey: process.env.REACT_APP_API_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -54,6 +55,27 @@ export const auth = getAuth(app);
 export const logout = () => {
     window.location.href = '/login';
     auth.signOut();
+};
+
+export const sendPasswordResetEmail = async (email) => {
+    try {
+        await firebaseSendPasswordResetEmail(auth, email);
+        alert('Password reset link sent!');
+    } catch (error) {
+        console.error('Password reset error:', error);
+        alert(error.message);
+    }
+};
+
+export const registerWithEmailPassword = async (email, password) => {
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log('User created:', userCredential.user);
+        return userCredential.user;
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert(error.message);
+    }
 };
 //export firestore db
 export const db = getFirestore(app);

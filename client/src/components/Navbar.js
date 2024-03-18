@@ -13,15 +13,21 @@ const Navbar = () => {
             <div className='navbar__logo'>
                 <img src={Logo} alt='logo'></img>
             </div>
-            <div className='navbar__contact'>
-                <p>INFO@FLANDRIAYACHTS.COM</p>
-                <p>+34 965 270285</p>
+            <div className='navbar__right'>
+                <div className='navbar__contact'>
+                    <p>INFO@FLANDRIAYACHTS.COM</p>
+                    <p>+34 965 270285</p>
+                </div>
+                <Tooltip title='Logout'>
+                    <IconButton
+                        onClick={logout}
+                        color='#FFFFFF'
+                        sx={{ textAlign: 'end', width: 'content' }}
+                    >
+                        <ExitToAppIcon sx={{ color: '#FFFFFF' }} />
+                    </IconButton>
+                </Tooltip>
             </div>
-            <Tooltip title='Logout'>
-                <IconButton onClick={logout} color='#FFFFF'>
-                    <ExitToAppIcon />
-                </IconButton>
-            </Tooltip>
         </nav>
     );
 };
