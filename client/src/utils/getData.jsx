@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AppStore } from '../stores/AppStore';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 export const getSetUserDoc = async (user) => {
     try {
@@ -84,9 +85,9 @@ export const getServices = async (user) => {
 };
 
 export const addUserToDataBase = (userInfo, password) => {
-    firebase
-        .auth()
-        .createUserWithEmailAndPassword(userInfo.email, password)
+    const auth = getAuth();
+
+    createUserWithEmailAndPassword(auth, userInfo.email, password)
         .then((userCredential) => {
             // User created successfully in Firebase Auth, now add user info to Firebase Database
             const uid = userCredential.user.uid;
