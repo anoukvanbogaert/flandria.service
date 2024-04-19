@@ -7,8 +7,13 @@ import Home from './components/Home';
 import Admin from './components/Admin';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppStore } from './stores/AppStore';
-import { getServices, getSetUserDoc } from './utils/getData';
-
+import {
+    getServices,
+    getSetUserDoc,
+    getServiceTemplates,
+    getClients,
+    getBoats,
+} from './utils/getData';
 import Login from './pages/Login';
 import { useStoreState } from 'pullstate';
 
@@ -26,9 +31,12 @@ function App() {
                 });
                 getSetUserDoc(fbUser);
                 getServices(fbUser);
+                getServiceTemplates();
+                getClients();
+                getBoats();
             }
         });
-    }, []);
+    }, [user]);
 
     return (
         <main className='App'>

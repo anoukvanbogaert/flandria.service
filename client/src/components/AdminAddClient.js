@@ -1,6 +1,7 @@
 import React from 'react';
 import './form.scss';
 import classNames from 'classnames';
+import { addUserToDataBase } from '../utils/getData';
 
 const AdminAddClient = ({ open }) => {
     const formClass = classNames('admin__form', {
@@ -13,7 +14,7 @@ const AdminAddClient = ({ open }) => {
             <div className={formClass}>
                 <h2 className='admin__form__title'>Add a client</h2>
                 <div className='admin__form__body'>
-                    <form>
+                    <div>
                         <div className='form__item__block'>
                             <label>Client Name</label>
                             <input className='form__item' type='text' placeholder='e.g. John' />
@@ -47,11 +48,6 @@ const AdminAddClient = ({ open }) => {
                         </div>
 
                         <div className='form__item__block'>
-                            <label>Temporary Client Password</label>
-                            <input className='form__item' type='text' placeholder='e.g. 1234' />
-                        </div>
-
-                        <div className='form__item__block'>
                             <label>Delivery Date</label>
                             <input
                                 className='form__item'
@@ -59,8 +55,6 @@ const AdminAddClient = ({ open }) => {
                                 placeholder='CHANGE INTO DATE PICKER'
                             />
                         </div>
-
-                        <div></div>
 
                         <div className='form__item__block'>
                             <label>Boat Name</label>
@@ -70,7 +64,7 @@ const AdminAddClient = ({ open }) => {
                         <div>
                             <button>ADD</button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

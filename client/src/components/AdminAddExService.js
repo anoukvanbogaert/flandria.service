@@ -1,78 +1,241 @@
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import './form.scss';
 import classNames from 'classnames';
+import { useStoreState } from 'pullstate';
+import { AppStore } from '../stores/AppStore';
+import {
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Autocomplete,
+    Box,
+    Typography,
+    Button,
+    TextField,
+    Grid,
+} from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { Build, DateRange, AccountCircle, DirectionsBoat, Comment } from '@mui/icons-material';
+import { addToCollection } from '../utils/getData';
 
+const AdminAddExService = ({ open }) => {
+    const { serviceTemplates, clients, boats } = useStoreState(AppStore);
+    const [userBoats, setUserboats] = useState([]);
+    const [formData, setFormData] = useState({
+        services: [],
+        date: null,
+        client: null,
+        boat: [],
+        brand: null,
+        model: null,
+        remark: null,
+    });
+    console.log('formData', formData);
 
-const AdminAddExService = ({open}) => {
+    useEffect(() => {
+        if (formData.client) {
+            const clientId = formData.client;
+            console.log('clientId', clientId);
 
-  const formClass = classNames("admin__form", {
-    "admin__form--open": open,
-    "admin__form--close": !open
-  });
+            const client = clients.find((c) => c.uid === clientId);
+            console.log('client', client);
 
-  return (
-    <div className="form__background">
+            if (client && client.boats) {
+                const userBoats = boats.filter((boat) => client.boats.includes(boat.id));
+                setUserboats(userBoats);
+            } else {
+                setUserboats([]);
+            }
+        }
+    }, [formData.client, clients, boats]);
 
-      <div className={formClass}>
-        <h2 className="admin__form__title">Add an executed service</h2>
-        <div className="admin__form__body">
-          <form>
-            <div className="form__item__block">
-              <label>Select service</label>
-              <input
-                className="form__item"
-                type="text"
-                placeholder="e.g. John"
-              />
-            </div>
+    const handleInputChange = (field, value) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
 
+    const handleSave = () => {
+        addToCollection('services', formData);
+    };
 
-            <div className="form__item__block">
-              <label>Date</label>
-              <input
-                className="form__item"
-                type="text"
-                placeholder="e.g. Sunseeker"
-              />
-            </div>
+    const formClass = classNames('admin__form', {
+        'admin__form--open': open,
+        'admin__form--close': !open,
+    });
 
-            <div className="form__item__block">
-              <label>Client</label>
-              <input
-                className="form__item"
-                type="text"
-                placeholder="e.g. John@example.com"
-              />
-            </div>
+    return (
+        <Box className='form__background' sx={{ padding: 3 }}>
+            <Box
+                className={formClass}
+                sx={{ margin: 'auto', padding: 2, borderRadius: 2, boxShadow: 3 }}
+            >
+                <Grid
+                    container
+                    alignItems='center'
+                    justifyContent='space-between'
+                    sx={{ marginBottom: '3rem' }}
+                >
+                    <Grid item xs={10}>
+                        <Typography variant='h4' component='h2' className='admin__form__title'>
+                            Log a service
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            sx={{
+                                width: '100%',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                            }}
+                            onClick={() => handleSave()}
+                        >
+                            Save
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3} alignItems='center'>
+                    <Grid item xs={1}>
+                        <AccountCircle />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <Autocomplete
+                            freeSolo
+                            options={clients.map((option) => ({
+                                label: option.name,
+                                uid: option.id,
+                            }))}
+                            onChange={(event, newValue) => {
+                                const id = newValue ? newValue.uid : '';
+                                handleInputChange('client', id);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label='Choose a client'
+                                    fullWidth
+                                    variant='filled'
+                                    size='small'
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={1}>
+                        <DirectionsBoat />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <FormControl fullWidth variant='filled' size='small'>
+                            <InputLabel id='service-select-label'>Select service</InputLabel>
+                            <Select
+                                labelId='service-select-label'
+                                value={formData.boat}
+                                onChange={(event) => handleInputChange('boat', event.target.value)}
+                                label='Select vessel'
+                            >
+                                {userBoats.map((boat) => (
+                                    <MenuItem key={boat.id} value={boat.id}>
+                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Build />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <FormControl fullWidth variant='filled' size='small'>
+                            <InputLabel id='service-select-label'>Select service</InputLabel>
+                            <Select
+                                labelId='service-select-label'
+                                multiple
+                                value={formData.services}
+                                onChange={(event) =>
+                                    handleInputChange('services', event.target.value)
+                                }
+                                label='Select service'
+                            >
+                                {serviceTemplates.map((template) => (
+                                    <MenuItem key={template.id} value={template.description}>
+                                        {template.description}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
 
-            <div className="form__item__block">
-              <label>Boat</label>
-              <input
-                className="form__item"
-                type="text"
-                placeholder="e.g. Manhattan"
-              />
-            </div>
+                    <Grid item xs={1}>
+                        <DateRange />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label='Select date'
+                                value={formData.date}
+                                onChange={(newValue) => handleInputChange('date', newValue)}
+                                slotProps={{ textField: { size: 'small', variant: 'filled' } }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
 
-            <div className="form__item__large" >
-              <label>Remark</label>
-              <input
-                className="form__item"
-                type="text"
-                placeholder="e.g. 1234"
-              />
-            </div>
+                    {/* <Grid item xs={1}>
+                        <DirectionsBoat />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label='Boat Brand'
+                                    placeholder='e.g. Sunseeker'
+                                    fullWidth
+                                    variant='filled'
+                                    size='small'
+                                    onChange={(event) =>
+                                        handleInputChange('brand', event.target.value)
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label='Boat Model'
+                                    placeholder='e.g. Manhattan'
+                                    fullWidth
+                                    variant='filled'
+                                    size='small'
+                                    onChange={(event) =>
+                                        handleInputChange('model', event.target.value)
+                                    }
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid> */}
 
-            <div>
-              <button>ADD</button>
-            </div>
-
-          </form>
-
-        </div>
-      </div>
-    </div>
-  );
+                    <Grid item xs={1}>
+                        <Comment />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <TextField
+                            label='Remark'
+                            multiline
+                            rows={4}
+                            placeholder='Enter your remark here'
+                            variant='filled'
+                            fullWidth
+                            onChange={(event) =>
+                                handleInputChange('selectedRemark', event.target.value)
+                            }
+                        />
+                    </Grid>
+                </Grid>
+            </Box>
+        </Box>
+    );
 };
 
 export default AdminAddExService;

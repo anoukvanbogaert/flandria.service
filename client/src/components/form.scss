@@ -1,19 +1,18 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .form__background {
-  width: 77vw;
-  height: 100vh;
-  top: 100px;
-  background-color: rgba(255, 255, 255, 0.3);
-  // backdrop-filter: blur(15px);
-  position: fixed;
-  display: flex;
-  margin-left: 550px;
-  padding: 0px 75px;
-  align-items: flex-start;
-
+    width: 77vw;
+    height: 100vh;
+    top: 100px;
+    background-color: rgba(255, 255, 255, 0.3);
+    // backdrop-filter: blur(15px);
+    position: fixed;
+    display: flex;
+    margin-left: 550px;
+    padding: 0px 75px;
+    align-items: flex-start;
 }
 
 // .admin__form {
@@ -29,62 +28,58 @@
 // }
 
 form div {
-  float: left;
-  width: 49%;
-  margin: 20px 0px;
-  font-weight: bolder;
+    float: left;
+    width: 49%;
+    margin: 20px 0px;
+    font-weight: bolder;
 }
 
 form div:not(:nth-child(2n)) {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .form__item__large {
-  display: inline-block;
-  width: 100%;
-  height: 10em
+    display: inline-block;
+    width: 100%;
+    height: 10em;
 }
 
 .form__item__wide {
-  width: 300%
+    width: 300%;
 }
-
-
 
 form div:last-child {
-  display: flex;
-  clear: both;
-  width: 80%;
-  justify-content: center;
-  height: 3em;
+    display: flex;
+    clear: both;
+    width: 80%;
+    justify-content: center;
+    height: 3em;
 }
-
 
 //displaying label on top of input
 form label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: larger;
-
+    display: block;
+    margin-bottom: 10px;
+    font-size: larger;
 }
 
 //form styling (form itself)
 input {
-  padding: 0.5em;
-  font-size: larger;
-  border-radius: 5px;
-  width: 75%
+    padding: 0.5em;
+    font-size: larger;
+    border-radius: 5px;
+    width: 75%;
 }
 
 input:focus {
-  outline: 3px solid #446084
+    outline: 3px solid #446084;
 }
 
 button {
-  width: 50%;
-  font-weight: bold;
-  font-size: x-large;
-  border-radius: 5px;
-  color: white;
-  background-color: #032433;
+    width: 50%;
+    font-weight: bold;
+    font-size: x-large;
+    border-radius: 5px;
+    color: white;
+    background-color: #032433;
 }
