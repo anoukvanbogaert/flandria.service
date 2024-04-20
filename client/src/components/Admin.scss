@@ -9,20 +9,20 @@
 
 .admin__options {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     padding-top: 4rem;
 
-    transition: transform 0.3s ease-in;
+    // transition: transform 0.3s ease-in;
 
-    &--left {
-        transform: translateX(-35%);
-    }
+    // &--left {
+    //     transform: translateX(-35%);
+    // }
 
-    &--middle {
-        transform: translateX(0%);
-    }
+    // &--middle {
+    //     transform: translateX(0%);
+    // }
 
     div {
         display: flex;
@@ -34,7 +34,7 @@
         border-radius: 10px;
         width: 400px;
         height: 150px;
-        font-size: 2.25em;
+        font-size: 2rem;
         font-weight: bold;
         margin: 10px 0px;
     }
@@ -53,16 +53,20 @@
 
     //   transition: transform 0.3s ease-in;
 
-    //   &--open {
-    //     transform: translateX(0%)
-    //   }
+    // &--open {
+    //     transform: translateX(0%);
+    // }
 
     //   &--close {
     //     transform: translateX(180%)
     //   }
     // }
-    background: white;
-    width: 75%;
-    margin: 2rem !important;
+    // background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    // margin: 2rem !important;
     padding: 0 3rem;
 }

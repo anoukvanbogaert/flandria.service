@@ -3,15 +3,13 @@
 }
 
 .form__background {
-    width: 77vw;
-    height: 100vh;
+    width: 50vw;
     top: 100px;
-    background-color: rgba(255, 255, 255, 0.3);
-    // backdrop-filter: blur(15px);
-    position: fixed;
+    // background-color: rgba(255, 255, 255, 0.3);
+    // // backdrop-filter: blur(15px);
+
     display: flex;
-    margin-left: 550px;
-    padding: 0px 75px;
+    // margin-left: 550px;
     align-items: flex-start;
 }
 
