@@ -106,7 +106,7 @@ const AdminAddExService = ({ open }) => {
     });
 
     return (
-        <Box className='form__background' sx={{ padding: 3 }}>
+        <Box className='form__background' sx={{ position: 'relative' }}>
             <Backdrop
                 sx={{
                     color: '#fff',
