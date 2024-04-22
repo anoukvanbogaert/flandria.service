@@ -9,16 +9,31 @@ import {
     Grid,
     CircularProgress,
     Backdrop,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogActions,
+    IconButton,
 } from '@mui/material';
 
-import { Email, AccountCircle, DirectionsBoat, Check, Close } from '@mui/icons-material';
+import {
+    Email,
+    AccountCircle,
+    DirectionsBoat,
+    EmojiPeople,
+    Check,
+    Close,
+} from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 
-const AdminAddExService = ({ open }) => {
+const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
+    const [step, setStep] = useState(1);
+    const [selection, setSelection] = useState('');
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        services: [],
+        name: '',
+        email: '',
         date: null,
         client: null,
         boat: [],
@@ -42,7 +57,6 @@ const AdminAddExService = ({ open }) => {
             setOperationStatus('success');
             setTimeout(() => {
                 setFormData({
-                    services: [],
                     date: null,
                     client: null,
                     boat: [],
@@ -67,9 +81,105 @@ const AdminAddExService = ({ open }) => {
         'admin__form--open': open,
         'admin__form--close': !open,
     });
+    const resetForm = () => {
+        setFormData({ name: '', email: '', brand: '', model: '' });
+        setOperationStatus('idle');
+        if (operationStatus === 'success') setStep(1); // Return to the first step only on success
+    };
+
+    const renderForm = () => {
+        if (selection === 'client') {
+            return (
+                <>
+                    <TextField
+                        label='Add name'
+                        placeholder='Add name'
+                        variant='filled'
+                        fullWidth
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                    />
+                    <TextField
+                        label='Add email'
+                        placeholder='Add email'
+                        variant='filled'
+                        fullWidth
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                    />
+                </>
+            );
+        } else if (selection === 'boat') {
+            return (
+                <>
+                    <TextField
+                        label='Boat Brand'
+                        placeholder='e.g. Sunseeker'
+                        fullWidth
+                        variant='filled'
+                        size='small'
+                        onChange={(e) => handleInputChange('brand', e.target.value)}
+                    />
+                    <TextField
+                        label='Boat Model'
+                        placeholder='e.g. Manhattan'
+                        fullWidth
+                        variant='filled'
+                        size='small'
+                        onChange={(e) => handleInputChange('model', e.target.value)}
+                    />
+                </>
+            );
+        }
+    };
 
     return (
-        <Box className='form__background' sx={{ padding: 3 }}>
+        <Dialog open={true} maxWidth='md' fullWidth>
+            <DialogTitle>{step === 1 ? 'Choose an option' : 'Fill in the details'}</DialogTitle>
+            <DialogContent>
+                {step === 1 ? (
+                    <Grid container spacing={2} justifyContent='center' height='auto'>
+                        <IconButton
+                            size='large'
+                            className='dialog__iconbutton'
+                            onClick={() => {
+                                setSelection('boat');
+                                setStep(2);
+                            }}
+                        >
+                            <DirectionsBoat
+                                sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                            />
+                        </IconButton>
+                        <IconButton
+                            className='dialog__iconbutton'
+                            onClick={() => {
+                                setSelection('client');
+                                setStep(2);
+                            }}
+                        >
+                            <EmojiPeople
+                                sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                            />
+                        </IconButton>
+                    </Grid>
+                ) : (
+                    <Grid container spacing={2}>
+                        {renderForm()}
+                    </Grid>
+                )}
+            </DialogContent>
+            <DialogActions>
+                {step === 2 && (
+                    <>
+                        <Button onClick={() => setStep(1)}>Back</Button>
+                        <Button
+                            onClick={handleSave}
+                            disabled={loading || operationStatus !== 'idle'}
+                        >
+                            Save
+                        </Button>
+                    </>
+                )}
+            </DialogActions>
             <Backdrop
                 sx={{
                     color: '#fff',
@@ -89,113 +199,15 @@ const AdminAddExService = ({ open }) => {
                 open={loading || operationStatus !== 'idle'}
             >
                 {loading ? (
-                    <CircularProgress color='inherit' size={300} />
+                    <CircularProgress color='inherit' size={68} />
                 ) : operationStatus === 'success' ? (
-                    <Check sx={{ fontSize: 300, color: 'green' }} />
+                    <Check sx={{ fontSize: 68, color: 'green' }} />
                 ) : operationStatus === 'error' ? (
-                    <Close sx={{ fontSize: 300, color: 'red' }} />
+                    <Close sx={{ fontSize: 68, color: 'red' }} />
                 ) : null}
             </Backdrop>
-            <Box
-                className={formClass}
-                sx={{
-                    margin: 'auto',
-                    padding: 2,
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    backgroundColor: 'white',
-                }}
-            >
-                <Grid
-                    container
-                    alignItems='center'
-                    justifyContent='space-between'
-                    sx={{ marginBottom: '1.5rem' }}
-                ></Grid>
-                <Grid container spacing={3} alignItems='center'>
-                    <Grid item xs={1}>
-                        <AccountCircle />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <TextField
-                            label='Add name'
-                            placeholder='Add name'
-                            variant='filled'
-                            fullWidth
-                            onChange={(event) => handleInputChange('name', event.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Email />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <TextField
-                            label='Add email'
-                            placeholder='Add email'
-                            variant='filled'
-                            fullWidth
-                            onChange={(event) => handleInputChange('email', event.target.value)}
-                        />
-                    </Grid>
-
-                    <Grid item xs={1}>
-                        <DirectionsBoat />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label='Boat Brand'
-                                    placeholder='e.g. Sunseeker'
-                                    fullWidth
-                                    variant='filled'
-                                    size='small'
-                                    onChange={(event) =>
-                                        handleInputChange('brand', event.target.value)
-                                    }
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    label='Boat Model'
-                                    placeholder='e.g. Manhattan'
-                                    fullWidth
-                                    variant='filled'
-                                    size='small'
-                                    onChange={(event) =>
-                                        handleInputChange('model', event.target.value)
-                                    }
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-
-                    <Grid item xs={10}>
-                        <Typography
-                            variant='h4'
-                            component='h2'
-                            className='admin__form__title'
-                        ></Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Button
-                            variant='contained'
-                            sx={{ fontSize: '1rem', fontWeight: 'bold', width: '100%' }}
-                            color='primary'
-                            disabled={
-                                loading ||
-                                operationStatus === 'success' ||
-                                operationStatus === 'error'
-                            }
-                            onClick={handleSave}
-                        >
-                            Save
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Box>
-        </Box>
+        </Dialog>
     );
 };
 
-export default AdminAddExService;
+export default AdminAddClient;
