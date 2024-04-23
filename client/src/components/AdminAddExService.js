@@ -168,6 +168,7 @@ const AdminAddExService = ({ open }) => {
                                     {...params}
                                     label='Choose a client'
                                     fullWidth
+                                    value={formData.client}
                                     variant='filled'
                                     size='small'
                                 />

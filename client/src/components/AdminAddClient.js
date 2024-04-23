@@ -3,6 +3,7 @@ import './form.scss';
 import classNames from 'classnames';
 import {
     Button,
+    Autocomplete,
     TextField,
     Grid,
     CircularProgress,
@@ -24,6 +25,9 @@ import {
     Check,
     Close,
     Replay,
+    Badge,
+    ShortText,
+    Comment,
 } from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
@@ -47,7 +51,8 @@ const AdminAddClient = ({ open }) => {
         model: null,
         remark: null,
     });
-    const { boats } = useStoreState(AppStore);
+    const { boats, clients } = useStoreState(AppStore);
+    console.log('boats', boats);
 
     const handleClientInputChange = (field, value) => {
         setClientData((prev) => ({
@@ -166,7 +171,7 @@ const AdminAddClient = ({ open }) => {
                             >
                                 {boats.map((boat) => (
                                     <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
+                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -185,7 +190,32 @@ const AdminAddClient = ({ open }) => {
                         sx={{ margin: '1.5rem 0' }}
                     >
                         <Grid item xs={1}>
-                            <DirectionsBoat />
+                            <AccountCircle />
+                        </Grid>
+                        <Grid item xs={11}>
+                            <Autocomplete
+                                freeSolo
+                                options={clients.map((option) => ({
+                                    label: option.name,
+                                    uid: option.id,
+                                }))}
+                                onChange={(event, newValue) => {
+                                    const id = newValue ? newValue.uid : '';
+                                    handleBoatInputChange('client', id);
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label='Choose a client'
+                                        fullWidth
+                                        variant='filled'
+                                        size='small'
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Badge />
                         </Grid>
                         <Grid item xs={11}>
                             <TextField
@@ -198,7 +228,7 @@ const AdminAddClient = ({ open }) => {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <DirectionsBoat /> {/* Example Icon, adjust as needed */}
+                            <DirectionsBoat />
                         </Grid>
                         <Grid item xs={11}>
                             <TextField
@@ -211,7 +241,7 @@ const AdminAddClient = ({ open }) => {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <DirectionsBoat />
+                            <ShortText />
                         </Grid>
                         <Grid item xs={11}>
                             <TextField
@@ -225,7 +255,7 @@ const AdminAddClient = ({ open }) => {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <DirectionsBoat /> {/* Example Icon, adjust as needed */}
+                            <Comment />
                         </Grid>
                         <Grid item xs={11}>
                             <TextField
@@ -318,7 +348,7 @@ const AdminAddClient = ({ open }) => {
                     ) : (
                         <>{renderForm()}</>
                     )}
-                    <Grid item xs={12} sx={{ alignSelf: 'flex-end' }}>
+                    <Grid item xs={12}>
                         {step === 2 && (
                             <>
                                 <Button
