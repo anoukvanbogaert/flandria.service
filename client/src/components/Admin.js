@@ -10,7 +10,7 @@ import AdminAddExService from './AdminAddExService';
 import AdminAddOffer from './AdminAddOffer';
 
 const Admin = () => {
-    const [activeComponent, setActiveComponent] = useState();
+    const [activeComponent, setActiveComponent] = useState(1);
 
     const handleClick = (component) => {
         activeComponent === component ? setActiveComponent('') : setActiveComponent(component);

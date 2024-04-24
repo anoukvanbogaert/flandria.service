@@ -76,13 +76,12 @@ const AdminAddClient = ({ open }) => {
             try {
                 await addToCollection('clients', clientData);
                 setOperationStatus('success');
-                resetForm();
             } catch (error) {
                 console.error('Error saving document: ', error);
                 setOperationStatus('error');
                 setTimeout(() => {
                     setOperationStatus('idle');
-                }, 2000); // Delay for visual effect
+                }, 2000);
             } finally {
                 setLoading(false);
             }
@@ -90,7 +89,6 @@ const AdminAddClient = ({ open }) => {
             try {
                 await addToCollection('boats', boatData);
                 setOperationStatus('success');
-                resetForm();
             } catch (error) {
                 console.error('Error saving document: ', error);
                 setOperationStatus('error');
@@ -102,28 +100,33 @@ const AdminAddClient = ({ open }) => {
             }
         }
     };
+    useEffect(() => {
+        if (operationStatus === 'success') {
+            setTimeout(() => {
+                setStep(1);
+                resetForm(); // Call resetForm to clear the data after a delay
+            }, 2000);
+        }
+    }, [operationStatus]);
 
     const formClass = classNames('admin__form', {
         'admin__form--open': open,
         'admin__form--close': !open,
     });
     const resetForm = () => {
-        setTimeout(() => {
-            setClientData({
-                name: null,
-                email: null,
-                boat: [],
-            });
-            setBoatData({
-                client: null,
-                name: null,
-                brand: null,
-                model: null,
-                remark: null,
-            });
-            setOperationStatus('idle');
-        }, 2000);
-        if (operationStatus === 'success') setStep(1);
+        setClientData({
+            name: null,
+            email: null,
+            boat: [],
+        });
+        setBoatData({
+            client: null,
+            name: null,
+            brand: null,
+            model: null,
+            remark: null,
+        });
+        setOperationStatus('idle');
     };
 
     const renderForm = () => {
@@ -322,31 +325,6 @@ const AdminAddClient = ({ open }) => {
                     {step === 1 ? (
                         <CustomAnimatedButton setStep={setStep} setSelection={setSelection} />
                     ) : (
-                        // <Grid item>
-                        //     <IconButton
-                        //         size='large'
-                        //         className='dialog__iconbutton'
-                        //         onClick={() => {
-                        //             setSelection('boat');
-                        //             setStep(2);
-                        //         }}
-                        //     >
-                        //         <DirectionsBoat
-                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                        //         />
-                        //     </IconButton>
-                        //     <IconButton
-                        //         className='dialog__iconbutton'
-                        //         onClick={() => {
-                        //             setSelection('client');
-                        //             setStep(2);
-                        //         }}
-                        //     >
-                        //         <EmojiPeople
-                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                        //         />
-                        //     </IconButton>
-                        // </Grid>
                         <>{renderForm()}</>
                     )}
                     <Grid item xs={12}>
