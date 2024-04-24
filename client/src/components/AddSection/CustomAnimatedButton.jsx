@@ -4,19 +4,19 @@ import { Box, ButtonBase, Typography } from '@mui/material/';
 
 const images = [
     {
-        url: require('../assets/images/boat.jpg'),
+        url: require('../../assets/images/boat.jpg'),
         title: 'Add a boat',
         width: '32%',
         selection: 'boat',
     },
     {
-        url: require('../assets/images/people.jpg'),
+        url: require('../../assets/images/people.jpg'),
         title: 'Add a customer',
         width: '32%',
         selection: 'client',
     },
     {
-        url: require('../assets/images/engine.jpg'),
+        url: require('../../assets/images/engine.jpg'),
         title: 'Add a service',
         width: '32%',
         selection: 'service',
