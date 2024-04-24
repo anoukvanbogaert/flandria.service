@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-material';
 
 import CustomButton from './CustomButton';
-import CustomAnimatedButton from './CustomAnimatedButton';
 
 import AdminAddClient from './AdminAddClient';
 import AdminAddExService from './AdminAddExService';

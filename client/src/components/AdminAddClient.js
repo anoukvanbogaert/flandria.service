@@ -320,7 +320,7 @@ const AdminAddClient = ({ open }) => {
                         </Typography>
                     </Grid>
                     {step === 1 ? (
-                        <CustomAnimatedButton />
+                        <CustomAnimatedButton setStep={setStep} setSelection={setSelection} />
                     ) : (
                         // <Grid item>
                         //     <IconButton

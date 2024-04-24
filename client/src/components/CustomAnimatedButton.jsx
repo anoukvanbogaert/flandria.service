@@ -7,11 +7,13 @@ const images = [
         url: require('../assets/images/boat.jpg'),
         title: 'Add a boat',
         width: '49%',
+        selection: 'boat',
     },
     {
         url: require('../assets/images/people.jpg'),
         title: 'Add a customer',
         width: '49%',
+        selection: 'client',
     },
 ];
 
@@ -83,7 +85,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
-export default function ButtonBaseDemo() {
+export default function ButtonBaseDemo({ setSelection, setStep }) {
     return (
         <Box
             sx={{
@@ -100,6 +102,10 @@ export default function ButtonBaseDemo() {
                     key={image.title}
                     style={{
                         width: image.width,
+                    }}
+                    onClick={() => {
+                        setStep(2);
+                        setSelection(`${image.selection}`);
                     }}
                 >
                     <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
