@@ -32,6 +32,7 @@ import {
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
+import CustomAnimatedButton from './CustomAnimatedButton';
 
 const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
@@ -320,32 +321,33 @@ const AdminAddClient = ({ open }) => {
                         </Typography>
                     </Grid>
                     {step === 1 ? (
-                        <Grid item>
-                            <IconButton
-                                size='large'
-                                className='dialog__iconbutton'
-                                onClick={() => {
-                                    setSelection('boat');
-                                    setStep(2);
-                                }}
-                            >
-                                <DirectionsBoat
-                                    sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                                />
-                            </IconButton>
-                            <IconButton
-                                className='dialog__iconbutton'
-                                onClick={() => {
-                                    setSelection('client');
-                                    setStep(2);
-                                }}
-                            >
-                                <EmojiPeople
-                                    sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                                />
-                            </IconButton>
-                        </Grid>
+                        <CustomAnimatedButton />
                     ) : (
+                        // <Grid item>
+                        //     <IconButton
+                        //         size='large'
+                        //         className='dialog__iconbutton'
+                        //         onClick={() => {
+                        //             setSelection('boat');
+                        //             setStep(2);
+                        //         }}
+                        //     >
+                        //         <DirectionsBoat
+                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                        //         />
+                        //     </IconButton>
+                        //     <IconButton
+                        //         className='dialog__iconbutton'
+                        //         onClick={() => {
+                        //             setSelection('client');
+                        //             setStep(2);
+                        //         }}
+                        //     >
+                        //         <EmojiPeople
+                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                        //         />
+                        //     </IconButton>
+                        // </Grid>
                         <>{renderForm()}</>
                     )}
                     <Grid item xs={12}>
