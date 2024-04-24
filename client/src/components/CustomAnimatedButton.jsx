@@ -6,18 +6,19 @@ const images = [
     {
         url: require('../assets/images/boat.jpg'),
         title: 'Add a boat',
-        width: '50%',
+        width: '49%',
     },
     {
         url: require('../assets/images/people.jpg'),
         title: 'Add a customer',
-        width: '50%',
+        width: '49%',
     },
 ];
 
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',
-    height: 200,
+    height: 250,
+
     [theme.breakpoints.down('sm')]: {
         width: '100% !important',
         height: 100,
@@ -32,6 +33,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
         },
         '& .MuiTypography-root': {
             border: '4px solid currentColor',
+            borderRadius: '10px',
         },
     },
 }));
@@ -44,6 +46,7 @@ const ImageSrc = styled('span')({
     bottom: 0,
     backgroundSize: 'cover',
     backgroundPosition: 'center 40%',
+    borderRadius: '10px',
 });
 
 const Image = styled('span')(({ theme }) => ({
@@ -67,6 +70,7 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.common.black,
     opacity: 0.4,
     transition: theme.transitions.create('opacity'),
+    borderRadius: '10px',
 }));
 
 const ImageMarked = styled('span')(({ theme }) => ({
@@ -81,7 +85,15 @@ const ImageMarked = styled('span')(({ theme }) => ({
 
 export default function ButtonBaseDemo() {
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+        <Box
+            sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                width: '100%',
+                justifyContent: 'space-between',
+                paddingLeft: '1.5rem',
+            }}
+        >
             {images.map((image) => (
                 <ImageButton
                     focusRipple
@@ -95,9 +107,10 @@ export default function ButtonBaseDemo() {
                     <Image>
                         <Typography
                             component='span'
-                            variant='subtitle1'
+                            variant='h3'
                             color='inherit'
                             sx={{
+                                fontWeight: 'bolder',
                                 position: 'relative',
                                 p: 4,
                                 pt: 2,

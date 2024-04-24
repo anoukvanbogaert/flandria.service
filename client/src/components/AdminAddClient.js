@@ -308,15 +308,14 @@ const AdminAddClient = ({ open }) => {
                 className={formClass}
                 sx={{
                     margin: 'auto',
-                    padding: 2,
                     borderRadius: 2,
                     boxShadow: 3,
                     backgroundColor: 'white',
                 }}
             >
-                <Grid container alignItems='center' spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant='h4' component='h2' sx={{ marginBottom: 2 }}>
+                <Grid container alignItems='center' spacing={3} padding='1.5rem'>
+                    <Grid item xs={12} sx={{ padding: '1.5rem 0 0 0' }}>
+                        <Typography variant='h1' component='h2' sx={{ marginBottom: 2 }}>
                             {step === 1 ? 'Choose an option' : 'Fill in the details'}
                         </Typography>
                     </Grid>
