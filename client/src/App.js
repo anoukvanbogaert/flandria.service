@@ -40,7 +40,7 @@ function App() {
             secondary: {
                 main: '#045174',
             },
-            tertiairy: {
+            tertiary: {
                 main: '#ceeefd',
             },
             // text: {
@@ -80,6 +80,10 @@ function App() {
         //     },
         // },
     });
+    const root = document.documentElement;
+    root.style.setProperty('--primary-color', theme.palette.primary.main);
+    root.style.setProperty('--secondary-color', theme.palette.secondary.main);
+    root.style.setProperty('--tertiary-color', theme.palette.tertiary.main);
 
     useEffect(() => {
         onAuthStateChanged(getAuth(), async (fbUser) => {
