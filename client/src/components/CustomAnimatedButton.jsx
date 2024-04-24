@@ -6,14 +6,20 @@ const images = [
     {
         url: require('../assets/images/boat.jpg'),
         title: 'Add a boat',
-        width: '49%',
+        width: '32%',
         selection: 'boat',
     },
     {
         url: require('../assets/images/people.jpg'),
         title: 'Add a customer',
-        width: '49%',
+        width: '32%',
         selection: 'client',
+    },
+    {
+        url: require('../assets/images/engine.jpg'),
+        title: 'Add a service',
+        width: '32%',
+        selection: 'service',
     },
 ];
 
@@ -113,7 +119,7 @@ export default function ButtonBaseDemo({ setSelection, setStep }) {
                     <Image>
                         <Typography
                             component='span'
-                            variant='h3'
+                            variant='h2'
                             color='inherit'
                             sx={{
                                 fontWeight: 'bolder',

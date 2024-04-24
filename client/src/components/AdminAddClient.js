@@ -21,21 +21,25 @@ import {
     Email,
     AccountCircle,
     DirectionsBoat,
-    EmojiPeople,
+    Build,
     Check,
     Close,
     Replay,
     Badge,
     ShortText,
     Comment,
+    DateRange,
 } from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import CustomAnimatedButton from './CustomAnimatedButton';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
+    const [userBoats, setUserboats] = useState([]);
     const [step, setStep] = useState(1);
     const [selection, setSelection] = useState('');
     const [loading, setLoading] = useState(false);
@@ -52,8 +56,33 @@ const AdminAddClient = ({ open }) => {
         model: null,
         remark: null,
     });
-    const { boats, clients } = useStoreState(AppStore);
-    console.log('boats', boats);
+
+    const [serviceData, setServiceData] = useState({
+        services: [],
+        date: null,
+        client: null,
+        boat: [],
+        brand: null,
+        model: null,
+        remark: null,
+    });
+    const { boats, clients, serviceTemplates } = useStoreState(AppStore);
+    useEffect(() => {
+        if (clientData.client) {
+            const clientId = clientData.client;
+            console.log('clientId', clientId);
+
+            const client = clients.find((c) => c.uid === clientId);
+            console.log('client', client);
+
+            if (client && client.boats) {
+                const userBoats = boats.filter((boat) => client.boats.includes(boat.id));
+                setUserboats(userBoats);
+            } else {
+                setUserboats([]);
+            }
+        }
+    }, [clientData.client, clients, boats]);
 
     const handleClientInputChange = (field, value) => {
         setClientData((prev) => ({
@@ -64,6 +93,13 @@ const AdminAddClient = ({ open }) => {
 
     const handleBoatInputChange = (field, value) => {
         setBoatData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleServiceInputChange = (field, value) => {
+        setServiceData((prev) => ({
             ...prev,
             [field]: value,
         }));
@@ -273,6 +309,114 @@ const AdminAddClient = ({ open }) => {
                                 onChange={(e) => handleBoatInputChange('remark', e.target.value)}
                             />
                         </Grid>
+                    </Grid>
+                </>
+            );
+        } else if (selection === 'service') {
+            return (
+                <>
+                    <Grid item xs={1}>
+                        <AccountCircle />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <Autocomplete
+                            freeSolo
+                            options={clients.map((option) => ({
+                                label: option.name,
+                                uid: option.id,
+                            }))}
+                            onChange={(event, newValue) => {
+                                const id = newValue ? newValue.uid : '';
+                                handleServiceInputChange('client', id);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label='Choose a client'
+                                    fullWidth
+                                    value={serviceData.client}
+                                    variant='filled'
+                                    size='small'
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={1}>
+                        <DirectionsBoat />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <FormControl fullWidth variant='filled' size='small'>
+                            <InputLabel id='service-select-label'>Select vessel</InputLabel>
+                            <Select
+                                labelId='service-select-label'
+                                value={serviceData.boat}
+                                onChange={(event) =>
+                                    handleServiceInputChange('boat', event.target.value)
+                                }
+                                label='Select vessel'
+                            >
+                                {userBoats.map((boat) => (
+                                    <MenuItem key={boat.id} value={boat.id}>
+                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Build />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <FormControl fullWidth variant='filled' size='small'>
+                            <InputLabel id='service-select-label'>Select service</InputLabel>
+                            <Select
+                                labelId='service-select-label'
+                                multiple
+                                value={serviceData.services}
+                                onChange={(event) =>
+                                    handleServiceInputChange('services', event.target.value)
+                                }
+                                label='Select service'
+                            >
+                                {serviceTemplates.map((template) => (
+                                    <MenuItem key={template.id} value={template.description}>
+                                        {template.description}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={1}>
+                        <DateRange />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label='Select date'
+                                value={serviceData.date}
+                                onChange={(newValue) => handleServiceInputChange('date', newValue)}
+                                slotProps={{ textField: { size: 'small', variant: 'filled' } }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+
+                    <Grid item xs={1}>
+                        <Comment />
+                    </Grid>
+                    <Grid item xs={11}>
+                        <TextField
+                            label='Remark'
+                            multiline
+                            rows={4}
+                            placeholder='Enter your remark here'
+                            variant='filled'
+                            fullWidth
+                            onChange={(event) =>
+                                handleClientInputChange('selectedRemark', event.target.value)
+                            }
+                        />
                     </Grid>
                 </>
             );
