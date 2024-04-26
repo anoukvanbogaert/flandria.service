@@ -1,41 +1,17 @@
 import { React, useState, useEffect } from 'react';
 import './form.scss';
 import classNames from 'classnames';
-import {
-    Button,
-    Autocomplete,
-    TextField,
-    Grid,
-    CircularProgress,
-    Backdrop,
-    Box,
-    Typography,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-} from '@mui/material';
+import { Button, Grid, CircularProgress, Backdrop, Box, Typography } from '@mui/material';
 
-import {
-    Email,
-    AccountCircle,
-    DirectionsBoat,
-    Build,
-    Check,
-    Close,
-    Replay,
-    Badge,
-    ShortText,
-    Comment,
-    DateRange,
-} from '@mui/icons-material';
+import { Check, Close, Replay } from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import CustomAnimatedButton from './CustomAnimatedButton';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import ClientForm from './ClientForm';
+
+import ClientForm from './forms/ClientForm';
+import BoatForm from './forms/BoatForm';
+import ServiceForm from './forms/ServiceForm';
 
 const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
@@ -66,13 +42,9 @@ const AdminAddClient = ({ open }) => {
         model: '',
         remark: '',
     });
-    console.log('serviceData', serviceData);
-    const { boats, clients, serviceTemplates } = useStoreState(AppStore);
-
-    const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
+    const { boats, clients } = useStoreState(AppStore);
 
     useEffect(() => {
-        console.log('clientData.client', clientData.client);
         if (clientData.client || serviceData.client) {
             const clientId = clientData.client || serviceData.client;
             const client = clients.find((c) => c.uid === clientId);
@@ -142,7 +114,7 @@ const AdminAddClient = ({ open }) => {
         if (operationStatus === 'success') {
             setTimeout(() => {
                 setStep(1);
-                resetForm(); // Call resetForm to clear the data after a delay
+                resetForm();
             }, 2000);
         }
     }, [operationStatus]);
@@ -169,265 +141,20 @@ const AdminAddClient = ({ open }) => {
     const renderForm = () => {
         if (selection === 'client') {
             return (
-                // <ClientForm
-                //     handleClientInputChange={handleClientInputChange}
-                //     clientData={clientData}
-                // />
-                <>
-                    <Grid item xs={1}>
-                        <AccountCircle />
-                    </Grid>
-                    <Grid item xs={11} sx={{ paddingLeft: '40px' }}>
-                        <TextField
-                            label='Add name'
-                            placeholder='Add name'
-                            variant='filled'
-                            fullWidth
-                            size='small'
-                            onChange={(e) => {
-                                handleClientInputChange('name', e.target.value);
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Email />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <TextField
-                            label='Add email'
-                            placeholder='Add email'
-                            variant='filled'
-                            fullWidth
-                            size='small'
-                            onChange={(e) => handleClientInputChange('email', e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <DirectionsBoat />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <FormControl fullWidth variant='filled' size='small'>
-                            <InputLabel id='service-select-label'>Select vessel</InputLabel>
-                            <Select
-                                labelId='service-select-label'
-                                value={clientData.boat}
-                                multiple
-                                onChange={(event) =>
-                                    handleClientInputChange('boat', event.target.value)
-                                }
-                                label='Select vessel (if any)'
-                            >
-                                {boats.map((boat) => (
-                                    <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </>
+                <ClientForm
+                    handleClientInputChange={handleClientInputChange}
+                    clientData={clientData}
+                />
             );
         } else if (selection === 'boat') {
-            return (
-                <>
-                    <Grid
-                        container
-                        spacing={3}
-                        alignItems='center'
-                        justifyContent='space-between'
-                        sx={{ margin: '1.5rem 0' }}
-                    >
-                        <Grid item xs={1}>
-                            <AccountCircle />
-                        </Grid>
-                        <Grid item xs={11}>
-                            <Autocomplete
-                                freeSolo
-                                options={clients.map((option) => ({
-                                    label: option.name,
-                                    uid: option.id,
-                                }))}
-                                getOptionLabel={(option) => option.label || ''}
-                                onChange={(event, newValue) => {
-                                    handleBoatInputChange('client', newValue.uid || '');
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label='Choose a client'
-                                        fullWidth
-                                        variant='filled'
-                                        size='small'
-                                    />
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Badge />
-                        </Grid>
-                        <Grid item xs={11}>
-                            <TextField
-                                label='Boat Name'
-                                placeholder='Enter boat name'
-                                fullWidth
-                                variant='filled'
-                                size='small'
-                                onChange={(e) => handleBoatInputChange('name', e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={1}>
-                            <DirectionsBoat />
-                        </Grid>
-                        <Grid item xs={11}>
-                            <TextField
-                                label='Boat Brand'
-                                placeholder='e.g. Sunseeker'
-                                fullWidth
-                                variant='filled'
-                                size='small'
-                                onChange={(e) => handleBoatInputChange('brand', e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={1}>
-                            <ShortText />
-                        </Grid>
-                        <Grid item xs={11}>
-                            <TextField
-                                label='Boat Model'
-                                value={boatData.model}
-                                placeholder='e.g. Manhattan'
-                                fullWidth
-                                variant='filled'
-                                size='small'
-                                onChange={(e) => handleBoatInputChange('model', e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Comment />
-                        </Grid>
-                        <Grid item xs={11}>
-                            <TextField
-                                label='Remark'
-                                placeholder='Enter any remarks'
-                                fullWidth
-                                variant='filled'
-                                size='small'
-                                multiline
-                                rows={4}
-                                onChange={(e) => handleBoatInputChange('remark', e.target.value)}
-                            />
-                        </Grid>
-                    </Grid>
-                </>
-            );
+            return <BoatForm handleBoatInputChange={handleBoatInputChange} boatData={boatData} />;
         } else if (selection === 'service') {
             return (
-                <>
-                    <Grid item xs={1}>
-                        <AccountCircle />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <Autocomplete
-                            freeSolo
-                            options={clients.map((option) => ({
-                                label: option.name,
-                                uid: option.id,
-                            }))}
-                            getOptionLabel={(option) => option.label || ''}
-                            onChange={(event, newValue) => {
-                                const id = newValue ? newValue.uid : '';
-                                handleServiceInputChange('client', id);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label='Choose a client'
-                                    fullWidth
-                                    value={serviceData.client}
-                                    variant='filled'
-                                    size='small'
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <DirectionsBoat />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <FormControl fullWidth variant='filled' size='small'>
-                            <InputLabel id='service-select-label'>Select vessel</InputLabel>
-                            <Select
-                                labelId='service-select-label'
-                                value={serviceData.boat}
-                                onChange={(event) =>
-                                    handleServiceInputChange('boat', event.target.value)
-                                }
-                                label='Select vessel'
-                            >
-                                {userBoats.map((boat) => (
-                                    <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Build />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <FormControl fullWidth variant='filled' size='small'>
-                            <InputLabel id='service-select-label'>Select service</InputLabel>
-                            <Select
-                                labelId='service-select-label'
-                                multiple
-                                value={serviceData.services}
-                                onChange={(event) =>
-                                    handleServiceInputChange('services', event.target.value)
-                                }
-                                label='Select service'
-                            >
-                                {filteredServiceTemplates.map((template) => (
-                                    <MenuItem key={template.id} value={template.description}>
-                                        {template.description}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={1}>
-                        <DateRange />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label='Select date'
-                                value={serviceData.date}
-                                onChange={(newValue) => handleServiceInputChange('date', newValue)}
-                                slotProps={{ textField: { size: 'small', variant: 'filled' } }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </LocalizationProvider>
-                    </Grid>
-
-                    <Grid item xs={1}>
-                        <Comment />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <TextField
-                            label='Remark'
-                            multiline
-                            rows={4}
-                            placeholder='Enter your remark here'
-                            variant='filled'
-                            fullWidth
-                            onChange={(event) =>
-                                handleClientInputChange('selectedRemark', event.target.value)
-                            }
-                        />
-                    </Grid>
-                </>
+                <ServiceForm
+                    handleServiceInputChange={handleServiceInputChange}
+                    serviceData={serviceData}
+                    userBoats={userBoats}
+                />
             );
         }
     };

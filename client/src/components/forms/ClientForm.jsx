@@ -2,7 +2,7 @@ import React from 'react';
 import { Email, AccountCircle, DirectionsBoat } from '@mui/icons-material';
 import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
+import { AppStore } from '../../stores/AppStore';
 
 const ClientForm = ({ handleClientInputChange, clientData }) => {
     const { boats } = useStoreState(AppStore);
@@ -19,7 +19,9 @@ const ClientForm = ({ handleClientInputChange, clientData }) => {
                     variant='filled'
                     fullWidth
                     size='small'
-                    onChange={(e) => handleClientInputChange('name', e.target.value)}
+                    onChange={(e) => {
+                        handleClientInputChange('name', e.target.value);
+                    }}
                 />
             </Grid>
             <Grid item xs={1}>
@@ -44,12 +46,13 @@ const ClientForm = ({ handleClientInputChange, clientData }) => {
                     <Select
                         labelId='service-select-label'
                         value={clientData.boat}
+                        multiple
                         onChange={(event) => handleClientInputChange('boat', event.target.value)}
                         label='Select vessel (if any)'
                     >
                         {boats.map((boat) => (
                             <MenuItem key={boat.id} value={boat.id}>
-                                {`${boat.boatName} (${boat.brand}, ${boat.model})`}
+                                {`${boat.name} (${boat.brand}, ${boat.model})`}
                             </MenuItem>
                         ))}
                     </Select>
