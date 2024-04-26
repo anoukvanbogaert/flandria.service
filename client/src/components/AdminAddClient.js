@@ -10,7 +10,6 @@ import {
     Backdrop,
     Box,
     Typography,
-    IconButton,
     FormControl,
     InputLabel,
     Select,
@@ -36,6 +35,7 @@ import { AppStore } from '../stores/AppStore';
 import CustomAnimatedButton from './CustomAnimatedButton';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import ClientForm from './ClientForm';
 
 const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
@@ -50,30 +50,32 @@ const AdminAddClient = ({ open }) => {
     });
 
     const [boatData, setBoatData] = useState({
-        client: null,
-        name: null,
-        brand: null,
-        model: null,
-        remark: null,
+        client: '',
+        name: '',
+        brand: '',
+        model: '',
+        remark: '',
     });
 
     const [serviceData, setServiceData] = useState({
         services: [],
         date: null,
-        client: null,
-        boat: [],
-        brand: null,
-        model: null,
-        remark: null,
+        client: '',
+        boat: '',
+        brand: '',
+        model: '',
+        remark: '',
     });
+    console.log('serviceData', serviceData);
     const { boats, clients, serviceTemplates } = useStoreState(AppStore);
-    useEffect(() => {
-        if (clientData.client) {
-            const clientId = clientData.client;
-            console.log('clientId', clientId);
 
+    const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
+
+    useEffect(() => {
+        console.log('clientData.client', clientData.client);
+        if (clientData.client || serviceData.client) {
+            const clientId = clientData.client || serviceData.client;
             const client = clients.find((c) => c.uid === clientId);
-            console.log('client', client);
 
             if (client && client.boats) {
                 const userBoats = boats.filter((boat) => client.boats.includes(boat.id));
@@ -159,15 +161,18 @@ const AdminAddClient = ({ open }) => {
             client: null,
             name: null,
             brand: null,
-            model: null,
+            model: '',
             remark: null,
         });
         setOperationStatus('idle');
     };
-
     const renderForm = () => {
         if (selection === 'client') {
             return (
+                // <ClientForm
+                //     handleClientInputChange={handleClientInputChange}
+                //     clientData={clientData}
+                // />
                 <>
                     <Grid item xs={1}>
                         <AccountCircle />
@@ -179,7 +184,9 @@ const AdminAddClient = ({ open }) => {
                             variant='filled'
                             fullWidth
                             size='small'
-                            onChange={(e) => handleClientInputChange('name', e.target.value)}
+                            onChange={(e) => {
+                                handleClientInputChange('name', e.target.value);
+                            }}
                         />
                     </Grid>
                     <Grid item xs={1}>
@@ -204,6 +211,7 @@ const AdminAddClient = ({ open }) => {
                             <Select
                                 labelId='service-select-label'
                                 value={clientData.boat}
+                                multiple
                                 onChange={(event) =>
                                     handleClientInputChange('boat', event.target.value)
                                 }
@@ -211,7 +219,7 @@ const AdminAddClient = ({ open }) => {
                             >
                                 {boats.map((boat) => (
                                     <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
+                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -239,9 +247,9 @@ const AdminAddClient = ({ open }) => {
                                     label: option.name,
                                     uid: option.id,
                                 }))}
+                                getOptionLabel={(option) => option.label || ''}
                                 onChange={(event, newValue) => {
-                                    const id = newValue ? newValue.uid : '';
-                                    handleBoatInputChange('client', id);
+                                    handleBoatInputChange('client', newValue.uid || '');
                                 }}
                                 renderInput={(params) => (
                                     <TextField
@@ -325,6 +333,7 @@ const AdminAddClient = ({ open }) => {
                                 label: option.name,
                                 uid: option.id,
                             }))}
+                            getOptionLabel={(option) => option.label || ''}
                             onChange={(event, newValue) => {
                                 const id = newValue ? newValue.uid : '';
                                 handleServiceInputChange('client', id);
@@ -357,7 +366,7 @@ const AdminAddClient = ({ open }) => {
                             >
                                 {userBoats.map((boat) => (
                                     <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
+                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -378,7 +387,7 @@ const AdminAddClient = ({ open }) => {
                                 }
                                 label='Select service'
                             >
-                                {serviceTemplates.map((template) => (
+                                {filteredServiceTemplates.map((template) => (
                                     <MenuItem key={template.id} value={template.description}>
                                         {template.description}
                                     </MenuItem>
