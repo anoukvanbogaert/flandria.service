@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import './form.scss';
+// import './form.scss';
 import classNames from 'classnames';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';

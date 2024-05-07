@@ -4,14 +4,13 @@ import classNames from 'classnames';
 import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-material';
 
 import CustomButton from './CustomButton';
-import CustomAnimatedButton from './CustomAnimatedButton';
 
-import AdminAddClient from './AdminAddClient';
+import AdminAddClient from './AddSection/AddOptions';
 import AdminAddExService from './AdminAddExService';
 import AdminAddOffer from './AdminAddOffer';
 
 const Admin = () => {
-    const [activeComponent, setActiveComponent] = useState();
+    const [activeComponent, setActiveComponent] = useState(1);
 
     const handleClick = (component) => {
         activeComponent === component ? setActiveComponent('') : setActiveComponent(component);
@@ -45,6 +44,13 @@ const Admin = () => {
                     Add
                 </CustomButton>
                 <CustomButton
+                    onClick={() => handleClick(4)}
+                    selected={activeComponent === 4}
+                    icon={Edit}
+                >
+                    Edit
+                </CustomButton>
+                <CustomButton
                     onClick={() => handleClick(2)}
                     selected={activeComponent === 2}
                     icon={PlaylistAdd}
@@ -56,14 +62,7 @@ const Admin = () => {
                     selected={activeComponent === 3}
                     icon={PostAdd}
                 >
-                    Add service template
-                </CustomButton>
-                <CustomButton
-                    onClick={() => handleClick(4)}
-                    selected={activeComponent === 4}
-                    icon={Edit}
-                >
-                    Edit data
+                    View Data
                 </CustomButton>
             </div>
             <div className={formClass}>

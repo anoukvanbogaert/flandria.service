@@ -1,5 +1,5 @@
 import React from 'react';
-import './form.scss';
+// import './form.scss';
 import classNames from 'classnames';
 
 const AdminAddOffer = () => {

@@ -4,14 +4,22 @@ import { Box, ButtonBase, Typography } from '@mui/material/';
 
 const images = [
     {
-        url: require('../assets/images/boat.jpg'),
+        url: require('../../assets/images/boat.jpg'),
         title: 'Add a boat',
-        width: '49%',
+        width: '32%',
+        selection: 'boat',
     },
     {
-        url: require('../assets/images/people.jpg'),
+        url: require('../../assets/images/people.jpg'),
         title: 'Add a customer',
-        width: '49%',
+        width: '32%',
+        selection: 'client',
+    },
+    {
+        url: require('../../assets/images/engine.jpg'),
+        title: 'Add a service',
+        width: '32%',
+        selection: 'service',
     },
 ];
 
@@ -83,7 +91,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
-export default function ButtonBaseDemo() {
+export default function ButtonBaseDemo({ setSelection, setStep }) {
     return (
         <Box
             sx={{
@@ -101,13 +109,17 @@ export default function ButtonBaseDemo() {
                     style={{
                         width: image.width,
                     }}
+                    onClick={() => {
+                        setStep(2);
+                        setSelection(`${image.selection}`);
+                    }}
                 >
                     <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
                     <ImageBackdrop className='MuiImageBackdrop-root' />
                     <Image>
                         <Typography
                             component='span'
-                            variant='h3'
+                            variant='h2'
                             color='inherit'
                             sx={{
                                 fontWeight: 'bolder',

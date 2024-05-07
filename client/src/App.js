@@ -103,7 +103,7 @@ function App() {
     }, [user]);
 
     return (
-        <main className='App'>
+        <main className='app'>
             <ThemeProvider theme={theme}>
                 <Router>
                     <Routes>
