@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './Admin.scss';
 import classNames from 'classnames';
+import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-material';
+
+import CustomButton from './CustomButton';
+import CustomAnimatedButton from './CustomAnimatedButton';
 
 import AdminAddClient from './AdminAddClient';
 import AdminAddExService from './AdminAddExService';
@@ -33,10 +37,34 @@ const Admin = () => {
     return (
         <div className='admin__container'>
             <div className={optionsClass}>
-                <div onClick={() => handleClick(1)}>Add client</div>
-                <div onClick={() => handleClick(2)}>Log a service</div>
-                <div onClick={() => handleClick(3)}>Add service template</div>
-                <div onClick={() => handleClick(4)}>Check database</div>
+                <CustomButton
+                    onClick={() => handleClick(1)}
+                    selected={activeComponent === 1}
+                    icon={AddCircleOutline}
+                >
+                    Add
+                </CustomButton>
+                <CustomButton
+                    onClick={() => handleClick(2)}
+                    selected={activeComponent === 2}
+                    icon={PlaylistAdd}
+                >
+                    Log a service
+                </CustomButton>
+                <CustomButton
+                    onClick={() => handleClick(3)}
+                    selected={activeComponent === 3}
+                    icon={PostAdd}
+                >
+                    Add service template
+                </CustomButton>
+                <CustomButton
+                    onClick={() => handleClick(4)}
+                    selected={activeComponent === 4}
+                    icon={Edit}
+                >
+                    Edit data
+                </CustomButton>
             </div>
             <div className={formClass}>
                 {activeComponent === 1 && <AdminAddClient />}

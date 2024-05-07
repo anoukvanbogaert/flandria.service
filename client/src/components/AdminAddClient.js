@@ -32,6 +32,7 @@ import {
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
+import CustomAnimatedButton from './CustomAnimatedButton';
 
 const AdminAddClient = ({ open }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
@@ -307,45 +308,45 @@ const AdminAddClient = ({ open }) => {
                 className={formClass}
                 sx={{
                     margin: 'auto',
-                    padding: 2,
                     borderRadius: 2,
                     boxShadow: 3,
                     backgroundColor: 'white',
                 }}
             >
-                <Grid container alignItems='center' spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant='h4' component='h2' sx={{ marginBottom: 2 }}>
+                <Grid container alignItems='center' spacing={3} padding='1.5rem'>
+                    <Grid item xs={12} sx={{ padding: '1.5rem 0 0 0' }}>
+                        <Typography variant='h1' component='h2' sx={{ marginBottom: 2 }}>
                             {step === 1 ? 'Choose an option' : 'Fill in the details'}
                         </Typography>
                     </Grid>
                     {step === 1 ? (
-                        <Grid item>
-                            <IconButton
-                                size='large'
-                                className='dialog__iconbutton'
-                                onClick={() => {
-                                    setSelection('boat');
-                                    setStep(2);
-                                }}
-                            >
-                                <DirectionsBoat
-                                    sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                                />
-                            </IconButton>
-                            <IconButton
-                                className='dialog__iconbutton'
-                                onClick={() => {
-                                    setSelection('client');
-                                    setStep(2);
-                                }}
-                            >
-                                <EmojiPeople
-                                    sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
-                                />
-                            </IconButton>
-                        </Grid>
+                        <CustomAnimatedButton />
                     ) : (
+                        // <Grid item>
+                        //     <IconButton
+                        //         size='large'
+                        //         className='dialog__iconbutton'
+                        //         onClick={() => {
+                        //             setSelection('boat');
+                        //             setStep(2);
+                        //         }}
+                        //     >
+                        //         <DirectionsBoat
+                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                        //         />
+                        //     </IconButton>
+                        //     <IconButton
+                        //         className='dialog__iconbutton'
+                        //         onClick={() => {
+                        //             setSelection('client');
+                        //             setStep(2);
+                        //         }}
+                        //     >
+                        //         <EmojiPeople
+                        //             sx={{ fontSize: '8rem', padding: '1rem', color: 'black' }}
+                        //         />
+                        //     </IconButton>
+                        // </Grid>
                         <>{renderForm()}</>
                     )}
                     <Grid item xs={12}>
