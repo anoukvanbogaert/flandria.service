@@ -8,7 +8,12 @@ import { AppStore } from '../stores/AppStore';
 import './data.css';
 
 const BoatData = () => {
-    const { boats } = useStoreState(AppStore);
+    const { boats, clients } = useStoreState(AppStore);
+
+    const getClientNameById = (clientId) => {
+        const client = clients.find((c) => c.id === clientId);
+        return client ? client.name : 'Unknown';
+    };
 
     const onEditClick = (boatId) => {
         console.log('Editing boat:', boatId);
@@ -28,6 +33,12 @@ const BoatData = () => {
         {
             name: 'client',
             label: 'Client',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const boat = boats[dataIndex];
+                    return getClientNameById(boat.client);
+                },
+            },
         },
         {
             name: 'brand',
