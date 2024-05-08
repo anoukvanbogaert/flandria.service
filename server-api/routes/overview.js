@@ -1,11 +1,11 @@
 const express = require('express');
-const {getServices} = require('../db/queries/services');
+const {getOverview} = require('../db/queries/overview');
 
 const router = express.Router();
 
 
 router.get('/', (req, res) => {
-  getServices()
+  getOverview()
     .then(services => {
       res.json(services);
     });

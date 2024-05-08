@@ -1,32 +1,162 @@
-import './App.css';
+import './App.scss';
 
-import {React, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Admin from './components/Admin';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { AppStore } from './stores/AppStore';
+import {
+    getServices,
+    getSetUserDoc,
+    getServiceTemplates,
+    getClients,
+    getBoats,
+} from './utils/getData';
+import Login from './pages/Login';
+import { useStoreState } from 'pullstate';
 
 function App() {
+    const [user, setUser] = useState(null);
+    const { userDoc } = useStoreState(AppStore);
 
-  const [backendData, setBackendData] = useState([{}]);
+    const theme = createTheme({
+        breakpoints: {
+            values: {
+                xs: 0,
+                sm: 600,
+                md: 900,
+                lg: 1200,
+                xl: 1536,
+            },
+        },
+        palette: {
+            primary: {
+                main: '#032433',
+            },
+            secondary: {
+                main: '#045174',
+            },
+            tertiary: {
+                main: '#ceeefd',
+            },
+            // text: {
+            //     primary: '#333333',
+            //     secondary: '#666666',
+            // },
+        },
+        typography: {
+            fontFamily: 'Open Sans, sans-serif',
+            fontSize: 15,
+            h1: {
+                fontSize: '31px',
+                lineHeight: '64px',
+            },
+            h2: {
+                fontSize: '25px',
+                lineHeight: '56px',
+            },
+            h3: {
+                fontSize: '19px',
+                lineHeight: '47px',
+            },
 
-  useEffect(() => {
-    fetch("/services")
-      .then(res => res.json())
-      .then(data => {
-        setBackendData(data);
-      }
-      );
-  }, []);
+            body1: {
+                fontSize: '15px',
+                lineHeight: '41px',
+            },
+        },
+        // overrides: {
+        //     MuiButton: {
+        //         root: {
+        //             fontSize: '1rem', // Default font size for buttons
+        //             [theme.breakpoints.down('sm')]: {
+        //                 fontSize: '0.875rem', // Smaller font size on mobile devices
+        //             },
+        //         },
+        //     },
+        // },
+    });
+    const root = document.documentElement;
+    root.style.setProperty('--primary-color', theme.palette.primary.main);
+    root.style.setProperty('--secondary-color', theme.palette.secondary.main);
+    root.style.setProperty('--tertiary-color', theme.palette.tertiary.main);
 
-  return (
-    <div>
-      {/* {(typeof backendData === 'undefined') ? (
-        <p>Loading...</p>
-      ) : (
-        backendData.map((service, i) => (
-          <p key={i}>{service}</p>
-        ))
-      )} */}
-      <p>Loading...</p>
-    </div>
-  );
+    useEffect(() => {
+        onAuthStateChanged(getAuth(), async (fbUser) => {
+            if (fbUser) {
+                setUser(fbUser);
+                console.log('user', userDoc);
+                AppStore.update((s) => {
+                    s.user = fbUser;
+                });
+                getSetUserDoc(fbUser);
+                getServices(fbUser);
+                getServiceTemplates();
+                getClients();
+                getBoats();
+            }
+        });
+    }, [user]);
+
+    return (
+        <main className='app'>
+            <ThemeProvider theme={theme}>
+                <Router>
+                    <Routes>
+                        <Route path='/login' element={<Login />} />
+                        <Route
+                            path='/home'
+                            element={user ? <HomeWithNavbar /> : <Navigate to='/login' replace />}
+                        />
+                        <Route
+                            path='/admin'
+                            element={
+                                userDoc.superAdmin ? (
+                                    <AdminWithNavbar />
+                                ) : (
+                                    <Navigate to='/login' replace />
+                                )
+                            }
+                        />
+                        <Route
+                            path='/'
+                            element={<Navigate to={user ? '/home' : '/login'} replace />}
+                        />
+                        <Route
+                            path='*'
+                            element={<Navigate to={user ? '/home' : '/login'} replace />}
+                        />
+                    </Routes>
+                </Router>
+            </ThemeProvider>
+        </main>
+    );
 }
+
+const HomeWithNavbar = () => (
+    <>
+        <section className='nav-block'>
+            <Navbar />
+        </section>
+        <section className='home-block'>
+            <Home />
+        </section>
+    </>
+);
+
+const AdminWithNavbar = () => (
+    <>
+        <section className='nav-block'>
+            <Navbar />
+        </section>
+        <section className='admin-block'>
+            <Admin />
+        </section>
+    </>
+);
 
 export default App;

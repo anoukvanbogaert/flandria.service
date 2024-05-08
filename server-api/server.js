@@ -1,9 +1,14 @@
+require('dotenv').config();
+
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require("express");
 const morgan = require('morgan');
 
+
 const app = express();
-const PORT = 8080; // default port 8080
+const cors = require('cors');
+app.use(cors());
+const PORT = 5000; // default port 5000
 
 app.set('view engine', 'ejs');
 
@@ -21,9 +26,11 @@ app.use(express.static('public'));
 
 //declaring resource routes
 const servicesRoutes = require('./routes/services');
+const overviewRoutes = require('./routes/overview');
 
 //mounting resource routes
 app.use('/services', servicesRoutes);
+app.use('/overview', overviewRoutes);
 
 //checking if connection works
 app.get("/", (req, res) => {

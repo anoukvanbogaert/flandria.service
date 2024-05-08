@@ -1,0 +1,17 @@
+.services_container {
+    width: 750px !important;
+}
+.service_box {
+    display: flex;
+}
+
+.service_box_avatar {
+    display: flex;
+    align-items: center;
+}
+.service_box_text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-transform: capitalize;
+}
