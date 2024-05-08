@@ -5,7 +5,7 @@ import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-materia
 
 import CustomButton from './CustomButton';
 
-import AdminAddClient from './AdminAddClient';
+import AdminAddClient from './AddSection/AddOptions';
 import AdminAddExService from './AdminAddExService';
 import AdminAddOffer from './AdminAddOffer';
 
