@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
+import { deleteFromCollection } from '../utils/getData';
 
 const BoatData = () => {
     const { boats, clients } = useStoreState(AppStore);
@@ -20,9 +21,9 @@ const BoatData = () => {
         // Add your edit logic here
     };
 
-    const onDeleteClick = (boatId) => {
+    const onDeleteClick = (boatId, clientId) => {
         console.log('Deleting boat:', boatId);
-        // Add your delete logic here
+        deleteFromCollection('boats', boatId, AppStore);
     };
 
     const columns = [
@@ -67,10 +68,18 @@ const BoatData = () => {
                     const boat = boats[dataIndex];
                     return (
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <IconButton onClick={() => onEditClick(boat.id)} aria-label='edit'>
+                            <IconButton
+                                onClick={() => onEditClick(boat.id)}
+                                aria-label='edit'
+                                color='secondary'
+                            >
                                 <EditIcon />
                             </IconButton>
-                            <IconButton onClick={() => onDeleteClick(boat.id)} aria-label='delete'>
+                            <IconButton
+                                onClick={() => onDeleteClick(boat.id, boat.client)}
+                                aria-label='delete'
+                                color='error'
+                            >
                                 <DeleteIcon />
                             </IconButton>
                         </Box>
@@ -101,7 +110,7 @@ const BoatData = () => {
     };
 
     return (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%', margin: '5rem' }}>
             <MUIDataTable data={boats} columns={columns} options={options} />
         </div>
     );

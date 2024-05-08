@@ -1,4 +1,13 @@
-import { collection, doc, getDoc, getDocs, query, setDoc, addDoc } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    setDoc,
+    addDoc,
+    deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { AppStore } from '../stores/AppStore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -43,6 +52,24 @@ export const addToCollection = async (collectionName, data) => {
     } catch (e) {
         console.error('Error adding document: ', e);
         throw e;
+    }
+};
+
+export const deleteFromCollection = async (collectionName, docId, store, clientId) => {
+    const docRef = doc(db, collectionName, docId);
+    await deleteDoc(docRef);
+
+    // if (collectionName === 'boats') {
+    //     const clientRef = doc(db, 'clients', clientId);
+    // }
+    console.log('store', store);
+
+    if (store) {
+        console.log('store', store);
+        store.update((s) => {
+            const updatedData = s[collectionName].filter((item) => item.id !== docId);
+            return { ...s, [collectionName]: updatedData };
+        });
     }
 };
 
