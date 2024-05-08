@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-material';
 
 import CustomButton from './CustomButton';
-
-import AdminAddClient from './AddSection/AddOptions';
+import BoatData from './BoatData';
+import AdminAddClient from './AdminAddClient';
 import AdminAddExService from './AdminAddExService';
 import AdminAddOffer from './AdminAddOffer';
 
@@ -65,10 +65,12 @@ const Admin = () => {
                     View Data
                 </CustomButton>
             </div>
+
             <div className={formClass}>
                 {activeComponent === 1 && <AdminAddClient />}
                 {activeComponent === 2 && <AdminAddExService open={afterClick} />}
                 {activeComponent === 3 && <AdminAddOffer />}
+                {activeComponent === 4 && <BoatData />}
             </div>
         </div>
     );
