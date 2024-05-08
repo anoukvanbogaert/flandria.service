@@ -89,7 +89,6 @@ function App() {
         onAuthStateChanged(getAuth(), async (fbUser) => {
             if (fbUser) {
                 setUser(fbUser);
-                console.log('user', userDoc);
                 AppStore.update((s) => {
                     s.user = fbUser;
                 });

@@ -64,7 +64,6 @@ export const getServiceTemplates = async () => {
             AppStore.update((s) => {
                 s.serviceTemplates = serviceTemplateArray;
             });
-            console.log('serviceTemplqteArray', serviceTemplateArray);
         } else {
             console.warn('No service templates found');
             AppStore.update((s) => {
@@ -97,7 +96,6 @@ export const getClients = async () => {
             AppStore.update((s) => {
                 s.clients = clientsArray;
             });
-            console.log('clientsArray', clientsArray);
         } else {
             console.warn('No clients found');
             AppStore.update((s) => {
@@ -130,7 +128,6 @@ export const getBoats = async () => {
             AppStore.update((s) => {
                 s.boats = boatssArray;
             });
-            console.log('boatssArray', boatssArray);
         } else {
             console.warn('No boats found');
             AppStore.update((s) => {
@@ -158,11 +155,9 @@ export const getServices = async (user) => {
         if (activeSubSnap.docs.length > 0) {
             // console.log('active subscriptions found');
             activeSubSnap.docs.forEach((doc) => {
-                console.log('still going');
                 const data = doc.data();
                 const id = doc.id;
                 serviceArray.push({ ...data, id });
-                console.log('serviceArray', serviceArray);
             });
 
             AppStore.update((s) => {
