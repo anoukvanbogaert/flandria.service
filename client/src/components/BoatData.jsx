@@ -110,7 +110,7 @@ const BoatData = () => {
     };
 
     return (
-        <div style={{ width: '100%', margin: '5rem' }}>
+        <div style={{ width: '100%', marginTop: '2rem' }}>
             <MUIDataTable data={boats} columns={columns} options={options} />
         </div>
     );

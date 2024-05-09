@@ -4,6 +4,9 @@ import classNames from 'classnames';
 import BoatData from './BoatData';
 import AdminOptions from './AdminOptions';
 import AdminForms from './AdminForms';
+import { Button, Box } from '@mui/material';
+
+import { Add } from '@mui/icons-material/';
 
 const Admin = () => {
     const [activeComponent, setActiveComponent] = useState(1);
@@ -28,13 +31,26 @@ const Admin = () => {
     });
 
     return (
-        <div className='admin__container'>
-            <div className={formClass}>
+        <Box className='admin__container'>
+            <Box className={formClass}>
                 <AdminOptions setSelection={setSelection} />
+                <Button
+                    variant='contained'
+                    startIcon={<Add />}
+                    color='secondary'
+                    sx={{
+                        justifySelf: 'left',
+                        marginTop: '5rem',
+                        fontWeight: 'bold',
+                        width: 'fit-content',
+                    }}
+                >
+                    Add a {selection}
+                </Button>
                 {/* {selection && <AdminForms selection={selection} />} */}
                 {selection === 'boat' && <BoatData />}
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
