@@ -8,7 +8,7 @@ import { AppStore } from '../stores/AppStore';
 import './data.css';
 import { deleteFromCollection } from '../utils/getData';
 
-const BoatData = () => {
+const BoatData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);
 
     const getClientNameById = (clientId) => {
@@ -18,7 +18,7 @@ const BoatData = () => {
 
     const onEditClick = (boatId) => {
         console.log('Editing boat:', boatId);
-        // Add your edit logic here
+        setOpenModal(true);
     };
 
     const onDeleteClick = (boatId, clientId) => {

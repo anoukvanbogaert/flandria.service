@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AddSection/form.scss';
-import { Button, Grid, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
+import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
