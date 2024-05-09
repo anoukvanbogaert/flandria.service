@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
 import './Admin.scss';
 import classNames from 'classnames';
-import { AddCircleOutline, PlaylistAdd, PostAdd, Edit } from '@mui/icons-material';
-
-import CustomButton from './CustomButton';
 import BoatData from './BoatData';
-import AdminAddClient from './AdminAddClient';
-import AdminAddExService from './AdminAddExService';
-import AdminAddOffer from './AdminAddOffer';
+import AdminOptions from './AdminOptions';
+import AdminForms from './AdminForms';
 
 const Admin = () => {
     const [activeComponent, setActiveComponent] = useState(1);
-
-    const handleClick = (component) => {
-        activeComponent === component ? setActiveComponent('') : setActiveComponent(component);
-    };
+    const [selection, setSelection] = useState('');
+    console.log('selection', selection);
 
     let afterClick = '';
     if (activeComponent) {
@@ -35,42 +29,10 @@ const Admin = () => {
 
     return (
         <div className='admin__container'>
-            <div className={optionsClass}>
-                <CustomButton
-                    onClick={() => handleClick(1)}
-                    selected={activeComponent === 1}
-                    icon={AddCircleOutline}
-                >
-                    Add
-                </CustomButton>
-                <CustomButton
-                    onClick={() => handleClick(4)}
-                    selected={activeComponent === 4}
-                    icon={Edit}
-                >
-                    Edit
-                </CustomButton>
-                <CustomButton
-                    onClick={() => handleClick(2)}
-                    selected={activeComponent === 2}
-                    icon={PlaylistAdd}
-                >
-                    Log a service
-                </CustomButton>
-                <CustomButton
-                    onClick={() => handleClick(3)}
-                    selected={activeComponent === 3}
-                    icon={PostAdd}
-                >
-                    View Data
-                </CustomButton>
-            </div>
-
             <div className={formClass}>
-                {activeComponent === 1 && <AdminAddClient />}
-                {activeComponent === 2 && <AdminAddExService open={afterClick} />}
-                {activeComponent === 3 && <AdminAddOffer />}
-                {activeComponent === 4 && <BoatData />}
+                <AdminOptions setSelection={setSelection} />
+                {/* {selection && <AdminForms selection={selection} />} */}
+                {selection === 'boat' && <BoatData />}
             </div>
         </div>
     );

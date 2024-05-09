@@ -1,10 +1,10 @@
 import React from 'react';
 import { Email, AccountCircle, DirectionsBoat } from '@mui/icons-material';
-import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Grid, FormControl, InputLabel, Select, MenuItem, Modal } from '@mui/material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
 
-const ClientForm = ({ handleClientInputChange, clientData }) => {
+const ClientForm = ({ open, handleClose, handleClientInputChange, clientData }) => {
     const { boats } = useStoreState(AppStore);
 
     return (

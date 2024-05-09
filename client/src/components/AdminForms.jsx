@@ -13,11 +13,9 @@ import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';
 import ServiceForm from './forms/ServiceForm';
 
-const AdminAddClient = ({ open }) => {
+const AdminForms = ({ selection }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
     const [userBoats, setUserboats] = useState([]);
-    const [step, setStep] = useState(1);
-    const [selection, setSelection] = useState('');
     const [loading, setLoading] = useState(false);
     const [clientData, setClientData] = useState({
         name: '',
@@ -113,16 +111,11 @@ const AdminAddClient = ({ open }) => {
     useEffect(() => {
         if (operationStatus === 'success') {
             setTimeout(() => {
-                setStep(1);
                 resetForm();
             }, 2000);
         }
     }, [operationStatus]);
 
-    const formClass = classNames('admin__form', {
-        'admin__form--open': open,
-        'admin__form--close': !open,
-    });
     const resetForm = () => {
         setClientData({
             name: null,
@@ -188,7 +181,7 @@ const AdminAddClient = ({ open }) => {
                 ) : null}
             </Backdrop>
             <Box
-                className={formClass}
+                className='admin__form'
                 sx={{
                     margin: 'auto',
                     borderRadius: 2,
@@ -199,43 +192,28 @@ const AdminAddClient = ({ open }) => {
                 <Grid container alignItems='center' spacing={3} padding='1.5rem'>
                     <Grid item xs={12} sx={{ padding: '1.5rem 0 0 0' }}>
                         <Typography variant='h1' component='h2' sx={{ marginBottom: 2 }}>
-                            {step === 1 ? 'Choose an option' : 'Fill in the details'}
+                            Fill in the details
                         </Typography>
                     </Grid>
-                    {step === 1 ? (
-                        <CustomAnimatedButton setStep={setStep} setSelection={setSelection} />
-                    ) : (
-                        <>{renderForm()}</>
-                    )}
+
+                    <>{renderForm()}</>
+
                     <Grid item xs={12}>
-                        {step === 2 && (
-                            <>
-                                <Button
-                                    onClick={() => setStep(1)}
-                                    startIcon={<Replay />}
-                                    sx={{
-                                        color: 'grey',
-                                        marginLeft: 'auto',
-                                        fontSize: '1rem',
-                                    }}
-                                >
-                                    Back
-                                </Button>
-                                <Button
-                                    onClick={handleSave}
-                                    disabled={loading || operationStatus !== 'idle'}
-                                    variant='contained'
-                                    sx={{
-                                        fontSize: '0.875rem',
-                                        fontWeight: 'bold',
-                                        width: 'auto',
-                                    }}
-                                    color='primary'
-                                >
-                                    Save
-                                </Button>
-                            </>
-                        )}
+                        <>
+                            <Button
+                                onClick={handleSave}
+                                disabled={loading || operationStatus !== 'idle'}
+                                variant='contained'
+                                sx={{
+                                    fontSize: '0.875rem',
+                                    fontWeight: 'bold',
+                                    width: 'auto',
+                                }}
+                                color='primary'
+                            >
+                                Save
+                            </Button>
+                        </>
                     </Grid>
                 </Grid>
             </Box>
@@ -243,4 +221,4 @@ const AdminAddClient = ({ open }) => {
     );
 };
 
-export default AdminAddClient;
+export default AdminForms;

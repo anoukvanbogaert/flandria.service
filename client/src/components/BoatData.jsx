@@ -93,7 +93,7 @@ const BoatData = () => {
         selectableRows: 'none',
         responsive: 'standard',
         viewColumns: false,
-        rowsPerPageOptions: false,
+        rowsPerPageOptions: [],
         customToolbar: () => {
             return (
                 <div
