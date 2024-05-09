@@ -6,33 +6,15 @@ import AdminOptions from './AdminOptions';
 import AdminForms from './AdminForms';
 import { Button, Box } from '@mui/material';
 
-import { Add } from '@mui/icons-material/';
+import { Add, FormatColorResetRounded } from '@mui/icons-material/';
 
 const Admin = () => {
-    const [activeComponent, setActiveComponent] = useState(1);
     const [selection, setSelection] = useState('');
-    console.log('selection', selection);
-
-    let afterClick = '';
-    if (activeComponent) {
-        afterClick = true;
-    } else {
-        afterClick = false;
-    }
-
-    const formClass = classNames('admin__form', {
-        'admin__form--open': afterClick,
-        'admin__form--close': !afterClick,
-    });
-
-    const optionsClass = classNames('admin__options', {
-        'admin__options--middle': !afterClick,
-        'admin__options--left': afterClick,
-    });
+    const [openModal, setOpenModal] = useState(false);
 
     return (
         <Box className='admin__container'>
-            <Box className={formClass}>
+            <Box className='admin__form'>
                 <AdminOptions setSelection={setSelection} />
                 <Button
                     variant='contained'
@@ -44,10 +26,11 @@ const Admin = () => {
                         fontWeight: 'bold',
                         width: 'fit-content',
                     }}
+                    onClick={() => setOpenModal(true)}
                 >
                     Add a {selection}
                 </Button>
-                {/* {selection && <AdminForms selection={selection} />} */}
+                {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
                 {selection === 'boat' && <BoatData />}
             </Box>
         </Box>

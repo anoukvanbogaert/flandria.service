@@ -14,10 +14,10 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                 spacing={3}
                 alignItems='center'
                 justifyContent='space-between'
-                sx={{ margin: '1.5rem 0' }}
+                sx={{ marginLeft: 0, width: 'auto' }}
             >
                 <Grid item xs={1}>
-                    <AccountCircle />
+                    <AccountCircle color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <Autocomplete
@@ -42,7 +42,7 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <Badge />
+                    <Badge color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
@@ -55,7 +55,7 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <DirectionsBoat />
+                    <DirectionsBoat color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
@@ -68,7 +68,7 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <ShortText />
+                    <ShortText color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
@@ -82,7 +82,7 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <Comment />
+                    <Comment color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
