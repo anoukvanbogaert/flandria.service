@@ -16,7 +16,7 @@ const Navbar = () => {
             <div className='navbar__right'>
                 <div className='navbar__contact'>
                     <p>INFO@FLANDRIAYACHTS.COM</p>
-                    <p>+34 965 270285</p>
+                    <p>+34 634 163 214</p>
                 </div>
                 <Tooltip title='Logout'>
                     <IconButton

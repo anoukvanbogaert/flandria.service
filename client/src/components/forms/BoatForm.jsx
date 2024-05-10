@@ -13,8 +13,6 @@ const BoatForm = ({ handleInputChange }) => {
 
     const editData = boats.find((boat) => boat.id === editId) || boatData;
 
-    console.log('boatData', boatData);
-
     useEffect(() => {
         if (editData) {
             FormStore.update((s) => {

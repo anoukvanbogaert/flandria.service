@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AddSection/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { addToCollection, editInCollection } from '../utils/getData';
+import { addToCollection, editInCollection, updateBoatOwnership } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 
@@ -53,8 +53,10 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 }
             } else if (selection === 'boat') {
                 if (boatData.id) {
+                    await updateBoatOwnership(boatData.client, boatData.id);
                     await editInCollection('boats', boatData.id, boatData);
                 } else {
+                    await updateBoatOwnership(boatData.client, boatData.id);
                     await addToCollection('boats', boatData);
                 }
             } else if (selection === 'service') {
