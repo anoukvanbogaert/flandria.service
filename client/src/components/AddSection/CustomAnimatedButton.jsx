@@ -1,23 +1,23 @@
-import * as React from 'react';
+import { React, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, ButtonBase, Typography } from '@mui/material/';
 
 const images = [
     {
         url: require('../../assets/images/boat.jpg'),
-        title: 'Add a boat',
+        title: 'Boats',
         width: '32%',
         selection: 'boat',
     },
     {
         url: require('../../assets/images/people.jpg'),
-        title: 'Add a customer',
+        title: 'Customers',
         width: '32%',
         selection: 'client',
     },
     {
         url: require('../../assets/images/engine.jpg'),
-        title: 'Add a service',
+        title: 'Services',
         width: '32%',
         selection: 'service',
     },
@@ -31,7 +31,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
         width: '100% !important',
         height: 100,
     },
-    '&:hover, &.Mui-focusVisible': {
+    '&:hover, &.Mui-focusVisible, &.selected': {
         zIndex: 1,
         '& .MuiImageBackdrop-root': {
             opacity: 0.15,
@@ -92,6 +92,8 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 export default function ButtonBaseDemo({ setSelection }) {
+    const [selected, setSelected] = useState(null);
+
     return (
         <Box
             sx={{
@@ -104,6 +106,7 @@ export default function ButtonBaseDemo({ setSelection }) {
         >
             {images.map((image) => (
                 <ImageButton
+                    className={selected === image.selection ? 'selected' : ''}
                     focusRipple
                     key={image.title}
                     style={{
@@ -111,6 +114,7 @@ export default function ButtonBaseDemo({ setSelection }) {
                     }}
                     onClick={() => {
                         setSelection(`${image.selection}`);
+                        setSelected(`${image.selection}`);
                     }}
                 >
                     <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
