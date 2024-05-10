@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import './form.scss';
+import './AddSection/form.scss';
 import classNames from 'classnames';
 import { Button, Grid, CircularProgress, Backdrop, Box, Typography } from '@mui/material';
 
@@ -7,7 +7,7 @@ import { Check, Close, Replay } from '@mui/icons-material';
 import { addToCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
-import CustomAnimatedButton from './CustomAnimatedButton';
+import CustomAnimatedButton from './AddSection/CustomAnimatedButton';
 
 import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';

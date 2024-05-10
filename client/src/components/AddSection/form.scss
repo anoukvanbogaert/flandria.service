@@ -74,12 +74,17 @@ input:focus {
 }
 
 button {
-    width: 50%;
+    // width: 50%;
     font-weight: bold;
     font-size: x-large;
     border-radius: 5px;
     color: white;
     background-color: #032433;
+}
+.tss-1h9t3sl-MUIDataTableHeadCell-sortAction {
+    font-weight: bolder !important;
+    font-size: 19px;
+    color: var(--primary-color);
 }
 
 .dialog__iconbutton {
@@ -98,4 +103,8 @@ button {
 .dialog__iconbutton:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     background-color: white !important;
+}
+
+.css-1o36jr-MuiGrid-root > .MuiGrid-item {
+    padding-left: 0 !important;
 }

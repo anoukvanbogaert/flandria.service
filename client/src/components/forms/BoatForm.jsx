@@ -1,12 +1,28 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 import { Autocomplete, TextField, Grid } from '@mui/material';
 
 import { AccountCircle, DirectionsBoat, Badge, ShortText, Comment } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../../stores/AppStore';
 
-const BoatForm = ({ handleBoatInputChange, boatData }) => {
-    const { clients } = useStoreState(AppStore);
+import { AppStore } from '../../stores/AppStore';
+import { FormStore } from '../../stores/FormStore';
+
+const BoatForm = ({ handleInputChange }) => {
+    const { clients, boats } = useStoreState(AppStore);
+    const { editId, boatData } = useStoreState(FormStore);
+
+    const editData = boats.find((boat) => boat.id === editId) || boatData;
+
+    console.log('boatData', boatData);
+
+    useEffect(() => {
+        if (editData) {
+            FormStore.update((s) => {
+                s.boatData = editData;
+            });
+        }
+    }, [editData]);
+
     return (
         <>
             <Grid
@@ -14,10 +30,10 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                 spacing={3}
                 alignItems='center'
                 justifyContent='space-between'
-                sx={{ margin: '1.5rem 0' }}
+                sx={{ marginLeft: 0, width: 'auto' }}
             >
                 <Grid item xs={1}>
-                    <AccountCircle />
+                    <AccountCircle color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <Autocomplete
@@ -26,9 +42,18 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                             label: option.name,
                             uid: option.id,
                         }))}
+                        defaultValue={
+                            clients.find((client) => client.id === editData.client)
+                                ? {
+                                      label: clients.find((client) => client.id === editData.client)
+                                          .name,
+                                      uid: editData.client,
+                                  }
+                                : null
+                        }
                         getOptionLabel={(option) => option.label || ''}
                         onChange={(event, newValue) => {
-                            handleBoatInputChange('client', newValue.uid || '');
+                            handleInputChange('client', newValue.uid || '');
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -42,58 +67,61 @@ const BoatForm = ({ handleBoatInputChange, boatData }) => {
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <Badge />
+                    <Badge color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
                         label='Boat Name'
                         placeholder='Enter boat name'
                         fullWidth
+                        value={editData.boatName}
                         variant='filled'
                         size='small'
-                        onChange={(e) => handleBoatInputChange('name', e.target.value)}
+                        onChange={(e) => handleInputChange('boatName', e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <DirectionsBoat />
+                    <DirectionsBoat color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
                         label='Boat Brand'
                         placeholder='e.g. Sunseeker'
                         fullWidth
+                        value={editData.brand}
                         variant='filled'
                         size='small'
-                        onChange={(e) => handleBoatInputChange('brand', e.target.value)}
+                        onChange={(e) => handleInputChange('brand', e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <ShortText />
+                    <ShortText color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
                         label='Boat Model'
-                        value={boatData.model}
+                        value={editData.model}
                         placeholder='e.g. Manhattan'
                         fullWidth
                         variant='filled'
                         size='small'
-                        onChange={(e) => handleBoatInputChange('model', e.target.value)}
+                        onChange={(e) => handleInputChange('model', e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={1}>
-                    <Comment />
+                    <Comment color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
                     <TextField
                         label='Remark'
                         placeholder='Enter any remarks'
                         fullWidth
+                        value={editData.remark}
                         variant='filled'
                         size='small'
                         multiline
                         rows={4}
-                        onChange={(e) => handleBoatInputChange('remark', e.target.value)}
+                        onChange={(e) => handleInputChange('remark', e.target.value)}
                     />
                 </Grid>
             </Grid>

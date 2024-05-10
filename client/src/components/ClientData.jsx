@@ -9,7 +9,7 @@ import './data.css';
 import { deleteFromCollection } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal }) => {
+const ClientData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);
 
     const getClientNameById = (clientId) => {
@@ -17,44 +17,35 @@ const BoatData = ({ setOpenModal }) => {
         return client ? client.name : 'Unknown';
     };
 
-    const onEditClick = (boatId) => {
+    const onEditClick = (clientId) => {
         FormStore.update((s) => {
-            s.editId = boatId;
+            s.editId = clientId;
         });
         setOpenModal(true);
     };
 
-    const onDeleteClick = (boatId, clientId) => {
-        console.log('Deleting boat:', boatId);
-        deleteFromCollection('boats', boatId, AppStore);
+    const onDeleteClick = (clientId) => {
+        console.log('Deleting client:', clientId);
+        deleteFromCollection('clients', clientId, AppStore);
     };
 
     const columns = [
         {
-            name: 'boatName',
-            label: 'Boat Name',
+            name: 'name',
+            label: 'Client Name',
+        },
+
+        {
+            name: 'email',
+            label: 'Email',
         },
         {
-            name: 'client',
-            label: 'Client',
-            options: {
-                customBodyRenderLite: (dataIndex) => {
-                    const boat = boats[dataIndex];
-                    return getClientNameById(boat.client);
-                },
-            },
+            name: 'Placeholder',
+            label: 'Placeholder',
         },
         {
-            name: 'brand',
-            label: 'Brand',
-        },
-        {
-            name: 'model',
-            label: 'Model',
-        },
-        {
-            name: 'techSpecs',
-            label: 'Tech Specs',
+            name: 'Placeholder',
+            label: 'Placeholder',
         },
         {
             name: '',
@@ -68,18 +59,18 @@ const BoatData = ({ setOpenModal }) => {
                     },
                 }),
                 customBodyRenderLite: (dataIndex) => {
-                    const boat = boats[dataIndex];
+                    const client = clients[dataIndex];
                     return (
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <IconButton
-                                onClick={() => onEditClick(boat.id)}
+                                onClick={() => onEditClick(client.id)}
                                 aria-label='edit'
                                 color='secondary'
                             >
                                 <EditIcon />
                             </IconButton>
                             <IconButton
-                                onClick={() => onDeleteClick(boat.id, boat.client)}
+                                onClick={() => onDeleteClick(client.id)}
                                 aria-label='delete'
                                 color='error'
                             >
@@ -114,9 +105,9 @@ const BoatData = ({ setOpenModal }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={boats} columns={columns} options={options} />
+            <MUIDataTable data={clients} columns={columns} options={options} />
         </div>
     );
 };
 
-export default BoatData;
+export default ClientData;

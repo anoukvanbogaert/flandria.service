@@ -91,7 +91,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
     transition: theme.transitions.create('opacity'),
 }));
 
-export default function ButtonBaseDemo({ setSelection, setStep }) {
+export default function ButtonBaseDemo({ setSelection }) {
     return (
         <Box
             sx={{
@@ -110,7 +110,6 @@ export default function ButtonBaseDemo({ setSelection, setStep }) {
                         width: image.width,
                     }}
                     onClick={() => {
-                        setStep(2);
                         setSelection(`${image.selection}`);
                     }}
                 >
