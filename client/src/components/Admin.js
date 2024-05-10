@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Admin.scss';
 import BoatData from './BoatData';
+import ClientData from './ClientData';
 import AdminOptions from './AdminOptions';
 import AdminForms from './AdminForms';
 import { Button, Box } from '@mui/material';
@@ -33,6 +34,7 @@ const Admin = () => {
                 )}
                 {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
                 {selection === 'boat' && <BoatData setOpenModal={setOpenModal} />}
+                {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
             </Box>
         </Box>
     );

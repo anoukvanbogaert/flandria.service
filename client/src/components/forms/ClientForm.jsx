@@ -4,7 +4,7 @@ import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
 
-const ClientForm = ({ handleClientInputChange, clientData }) => {
+const ClientForm = ({ handleInputChange, clientData }) => {
     const { boats } = useStoreState(AppStore);
 
     return (
@@ -27,7 +27,7 @@ const ClientForm = ({ handleClientInputChange, clientData }) => {
                         fullWidth
                         size='small'
                         onChange={(e) => {
-                            handleClientInputChange('name', e.target.value);
+                            handleInputChange('name', e.target.value);
                         }}
                     />
                 </Grid>
@@ -41,7 +41,7 @@ const ClientForm = ({ handleClientInputChange, clientData }) => {
                         variant='filled'
                         fullWidth
                         size='small'
-                        onChange={(e) => handleClientInputChange('email', e.target.value)}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={1}>
@@ -54,9 +54,7 @@ const ClientForm = ({ handleClientInputChange, clientData }) => {
                             labelId='service-select-label'
                             value={clientData.boat}
                             multiple
-                            onChange={(event) =>
-                                handleClientInputChange('boat', event.target.value)
-                            }
+                            onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel (if any)'
                         >
                             {boats.map((boat) => (

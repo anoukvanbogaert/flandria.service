@@ -2,42 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './AddSection/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { addToCollection } from '../utils/getData';
+import { addToCollection, editInCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 
 import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';
 import ServiceForm from './forms/ServiceForm';
+import { FormStore } from '../stores/FormStore';
 
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
     const [userBoats, setUserboats] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [clientData, setClientData] = useState({
-        name: '',
-        email: '',
-        boat: [],
-    });
-
-    const [boatData, setBoatData] = useState({
-        client: '',
-        name: '',
-        brand: '',
-        model: '',
-        remark: '',
-    });
-
-    const [serviceData, setServiceData] = useState({
-        services: [],
-        date: null,
-        client: '',
-        boat: '',
-        brand: '',
-        model: '',
-        remark: '',
-    });
     const { boats, clients } = useStoreState(AppStore);
+    const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     useEffect(() => {
         if (clientData.client || serviceData.client) {
@@ -53,8 +32,12 @@ const AdminForms = ({ selection, setOpenModal }) => {
         }
     }, [clientData.client, serviceData.client, clients, boats]);
 
-    const handleInputChange = (dataSetter) => (field, value) => {
-        dataSetter((prev) => ({ ...prev, [field]: value }));
+    const handleInputChange = (section) => (field, value) => {
+        FormStore.update((s) => {
+            if (s[section]) {
+                s[section][field] = value;
+            }
+        });
     };
 
     const handleSave = async () => {
@@ -63,11 +46,23 @@ const AdminForms = ({ selection, setOpenModal }) => {
 
         try {
             if (selection === 'client') {
-                await addToCollection('clients', clientData);
+                if (clientData.id) {
+                    await editInCollection('clients', clientData.id, clientData);
+                } else {
+                    await addToCollection('clients', clientData);
+                }
             } else if (selection === 'boat') {
-                await addToCollection('boats', boatData);
+                if (boatData.id) {
+                    await editInCollection('boats', boatData.id, boatData);
+                } else {
+                    await addToCollection('boats', boatData);
+                }
             } else if (selection === 'service') {
-                await addToCollection('services', serviceData);
+                if (serviceData.id) {
+                    await editInCollection('services', serviceData.id, serviceData);
+                } else {
+                    await addToCollection('services', serviceData);
+                }
             }
             setOperationStatus('success');
         } catch (error) {
@@ -78,6 +73,12 @@ const AdminForms = ({ selection, setOpenModal }) => {
             setTimeout(() => {
                 setOperationStatus('idle');
                 setOpenModal(false);
+                // Reset editId if it's an edit operation
+                if (FormStore.currentState.editId) {
+                    FormStore.update((s) => {
+                        s.editId = null;
+                    });
+                }
             }, 2000);
         }
     };
@@ -87,21 +88,21 @@ const AdminForms = ({ selection, setOpenModal }) => {
             case 'client':
                 return (
                     <ClientForm
-                        handleInputChange={handleInputChange(setClientData)}
+                        handleInputChange={handleInputChange('clientData')}
                         clientData={clientData}
                     />
                 );
             case 'boat':
                 return (
                     <BoatForm
-                        handleInputChange={handleInputChange(setBoatData)}
+                        handleInputChange={handleInputChange('boatData')}
                         boatData={boatData}
                     />
                 );
             case 'service':
                 return (
                     <ServiceForm
-                        handleInputChange={handleInputChange(setServiceData)}
+                        handleInputChange={handleInputChange(serviceData)}
                         serviceData={serviceData}
                         userBoats={userBoats}
                     />

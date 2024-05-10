@@ -5,3 +5,7 @@
 .css-kpihkf-MuiButtonBase-root-MuiIconButton-root {
     width: fit-content;
 }
+
+.css-11mde6h-MuiPaper-root {
+    border-radius: 10px !important;
+}

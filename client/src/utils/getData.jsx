@@ -7,6 +7,7 @@ import {
     setDoc,
     addDoc,
     deleteDoc,
+    updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AppStore } from '../stores/AppStore';
@@ -47,10 +48,30 @@ export const getSetUserDoc = async (user) => {
 export const addToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
+        AppStore.update((s) => {
+            s[collectionName].push({ ...data, id: docRef.id });
+        });
         console.log('Document written with ID: ', docRef.id);
         return docRef;
     } catch (e) {
         console.error('Error adding document: ', e);
+        throw e;
+    }
+};
+
+export const editInCollection = async (collectionName, docId, data) => {
+    try {
+        const docRef = doc(db, collectionName, docId);
+        await updateDoc(docRef, data);
+        AppStore.update((s) => {
+            const index = s[collectionName].findIndex((item) => item.id === docId);
+            if (index !== -1) {
+                s[collectionName][index] = { ...s[collectionName][index], ...data };
+            }
+        });
+        console.log('Document updated with ID: ', docId);
+    } catch (e) {
+        console.error('Error updating document: ', e);
         throw e;
     }
 };
