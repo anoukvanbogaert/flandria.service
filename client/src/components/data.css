@@ -9,3 +9,17 @@
 .css-11mde6h-MuiPaper-root {
     border-radius: 10px !important;
 }
+
+@keyframes flash {
+    0%,
+    100% {
+        background-color: inherit;
+    }
+    50% {
+        background-color: #b2fab4;
+    }
+}
+
+.flash-background {
+    animation: flash 1s ease-out infinite;
+}
