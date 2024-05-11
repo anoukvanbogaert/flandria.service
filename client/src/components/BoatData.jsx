@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { IconButton, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,7 +10,10 @@ import { deleteFromCollection } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const BoatData = ({ setOpenModal }) => {
+    const [highlightedRow, setHighlightedRow] = useState(null);
+
     const { boats, clients } = useStoreState(AppStore);
+    console.log('boats', boats);
 
     const getClientNameById = (clientId) => {
         const client = clients.find((c) => c.id === clientId);
@@ -28,6 +31,30 @@ const BoatData = ({ setOpenModal }) => {
         console.log('Deleting boat:', boatId);
         deleteFromCollection('boats', boatId, AppStore);
     };
+
+    //This useffect looks for rows to highlight
+    useEffect(() => {
+        const lastAddedBoat = boats.find((boat) => boat.lastAdded);
+        if (lastAddedBoat) {
+            setHighlightedRow(lastAddedBoat.id);
+
+            const timer = setTimeout(() => {
+                setHighlightedRow(null);
+                AppStore.update((s) => {
+                    const index = s.boats.findIndex((boat) => boat.id === lastAddedBoat.id);
+                    if (index !== -1) {
+                        s.boats[index].lastAdded = false;
+                    }
+                });
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [boats]);
+
+    const getCellStyle = (rowIndex) => ({
+        className: boats[rowIndex].id === highlightedRow ? 'flash-background' : '',
+    });
 
     const columns = [
         {
@@ -94,6 +121,7 @@ const BoatData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
+
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],
@@ -110,6 +138,11 @@ const BoatData = ({ setOpenModal }) => {
         setTableProps: () => ({
             size: 'small',
         }),
+        setRowProps: (row, dataIndex) => {
+            return {
+                className: boats[dataIndex].id === highlightedRow ? 'flash-background' : '',
+            };
+        },
     };
 
     return (

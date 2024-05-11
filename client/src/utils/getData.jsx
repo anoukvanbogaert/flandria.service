@@ -4,13 +4,10 @@ import {
     getDoc,
     getDocs,
     query,
-    where,
     setDoc,
     addDoc,
     deleteDoc,
     updateDoc,
-    arrayUnion,
-    arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AppStore } from '../stores/AppStore';
@@ -52,7 +49,7 @@ export const addToCollection = async (collectionName, data) => {
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
         AppStore.update((s) => {
-            s[collectionName].push({ ...data, id: docRef.id });
+            s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
         });
         console.log('Document written with ID: ', docRef.id);
         return docRef;
@@ -69,7 +66,11 @@ export const editInCollection = async (collectionName, docId, data) => {
         AppStore.update((s) => {
             const index = s[collectionName].findIndex((item) => item.id === docId);
             if (index !== -1) {
-                s[collectionName][index] = { ...s[collectionName][index], ...data };
+                s[collectionName][index] = {
+                    ...s[collectionName][index],
+                    ...data,
+                    lastAdded: true,
+                };
             }
         });
         console.log('Document updated with ID: ', docId);
@@ -90,9 +91,9 @@ export const updateBoatOwnership = async (clientId, boatId) => {
             let boatArray = clientData.boat || [];
             // Check if boatId is not already in the array to avoid duplicates
             if (!boatArray.includes(boatId)) {
-                boatArray.push(boatId); // Add the boatId to the array
+                boatArray.push(boatId);
                 await updateDoc(clientRef, {
-                    boat: boatArray, // Update Firestore with the new array
+                    boat: boatArray,
                 });
                 console.log('Boat added to client array successfully');
 
