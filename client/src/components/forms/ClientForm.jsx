@@ -3,9 +3,16 @@ import { Email, AccountCircle, DirectionsBoat } from '@mui/icons-material';
 import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
+import { FormStore } from '../../stores/FormStore';
 
-const ClientForm = ({ handleInputChange, clientData }) => {
-    const { boats } = useStoreState(AppStore);
+const ClientForm = ({ handleInputChange }) => {
+    const { boats, clients } = useStoreState(AppStore);
+    const { editId, clientData } = useStoreState(FormStore);
+
+    const editData = clients.find((client) => client.id === editId) || clientData;
+    console.log('clients', clients);
+    console.log('editId', editId);
+    console.log('editData', editData);
 
     return (
         <>
@@ -22,6 +29,7 @@ const ClientForm = ({ handleInputChange, clientData }) => {
                 <Grid item xs={11}>
                     <TextField
                         label='Add name'
+                        value={editData.name}
                         placeholder='Add name'
                         variant='filled'
                         fullWidth
@@ -37,6 +45,7 @@ const ClientForm = ({ handleInputChange, clientData }) => {
                 <Grid item xs={11}>
                     <TextField
                         label='Add email'
+                        value={editData.email}
                         placeholder='Add email'
                         variant='filled'
                         fullWidth
@@ -52,7 +61,7 @@ const ClientForm = ({ handleInputChange, clientData }) => {
                         <InputLabel id='service-select-label'>Select vessel</InputLabel>
                         <Select
                             labelId='service-select-label'
-                            value={clientData.boat}
+                            value={editData.boat || []}
                             multiple
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel (if any)'

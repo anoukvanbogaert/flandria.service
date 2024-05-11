@@ -4,10 +4,13 @@ import {
     getDoc,
     getDocs,
     query,
+    where,
     setDoc,
     addDoc,
     deleteDoc,
     updateDoc,
+    arrayUnion,
+    arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { AppStore } from '../stores/AppStore';
@@ -72,6 +75,42 @@ export const editInCollection = async (collectionName, docId, data) => {
         console.log('Document updated with ID: ', docId);
     } catch (e) {
         console.error('Error updating document: ', e);
+        throw e;
+    }
+};
+
+export const updateBoatOwnership = async (clientId, boatId) => {
+    const clientRef = doc(db, 'clients', clientId);
+    const clientDoc = await getDoc(clientRef);
+
+    try {
+        if (clientDoc.exists()) {
+            const clientData = clientDoc.data();
+            // Check if 'boat' field exists and is an array
+            let boatArray = clientData.boat || [];
+            // Check if boatId is not already in the array to avoid duplicates
+            if (!boatArray.includes(boatId)) {
+                boatArray.push(boatId); // Add the boatId to the array
+                await updateDoc(clientRef, {
+                    boat: boatArray, // Update Firestore with the new array
+                });
+                console.log('Boat added to client array successfully');
+
+                // Update local AppStore state
+                AppStore.update((s) => {
+                    const index = s.clients.findIndex((client) => client.id === clientId);
+                    if (index !== -1) {
+                        s.clients[index].boat = boatArray; // Directly assign the new array
+                    }
+                });
+            } else {
+                console.log("Boat ID already exists in the client's boat array");
+            }
+        } else {
+            console.log('Client not found with the given ID:', clientId);
+        }
+    } catch (e) {
+        console.error('Error updating client boat array:', e);
         throw e;
     }
 };
