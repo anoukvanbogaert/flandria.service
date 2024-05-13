@@ -16,7 +16,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const [userBoats, setUserboats] = useState([]);
     const [loading, setLoading] = useState(false);
     const { boats, clients } = useStoreState(AppStore);
-    const { boatData, serviceData, clientData, editId } = useStoreState(FormStore);
+    const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     useEffect(() => {
         if (clientData.client || serviceData.client) {
@@ -161,11 +161,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     open={loading || operationStatus !== 'idle'}
                 >
                     {loading ? (
-                        <CircularProgress color='inherit' size={68} />
+                        <CircularProgress color='inherit' size={160} />
                     ) : operationStatus === 'success' ? (
-                        <Check sx={{ fontSize: 68, color: 'green' }} />
+                        <Check sx={{ fontSize: 160, color: 'green' }} />
                     ) : operationStatus === 'error' ? (
-                        <Close sx={{ fontSize: 68, color: 'red' }} />
+                        <Close sx={{ fontSize: 160, color: 'red' }} />
                     ) : null}
                 </Backdrop>
                 <Typography
