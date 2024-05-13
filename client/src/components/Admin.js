@@ -9,7 +9,7 @@ import { Button, Box } from '@mui/material';
 import { Add } from '@mui/icons-material/';
 
 const Admin = () => {
-    const [selection, setSelection] = useState('');
+    const [selection, setSelection] = useState('boat');
     const [openModal, setOpenModal] = useState(false);
 
     return (

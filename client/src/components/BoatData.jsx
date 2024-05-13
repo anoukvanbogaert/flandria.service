@@ -13,7 +13,6 @@ const BoatData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
-    console.log('boats', boats);
 
     const getClientNameById = (clientId) => {
         const client = clients.find((c) => c.id === clientId);

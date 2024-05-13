@@ -10,16 +10,34 @@ import { FormStore } from '../../stores/FormStore';
 const BoatForm = ({ handleInputChange }) => {
     const { clients, boats } = useStoreState(AppStore);
     const { editId, boatData } = useStoreState(FormStore);
-
-    const editData = boats.find((boat) => boat.id === editId) || boatData;
+    const [clientValue, setClientValue] = useState(null);
 
     useEffect(() => {
-        if (editData) {
+        if (editId && boatData.client) {
+            // Find the client object for the given client ID from boatData
+            const client = clients.find((c) => c.id === boatData.client);
+            setClientValue(client ? { label: client.name, uid: client.id } : null);
+        } else {
+            setClientValue(null); // Reset or set to default if no editId
+        }
+    }, [editId, boatData.client, clients]);
+
+    useEffect(() => {
+        if (editId) {
+            const editData = boats.find((boat) => boat.id === editId) || boatData;
+            console.log('editData1', editData);
             FormStore.update((s) => {
-                s.boatData = editData;
+                s.boatData = editData || {};
+            });
+        } else {
+            FormStore.update((s) => {
+                s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editData]);
+    }, [editId]);
+
+    console.log('editId', editId);
+    console.log('boatData', boatData);
 
     return (
         <>
@@ -40,19 +58,12 @@ const BoatForm = ({ handleInputChange }) => {
                             label: option.name,
                             uid: option.id,
                         }))}
-                        defaultValue={
-                            clients.find((client) => client.id === editData.client)
-                                ? {
-                                      label: clients.find((client) => client.id === editData.client)
-                                          .name,
-                                      uid: editData.client,
-                                  }
-                                : null
-                        }
-                        getOptionLabel={(option) => option.label || ''}
+                        value={clientValue} // Controlled component
                         onChange={(event, newValue) => {
-                            handleInputChange('client', newValue.uid || '');
+                            setClientValue(newValue);
+                            handleInputChange('client', newValue ? newValue.uid : '');
                         }}
+                        getOptionLabel={(option) => option.label || ''}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -72,7 +83,7 @@ const BoatForm = ({ handleInputChange }) => {
                         label='Boat Name'
                         placeholder='Enter boat name'
                         fullWidth
-                        value={editData.boatName}
+                        value={boatData.boatName}
                         variant='filled'
                         size='small'
                         onChange={(e) => handleInputChange('boatName', e.target.value)}
@@ -86,7 +97,7 @@ const BoatForm = ({ handleInputChange }) => {
                         label='Boat Brand'
                         placeholder='e.g. Sunseeker'
                         fullWidth
-                        value={editData.brand}
+                        value={boatData.brand}
                         variant='filled'
                         size='small'
                         onChange={(e) => handleInputChange('brand', e.target.value)}
@@ -98,7 +109,7 @@ const BoatForm = ({ handleInputChange }) => {
                 <Grid item xs={11}>
                     <TextField
                         label='Boat Model'
-                        value={editData.model}
+                        value={boatData.model}
                         placeholder='e.g. Manhattan'
                         fullWidth
                         variant='filled'
@@ -114,7 +125,7 @@ const BoatForm = ({ handleInputChange }) => {
                         label='Remark'
                         placeholder='Enter any remarks'
                         fullWidth
-                        value={editData.remark}
+                        value={boatData.remark}
                         variant='filled'
                         size='small'
                         multiline

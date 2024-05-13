@@ -16,7 +16,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const [userBoats, setUserboats] = useState([]);
     const [loading, setLoading] = useState(false);
     const { boats, clients } = useStoreState(AppStore);
-    const { boatData, serviceData, clientData } = useStoreState(FormStore);
+    const { boatData, serviceData, clientData, editId } = useStoreState(FormStore);
 
     useEffect(() => {
         if (clientData.client || serviceData.client) {
@@ -117,7 +117,12 @@ const AdminForms = ({ selection, setOpenModal }) => {
     return (
         <Modal
             open={true}
-            onClose={() => setOpenModal(false)}
+            onClose={() => {
+                setOpenModal(false);
+                FormStore.update((s) => {
+                    s.editId = null;
+                });
+            }}
             aria-labelledby='modal-title'
             aria-describedby='modal-description'
         >
