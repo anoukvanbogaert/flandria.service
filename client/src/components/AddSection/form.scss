@@ -108,3 +108,17 @@ button {
 .css-1o36jr-MuiGrid-root > .MuiGrid-item {
     padding-left: 0 !important;
 }
+
+//clients form needs this to take up the full width
+
+.MuiBox-root .css-0 {
+    width: 100% !important;
+}
+
+.css-u78q51-MuiGrid-root {
+    padding-left: 0 !important;
+}
+
+.css-7xiw84-MuiGrid-root > .MuiGrid-item {
+    padding-left: 0 !important;
+}

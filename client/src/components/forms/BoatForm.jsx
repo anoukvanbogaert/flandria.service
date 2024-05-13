@@ -13,19 +13,8 @@ const BoatForm = ({ handleInputChange }) => {
     const [clientValue, setClientValue] = useState(null);
 
     useEffect(() => {
-        if (editId && boatData.client) {
-            // Find the client object for the given client ID from boatData
-            const client = clients.find((c) => c.id === boatData.client);
-            setClientValue(client ? { label: client.name, uid: client.id } : null);
-        } else {
-            setClientValue(null); // Reset or set to default if no editId
-        }
-    }, [editId, boatData.client, clients]);
-
-    useEffect(() => {
         if (editId) {
             const editData = boats.find((boat) => boat.id === editId) || boatData;
-            console.log('editData1', editData);
             FormStore.update((s) => {
                 s.boatData = editData || {};
             });
@@ -34,7 +23,7 @@ const BoatForm = ({ handleInputChange }) => {
                 s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editId]);
+    }, [editId, boatData, boats]);
 
     console.log('editId', editId);
     console.log('boatData', boatData);
@@ -58,7 +47,7 @@ const BoatForm = ({ handleInputChange }) => {
                             label: option.name,
                             uid: option.id,
                         }))}
-                        value={clientValue} // Controlled component
+                        value={clientValue}
                         onChange={(event, newValue) => {
                             setClientValue(newValue);
                             handleInputChange('client', newValue ? newValue.uid : '');
