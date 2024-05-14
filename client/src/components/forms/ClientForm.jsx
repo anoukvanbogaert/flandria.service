@@ -8,19 +8,24 @@ import { FormStore } from '../../stores/FormStore';
 const ClientForm = ({ handleInputChange }) => {
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
+    console.log('clientData', clientData);
 
     useEffect(() => {
         if (editId) {
-            const editData = clients.find((client) => client.id === editId) || clientData;
+            const editData = clients.find((client) => client.id === editId);
             FormStore.update((s) => {
                 s.clientData = editData || {};
             });
-        } else {
+        }
+    }, [editId, clients]);
+
+    useEffect(() => {
+        if (!editId) {
             FormStore.update((s) => {
                 s.clientData = { email: '', boat: [], name: '' };
             });
         }
-    }, [editId, clientData, clients]);
+    }, [editId]);
 
     return (
         <Grid

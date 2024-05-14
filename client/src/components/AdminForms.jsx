@@ -33,6 +33,8 @@ const AdminForms = ({ selection, setOpenModal }) => {
     }, [clientData.client, serviceData.client, clients, boats]);
 
     const handleInputChange = (section) => (field, value) => {
+        console.log('field', field);
+        console.log('section', section);
         FormStore.update((s) => {
             if (s[section]) {
                 s[section][field] = value;

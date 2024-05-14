@@ -23,10 +23,7 @@ const BoatForm = ({ handleInputChange }) => {
                 s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editId, boatData, boats]);
-
-    console.log('editId', editId);
-    console.log('boatData', boatData);
+    }, [editId, boats]);
 
     return (
         <>
