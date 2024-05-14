@@ -47,8 +47,6 @@ export const getSetUserDoc = async (user) => {
 
 export const addToCollection = async (collectionName, data) => {
     try {
-        console.log('data', data);
-        console.log('collectionName', collectionName);
         const docRef = await addDoc(collection(db, collectionName), data);
         AppStore.update((s) => {
             s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
@@ -92,9 +90,6 @@ export const editInCollection = async (collectionName, docId, data) => {
 export const updateBoatOwnership = async (clientId, boatId) => {
     const clientRef = doc(db, 'clients', clientId);
     const clientDoc = await getDoc(clientRef);
-
-    console.log('clientId', clientId);
-    console.log('boatId', boatId);
 
     try {
         if (clientDoc.exists()) {

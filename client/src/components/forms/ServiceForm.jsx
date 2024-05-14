@@ -20,107 +20,117 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
     return (
         <>
-            <Grid item xs={1}>
-                <AccountCircle />
-            </Grid>
-            <Grid item xs={11}>
-                <Autocomplete
-                    freeSolo
-                    options={clients.map((option) => ({
-                        label: option.name,
-                        uid: option.id,
-                    }))}
-                    getOptionLabel={(option) => option.label || ''}
-                    onChange={(event, newValue) => {
-                        const id = newValue ? newValue.uid : '';
-                        handleServiceInputChange('client', id);
-                    }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label='Choose a client'
-                            fullWidth
-                            value={serviceData.client}
-                            variant='filled'
-                            size='small'
-                        />
-                    )}
-                />
-            </Grid>
-            <Grid item xs={1}>
-                <DirectionsBoat />
-            </Grid>
-            <Grid item xs={11}>
-                <FormControl fullWidth variant='filled' size='small'>
-                    <InputLabel id='service-select-label'>Select vessel</InputLabel>
-                    <Select
-                        labelId='service-select-label'
-                        value={serviceData.boat}
-                        onChange={(event) => handleServiceInputChange('boat', event.target.value)}
-                        label='Select vessel'
-                    >
-                        {userBoats.map((boat) => (
-                            <MenuItem key={boat.id} value={boat.id}>
-                                {`${boat.name} (${boat.brand}, ${boat.model})`}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid item xs={1}>
-                <Build />
-            </Grid>
-            <Grid item xs={11}>
-                <FormControl fullWidth variant='filled' size='small'>
-                    <InputLabel id='service-select-label'>Select service</InputLabel>
-                    <Select
-                        labelId='service-select-label'
-                        multiple
-                        value={serviceData.services}
-                        onChange={(event) =>
-                            handleServiceInputChange('services', event.target.value)
-                        }
-                        label='Select service'
-                    >
-                        {filteredServiceTemplates.map((template) => (
-                            <MenuItem key={template.id} value={template.description}>
-                                {template.description}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </Grid>
-
-            <Grid item xs={1}>
-                <DateRange />
-            </Grid>
-            <Grid item xs={11}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        label='Select date'
-                        value={serviceData.date}
-                        onChange={(newValue) => handleServiceInputChange('date', newValue)}
-                        slotProps={{ textField: { size: 'small', variant: 'filled' } }}
-                        renderInput={(params) => <TextField {...params} />}
+            <Grid
+                container
+                spacing={3}
+                alignItems='center'
+                justifyContent='space-between'
+                sx={{ marginLeft: 0, width: 'auto' }}
+            >
+                <Grid item xs={1}>
+                    <AccountCircle color='secondary' />
+                </Grid>
+                <Grid item xs={11}>
+                    <Autocomplete
+                        freeSolo
+                        options={clients.map((option) => ({
+                            label: option.name,
+                            uid: option.id,
+                        }))}
+                        getOptionLabel={(option) => option.label || ''}
+                        onChange={(event, newValue) => {
+                            const id = newValue ? newValue.uid : '';
+                            handleServiceInputChange('client', id);
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label='Choose a client'
+                                fullWidth
+                                value={serviceData.client}
+                                variant='filled'
+                                size='small'
+                            />
+                        )}
                     />
-                </LocalizationProvider>
-            </Grid>
+                </Grid>
+                <Grid item xs={1}>
+                    <DirectionsBoat color='secondary' />
+                </Grid>
+                <Grid item xs={11}>
+                    <FormControl fullWidth variant='filled' size='small'>
+                        <InputLabel id='service-select-label'>Select vessel</InputLabel>
+                        <Select
+                            labelId='service-select-label'
+                            value={serviceData.boat}
+                            onChange={(event) =>
+                                handleServiceInputChange('boat', event.target.value)
+                            }
+                            label='Select vessel'
+                        >
+                            {userBoats.map((boat) => (
+                                <MenuItem key={boat.id} value={boat.id}>
+                                    {`${boat.name} (${boat.brand}, ${boat.model})`}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={1}>
+                    <Build color='secondary' />
+                </Grid>
+                <Grid item xs={11}>
+                    <FormControl fullWidth variant='filled' size='small'>
+                        <InputLabel id='service-select-label'>Select service</InputLabel>
+                        <Select
+                            labelId='service-select-label'
+                            multiple
+                            value={serviceData.services}
+                            onChange={(event) =>
+                                handleServiceInputChange('services', event.target.value)
+                            }
+                            label='Select service'
+                        >
+                            {filteredServiceTemplates.map((template) => (
+                                <MenuItem key={template.id} value={template.description}>
+                                    {template.description}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
 
-            <Grid item xs={1}>
-                <Comment />
-            </Grid>
-            <Grid item xs={11}>
-                <TextField
-                    label='Remark'
-                    multiline
-                    rows={4}
-                    placeholder='Enter your remark here'
-                    variant='filled'
-                    fullWidth
-                    onChange={(event) =>
-                        handleServiceInputChange('selectedRemark', event.target.value)
-                    }
-                />
+                <Grid item xs={1}>
+                    <DateRange color='secondary' />
+                </Grid>
+                <Grid item xs={11}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                            label='Select date'
+                            value={serviceData.date}
+                            onChange={(newValue) => handleServiceInputChange('date', newValue)}
+                            slotProps={{ textField: { size: 'small', variant: 'filled' } }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={1}>
+                    <Comment color='secondary' />
+                </Grid>
+                <Grid item xs={11}>
+                    <TextField
+                        label='Remark'
+                        multiline
+                        rows={4}
+                        placeholder='Enter your remark here'
+                        variant='filled'
+                        fullWidth
+                        onChange={(event) =>
+                            handleServiceInputChange('selectedRemark', event.target.value)
+                        }
+                    />
+                </Grid>
             </Grid>
         </>
     );
