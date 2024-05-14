@@ -46,6 +46,8 @@ export const getSetUserDoc = async (user) => {
 };
 
 export const addToCollection = async (collectionName, data) => {
+    console.log('collectionName', collectionName);
+    // console.log('data', data);
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
         AppStore.update((s) => {

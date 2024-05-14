@@ -9,8 +9,6 @@ export const FormStore = new Store({
         date: null,
         client: '',
         boat: '',
-        brand: '',
-        model: '',
         remark: '',
     },
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import {
     Autocomplete,
     TextField,
@@ -14,10 +14,32 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
+import { FormStore } from '../../stores/FormStore';
 
-const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
-    const { clients, serviceTemplates } = useStoreState(AppStore);
+const ServiceForm = ({ handleInputChange }) => {
+    const { clients, boats, serviceTemplates } = useStoreState(AppStore);
+    const { serviceData } = useStoreState(FormStore);
+    const [userBoats, setUserboats] = useState([]);
+
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
+    console.log('clients', userBoats);
+
+    useEffect(() => {
+        if (serviceData.client) {
+            const clientId = serviceData.client;
+            const client = clients.find((c) => c.id === clientId);
+
+            if (client) {
+                const boatInfo = client.boat
+                    .map((boatId) => boats.find((boat) => boat.id === boatId))
+                    .filter((boat) => boat !== undefined);
+                setUserboats(boatInfo);
+            } else {
+                setUserboats([]);
+            }
+        }
+    }, [serviceData.client, clients]);
+
     return (
         <>
             <Grid
@@ -40,7 +62,7 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
                         getOptionLabel={(option) => option.label || ''}
                         onChange={(event, newValue) => {
                             const id = newValue ? newValue.uid : '';
-                            handleServiceInputChange('client', id);
+                            handleInputChange('client', id);
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -63,9 +85,7 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
                         <Select
                             labelId='service-select-label'
                             value={serviceData.boat}
-                            onChange={(event) =>
-                                handleServiceInputChange('boat', event.target.value)
-                            }
+                            onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
                         >
                             {userBoats.map((boat) => (
@@ -86,9 +106,7 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
                             labelId='service-select-label'
                             multiple
                             value={serviceData.services}
-                            onChange={(event) =>
-                                handleServiceInputChange('services', event.target.value)
-                            }
+                            onChange={(event) => handleInputChange('services', event.target.value)}
                             label='Select service'
                         >
                             {filteredServiceTemplates.map((template) => (
@@ -108,9 +126,17 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
                         <DatePicker
                             label='Select date'
                             value={serviceData.date}
-                            onChange={(newValue) => handleServiceInputChange('date', newValue)}
+                            onChange={(newValue) => handleInputChange('date', newValue)}
                             slotProps={{ textField: { size: 'small', variant: 'filled' } }}
-                            renderInput={(params) => <TextField {...params} />}
+                            components={{
+                                OpenPickerIcon: TextField,
+                            }}
+                            componentsProps={{
+                                textField: {
+                                    size: 'small',
+                                    variant: 'filled',
+                                },
+                            }}
                         />
                     </LocalizationProvider>
                 </Grid>
@@ -127,7 +153,7 @@ const ServiceForm = ({ handleServiceInputChange, serviceData, userBoats }) => {
                         variant='filled'
                         fullWidth
                         onChange={(event) =>
-                            handleServiceInputChange('selectedRemark', event.target.value)
+                            handleInputChange('selectedRemark', event.target.value)
                         }
                     />
                 </Grid>

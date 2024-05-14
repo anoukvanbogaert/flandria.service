@@ -13,28 +13,11 @@ import { FormStore } from '../stores/FormStore';
 
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
-    const [userBoats, setUserboats] = useState([]);
     const [loading, setLoading] = useState(false);
     const { boats, clients } = useStoreState(AppStore);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
-    useEffect(() => {
-        if (clientData.client || serviceData.client) {
-            const clientId = clientData.client || serviceData.client;
-            const client = clients.find((c) => c.uid === clientId);
-
-            if (client && client.boats) {
-                const userBoats = boats.filter((boat) => client.boats.includes(boat.id));
-                setUserboats(userBoats);
-            } else {
-                setUserboats([]);
-            }
-        }
-    }, [clientData.client, serviceData.client, clients, boats]);
-
     const handleInputChange = (section) => (field, value) => {
-        console.log('field', field);
-        console.log('section', section);
         FormStore.update((s) => {
             if (s[section]) {
                 s[section][field] = value;
@@ -45,6 +28,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const handleSave = async () => {
         setLoading(true);
         setOperationStatus('idle');
+        console.log('selection', selection);
 
         try {
             if (selection === 'client') {
@@ -90,27 +74,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const renderForm = () => {
         switch (selection) {
             case 'client':
-                return (
-                    <ClientForm
-                        handleInputChange={handleInputChange('clientData')}
-                        clientData={clientData}
-                    />
-                );
+                return <ClientForm handleInputChange={handleInputChange('clientData')} />;
             case 'boat':
-                return (
-                    <BoatForm
-                        handleInputChange={handleInputChange('boatData')}
-                        boatData={boatData}
-                    />
-                );
+                return <BoatForm handleInputChange={handleInputChange('boatData')} />;
             case 'service':
-                return (
-                    <ServiceForm
-                        handleInputChange={handleInputChange(serviceData)}
-                        serviceData={serviceData}
-                        userBoats={userBoats}
-                    />
-                );
+                return <ServiceForm handleInputChange={handleInputChange('serviceData')} />;
             default:
                 return null;
         }
