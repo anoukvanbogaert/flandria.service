@@ -38,7 +38,7 @@ const ServiceForm = ({ handleInputChange }) => {
                 setUserboats([]);
             }
         }
-    }, [serviceData.client, clients]);
+    }, [serviceData.client, clients, boats]);
 
     return (
         <>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './AddSection/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { addToCollection, editInCollection, updateBoatOwnership } from '../utils/getData';
+import { addToCollection, editInCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
 
 import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';
@@ -14,7 +13,6 @@ import { FormStore } from '../stores/FormStore';
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
     const [loading, setLoading] = useState(false);
-    const { boats, clients } = useStoreState(AppStore);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     const handleInputChange = (section) => (field, value) => {

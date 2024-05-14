@@ -47,7 +47,7 @@ export const getSetUserDoc = async (user) => {
 
 export const addToCollection = async (collectionName, data) => {
     console.log('collectionName', collectionName);
-    // console.log('data', data);
+
     try {
         const docRef = await addDoc(collection(db, collectionName), data);
         AppStore.update((s) => {
@@ -55,6 +55,21 @@ export const addToCollection = async (collectionName, data) => {
         });
         if (collectionName === 'boats') {
             await updateBoatOwnership(data.client, docRef.id);
+        }
+
+        if (collectionName === 'services') {
+            const boatServicesRef = collection(db, 'boats', data.boat, 'services');
+            const boatDocRef = await addDoc(boatServicesRef, data);
+
+            AppStore.update((s) => {
+                const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
+                if (boatIndex !== -1) {
+                    if (!s.boats[boatIndex].services) {
+                        s.boats[boatIndex].services = [];
+                    }
+                    s.boats[boatIndex].services.push({ ...data, id: boatDocRef.id });
+                }
+            });
         }
         console.log('Document written with ID: ', docRef.id);
         return docRef;
