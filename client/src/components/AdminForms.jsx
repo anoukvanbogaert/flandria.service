@@ -55,11 +55,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 }
             } else if (selection === 'boat') {
                 if (boatData.id) {
-                    await updateBoatOwnership(boatData.client, boatData.id);
                     await editInCollection('boats', boatData.id, boatData);
+                    // await updateBoatOwnership(boatData.client, boatData.id);
                 } else {
-                    await updateBoatOwnership(boatData.client, boatData.id);
                     await addToCollection('boats', boatData);
+                    // await updateBoatOwnership(boatData.client, boatData.id);
                 }
             } else if (selection === 'service') {
                 if (serviceData.id) {
