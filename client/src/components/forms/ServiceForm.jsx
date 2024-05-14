@@ -84,15 +84,23 @@ const ServiceForm = ({ handleInputChange }) => {
                         <InputLabel id='service-select-label'>Select vessel</InputLabel>
                         <Select
                             labelId='service-select-label'
-                            value={serviceData.boat}
+                            value={serviceData.boat || ''}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
                         >
-                            {userBoats.map((boat) => (
-                                <MenuItem key={boat.id} value={boat.id}>
-                                    {`${boat.name} (${boat.brand}, ${boat.model})`}
+                            {userBoats.length > 0 ? (
+                                userBoats.map((boat) => (
+                                    <MenuItem key={boat.id} value={boat.id}>
+                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
+                                    </MenuItem>
+                                ))
+                            ) : (
+                                <MenuItem disabled value=''>
+                                    {serviceData.client
+                                        ? 'This customer does not have any boats yet'
+                                        : 'Please select a customer first'}
                                 </MenuItem>
-                            ))}
+                            )}
                         </Select>
                     </FormControl>
                 </Grid>
