@@ -33,6 +33,8 @@ const AdminForms = ({ selection, setOpenModal }) => {
     }, [clientData.client, serviceData.client, clients, boats]);
 
     const handleInputChange = (section) => (field, value) => {
+        console.log('field', field);
+        console.log('section', section);
         FormStore.update((s) => {
             if (s[section]) {
                 s[section][field] = value;
@@ -117,7 +119,12 @@ const AdminForms = ({ selection, setOpenModal }) => {
     return (
         <Modal
             open={true}
-            onClose={() => setOpenModal(false)}
+            onClose={() => {
+                setOpenModal(false);
+                FormStore.update((s) => {
+                    s.editId = null;
+                });
+            }}
             aria-labelledby='modal-title'
             aria-describedby='modal-description'
         >
@@ -156,11 +163,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     open={loading || operationStatus !== 'idle'}
                 >
                     {loading ? (
-                        <CircularProgress color='inherit' size={68} />
+                        <CircularProgress color='inherit' size={160} />
                     ) : operationStatus === 'success' ? (
-                        <Check sx={{ fontSize: 68, color: 'green' }} />
+                        <Check sx={{ fontSize: 160, color: 'green' }} />
                     ) : operationStatus === 'error' ? (
-                        <Close sx={{ fontSize: 68, color: 'red' }} />
+                        <Close sx={{ fontSize: 160, color: 'red' }} />
                     ) : null}
                 </Backdrop>
                 <Typography
