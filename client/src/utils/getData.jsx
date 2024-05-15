@@ -48,17 +48,14 @@ export const addToCollection = async (collectionName, data) => {
     console.log('collectionName', collectionName);
 
     try {
-        const docRef = await addDoc(collection(db, collectionName), data);
-        AppStore.update((s) => {
-            s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
-        });
-        if (collectionName === 'boats') {
-            await updateBoatOwnership(data.client, docRef.id);
-        }
-
-        if (collectionName === 'services') {
-            const boatServicesRef = collection(db, 'boats', data.boat, 'services');
-            const boatDocRef = await addDoc(boatServicesRef, data);
+        let docRef;
+        if (collectionName === 'services' && data.boat) {
+            // Create a document reference with a new ID in the main services collection
+            docRef = doc(collection(db, collectionName));
+            // Use the same ID to add the document to the boats' subcollection
+            const boatServicesRef = doc(db, 'boats', data.boat, 'services', docRef.id);
+            await setDoc(boatServicesRef, data);
+            await setDoc(docRef, data); // Set the document in the main services collection with the same ID
 
             AppStore.update((s) => {
                 const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
@@ -66,9 +63,19 @@ export const addToCollection = async (collectionName, data) => {
                     if (!s.boats[boatIndex].services) {
                         s.boats[boatIndex].services = [];
                     }
-                    s.boats[boatIndex].services.push({ ...data, id: boatDocRef.id });
+                    s.boats[boatIndex].services.push({ ...data, id: docRef.id });
                 }
+                s.services.push({ ...data, id: docRef.id });
             });
+        } else {
+            // For other collections like boats
+            docRef = await addDoc(collection(db, collectionName), data);
+            AppStore.update((s) => {
+                s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
+            });
+            if (collectionName === 'boats') {
+                await updateBoatOwnership(data.client, docRef.id);
+            }
         }
         console.log('Document written with ID: ', docRef.id);
         return docRef;
@@ -139,20 +146,48 @@ export const updateBoatOwnership = async (clientId, boatId) => {
     }
 };
 
-export const deleteFromCollection = async (collectionName, docId, store, clientId) => {
+export const deleteFromCollection = async (collectionName, docId, store) => {
     const docRef = doc(db, collectionName, docId);
+
+    if (collectionName === 'services') {
+        const serviceDoc = await getDoc(docRef);
+        const boatId = serviceDoc.data().boat;
+        if (boatId) {
+            await deleteFromSubCollection('boats', 'services', docId, boatId, store);
+        }
+    }
     await deleteDoc(docRef);
 
-    // if (collectionName === 'boats') {
-    //     const clientRef = doc(db, 'clients', clientId);
-    // }
-    console.log('store', store);
-
     if (store) {
-        console.log('store', store);
         store.update((s) => {
             const updatedData = s[collectionName].filter((item) => item.id !== docId);
             return { ...s, [collectionName]: updatedData };
+        });
+    }
+};
+
+export const deleteFromSubCollection = async (
+    collectionName,
+    subCollectionName,
+    docId,
+    boatId,
+    store
+) => {
+    const serviceSubDocRef = doc(db, collectionName, boatId, subCollectionName, docId);
+    await deleteDoc(serviceSubDocRef);
+
+    if (store) {
+        store.update((s) => {
+            const updatedBoats = s.boats.map((boat) => {
+                if (boat.id === boatId) {
+                    const updatedServices = boat.services.filter(
+                        (serviceId) => serviceId !== docId
+                    );
+                    return { ...boat, services: updatedServices };
+                }
+                return boat;
+            });
+            return { ...s, boats: updatedBoats };
         });
     }
 };
