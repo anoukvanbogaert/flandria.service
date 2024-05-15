@@ -12,71 +12,96 @@ import { FormStore } from '../stores/FormStore';
 const BoatData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
-    const { boats, clients } = useStoreState(AppStore);
+    const { boats, clients, services } = useStoreState(AppStore);
 
-    const getClientNameById = (clientId) => {
-        const client = clients.find((c) => c.id === clientId);
-        return client ? client.name : 'Unknown';
+    const getInfoById = (id, items, property) => {
+        const item = items.find((item) => item.id === id);
+        return item ? item[property] : 'Unknown';
     };
 
-    const onEditClick = (boatId) => {
+    const onEditClick = (serviceId) => {
         FormStore.update((s) => {
-            s.editId = boatId;
+            s.editId = serviceId;
         });
         setOpenModal(true);
     };
 
-    const onDeleteClick = (boatId, clientId) => {
-        console.log('Deleting boat:', boatId);
-        deleteFromCollection('boats', boatId, AppStore);
+    const onDeleteClick = (serviceId, clientId) => {
+        console.log('Deleting service:', serviceId);
+        // below needs to be turned into deletefromsubcollection
+        // deleteFromCollection('boats', boatId, AppStore);
     };
 
     //This useffect looks for rows to highlight
     useEffect(() => {
-        const lastAddedBoat = boats.find((boat) => boat.lastAdded);
-        if (lastAddedBoat) {
-            setHighlightedRow(lastAddedBoat.id);
+        const lastAddedService = services.find((service) => service.lastAdded);
+        if (lastAddedService) {
+            setHighlightedRow(lastAddedService.id);
 
             const timer = setTimeout(() => {
                 setHighlightedRow(null);
                 AppStore.update((s) => {
-                    const index = s.boats.findIndex((boat) => boat.id === lastAddedBoat.id);
+                    const index = s.services.findIndex(
+                        (service) => service.id === lastAddedService.id
+                    );
                     if (index !== -1) {
-                        s.boats[index].lastAdded = false;
+                        s.services[index].lastAdded = false;
                     }
                 });
             }, 2000);
 
             return () => clearTimeout(timer);
         }
-    }, [boats]);
+    }, [services]);
 
     const columns = [
         {
             name: 'boatName',
             label: 'Boat Name',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const service = services[dataIndex];
+                    return getInfoById(service.boat, boats, 'boatName');
+                },
+            },
         },
         {
             name: 'client',
             label: 'Client',
             options: {
                 customBodyRenderLite: (dataIndex) => {
-                    const boat = boats[dataIndex];
-                    return getClientNameById(boat.client);
+                    const service = services[dataIndex];
+                    return getInfoById(service.client, clients, 'name');
                 },
             },
         },
         {
             name: 'brand',
             label: 'Brand',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const service = services[dataIndex];
+                    return getInfoById(service.boat, boats, 'brand');
+                },
+            },
         },
         {
             name: 'model',
             label: 'Model',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const service = services[dataIndex];
+                    return getInfoById(service.boat, boats, 'model');
+                },
+            },
         },
+        // {
+        //     name: 'date',
+        //     label: 'Date',
+        // },
         {
-            name: 'techSpecs',
-            label: 'Tech Specs',
+            name: 'services',
+            label: 'Service(s) performed',
         },
         {
             name: '',
@@ -90,18 +115,18 @@ const BoatData = ({ setOpenModal }) => {
                     },
                 }),
                 customBodyRenderLite: (dataIndex) => {
-                    const boat = boats[dataIndex];
+                    const service = services[dataIndex];
                     return (
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <IconButton
-                                onClick={() => onEditClick(boat.id)}
+                                onClick={() => onEditClick(service.id)}
                                 aria-label='edit'
                                 color='secondary'
                             >
                                 <EditIcon />
                             </IconButton>
                             <IconButton
-                                onClick={() => onDeleteClick(boat.id, boat.client)}
+                                onClick={() => onDeleteClick(service.id, service.client)}
                                 aria-label='delete'
                                 color='error'
                             >
@@ -135,14 +160,14 @@ const BoatData = ({ setOpenModal }) => {
         }),
         setRowProps: (row, dataIndex) => {
             return {
-                className: boats[dataIndex].id === highlightedRow ? 'flash-background' : '',
+                className: services[dataIndex].id === highlightedRow ? 'flash-background' : '',
             };
         },
     };
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={boats} columns={columns} options={options} />
+            <MUIDataTable data={services} columns={columns} options={options} />
         </div>
     );
 };

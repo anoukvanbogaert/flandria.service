@@ -20,9 +20,10 @@ const ServiceForm = ({ handleInputChange }) => {
     const { clients, boats, services, serviceTemplates } = useStoreState(AppStore);
     const { editId, serviceData } = useStoreState(FormStore);
     const [userBoats, setUserboats] = useState([]);
+    const [clientValue, setClientValue] = useState(null);
+    const [boatValue, setBoatValue] = useState(null);
 
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
-    console.log('serviceData', serviceData);
 
     useEffect(() => {
         if (serviceData.client) {
@@ -43,7 +44,12 @@ const ServiceForm = ({ handleInputChange }) => {
 
     useEffect(() => {
         if (editId) {
-            const editData = services.find((service) => service.id === editId);
+            const editData = services.find((service) => service.id === editId) || serviceData;
+            const clientName =
+                clients.find((client) => client.id === editData.client)?.name || 'Unknown';
+            setClientValue(clientName);
+            const boatInfo = boats.find((boat) => boat.id === editData.boat) || 'Unknown';
+            setBoatValue(boatInfo);
             FormStore.update((s) => {
                 s.serviceData = editData || {};
             });
@@ -77,17 +83,18 @@ const ServiceForm = ({ handleInputChange }) => {
                             label: option.name,
                             uid: option.id,
                         }))}
-                        getOptionLabel={(option) => option.label || ''}
+                        value={clientValue}
                         onChange={(event, newValue) => {
-                            const id = newValue ? newValue.uid : '';
-                            handleInputChange('client', id);
+                            setClientValue(newValue);
+                            handleInputChange('client', newValue ? newValue.uid : '');
                         }}
+                        getOptionLabel={(option) => option.label || ''}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label='Choose a client'
+                                disabled={serviceData.id}
+                                label={serviceData.id ? 'Client' : 'Choose a client'}
                                 fullWidth
-                                value={serviceData.client}
                                 variant='filled'
                                 size='small'
                             />
@@ -105,6 +112,7 @@ const ServiceForm = ({ handleInputChange }) => {
                             value={serviceData.boat || []}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
+                            disabled={serviceData.id}
                         >
                             {userBoats.length > 0 ? (
                                 userBoats.map((boat) => (
