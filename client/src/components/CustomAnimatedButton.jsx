@@ -4,19 +4,19 @@ import { Box, ButtonBase, Typography } from '@mui/material/';
 
 const images = [
     {
-        url: require('../../assets/images/boat.jpg'),
+        url: require('../assets/images/boat.jpg'),
         title: 'Boats',
         width: '32%',
         selection: 'boat',
     },
     {
-        url: require('../../assets/images/people.jpg'),
+        url: require('../assets/images/people.jpg'),
         title: 'Customers',
         width: '32%',
         selection: 'client',
     },
     {
-        url: require('../../assets/images/engine.jpg'),
+        url: require('../assets/images/engine.jpg'),
         title: 'Services',
         width: '32%',
         selection: 'service',
@@ -92,7 +92,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 export default function ButtonBaseDemo({ setSelection }) {
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState('boat');
 
     return (
         <Box

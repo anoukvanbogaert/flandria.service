@@ -6,6 +6,7 @@ export const AppStore = new Store({
     serviceTemplates: [],
     clients: [],
     boats: [],
+    services: [],
     appBarHeight: 64,
     overview: null,
 });

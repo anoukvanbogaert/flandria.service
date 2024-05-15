@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './AddSection/form.scss';
+import React, { useState } from 'react';
+import './forms/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { addToCollection, editInCollection, updateBoatOwnership } from '../utils/getData';
+import { addToCollection, editInCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
 
 import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';
@@ -13,28 +12,10 @@ import { FormStore } from '../stores/FormStore';
 
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
-    const [userBoats, setUserboats] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { boats, clients } = useStoreState(AppStore);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
-    useEffect(() => {
-        if (clientData.client || serviceData.client) {
-            const clientId = clientData.client || serviceData.client;
-            const client = clients.find((c) => c.uid === clientId);
-
-            if (client && client.boats) {
-                const userBoats = boats.filter((boat) => client.boats.includes(boat.id));
-                setUserboats(userBoats);
-            } else {
-                setUserboats([]);
-            }
-        }
-    }, [clientData.client, serviceData.client, clients, boats]);
-
     const handleInputChange = (section) => (field, value) => {
-        console.log('field', field);
-        console.log('section', section);
         FormStore.update((s) => {
             if (s[section]) {
                 s[section][field] = value;
@@ -45,6 +26,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const handleSave = async () => {
         setLoading(true);
         setOperationStatus('idle');
+        console.log('selection', selection);
 
         try {
             if (selection === 'client') {
@@ -55,11 +37,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 }
             } else if (selection === 'boat') {
                 if (boatData.id) {
-                    await updateBoatOwnership(boatData.client, boatData.id);
                     await editInCollection('boats', boatData.id, boatData);
+                    // await updateBoatOwnership(boatData.client, boatData.id);
                 } else {
-                    await updateBoatOwnership(boatData.client, boatData.id);
                     await addToCollection('boats', boatData);
+                    // await updateBoatOwnership(boatData.client, boatData.id);
                 }
             } else if (selection === 'service') {
                 if (serviceData.id) {
@@ -90,27 +72,11 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const renderForm = () => {
         switch (selection) {
             case 'client':
-                return (
-                    <ClientForm
-                        handleInputChange={handleInputChange('clientData')}
-                        clientData={clientData}
-                    />
-                );
+                return <ClientForm handleInputChange={handleInputChange('clientData')} />;
             case 'boat':
-                return (
-                    <BoatForm
-                        handleInputChange={handleInputChange('boatData')}
-                        boatData={boatData}
-                    />
-                );
+                return <BoatForm handleInputChange={handleInputChange('boatData')} />;
             case 'service':
-                return (
-                    <ServiceForm
-                        handleInputChange={handleInputChange(serviceData)}
-                        serviceData={serviceData}
-                        userBoats={userBoats}
-                    />
-                );
+                return <ServiceForm handleInputChange={handleInputChange('serviceData')} />;
             default:
                 return null;
         }
