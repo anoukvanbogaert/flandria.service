@@ -13,33 +13,23 @@ const BoatData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients, services } = useStoreState(AppStore);
-    console.log('services', services);
 
-    const getClientNameById = (clientId) => {
-        const client = clients.find((c) => c.id === clientId);
-        return client ? client.name : 'Unknown';
+    const getInfoById = (id, items, property) => {
+        const item = items.find((item) => item.id === id);
+        return item ? item[property] : 'Unknown';
     };
 
-    const getBoatModelById = (boatId) => {
-        const boat = boats.find((b) => b.id === boatId);
-        return boat ? boat.model : 'Unknown';
-    };
-
-    const getBoatBrandById = (boatId) => {
-        const boat = boats.find((b) => b.id === boatId);
-        return boat ? boat.brand : 'Unknown';
-    };
-
-    const onEditClick = (boatId) => {
+    const onEditClick = (serviceId) => {
         FormStore.update((s) => {
-            s.editId = boatId;
+            s.editId = serviceId;
         });
         setOpenModal(true);
     };
 
-    const onDeleteClick = (boatId, clientId) => {
-        console.log('Deleting boat:', boatId);
-        deleteFromCollection('boats', boatId, AppStore);
+    const onDeleteClick = (serviceId, clientId) => {
+        console.log('Deleting service:', serviceId);
+        // below needs to be turned into deletefromsubcollection
+        // deleteFromCollection('boats', boatId, AppStore);
     };
 
     //This useffect looks for rows to highlight
@@ -68,6 +58,12 @@ const BoatData = ({ setOpenModal }) => {
         {
             name: 'boatName',
             label: 'Boat Name',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const service = services[dataIndex];
+                    return getInfoById(service.boat, boats, 'boatName');
+                },
+            },
         },
         {
             name: 'client',
@@ -75,7 +71,7 @@ const BoatData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getClientNameById(service.client);
+                    return getInfoById(service.client, clients, 'name');
                 },
             },
         },
@@ -85,7 +81,7 @@ const BoatData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getBoatBrandById(service.boat);
+                    return getInfoById(service.boat, boats, 'brand');
                 },
             },
         },
@@ -95,7 +91,7 @@ const BoatData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getBoatModelById(service.boat);
+                    return getInfoById(service.boat, boats, 'model');
                 },
             },
         },
