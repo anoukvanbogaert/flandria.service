@@ -12,7 +12,8 @@ import { FormStore } from '../stores/FormStore';
 const BoatData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
-    const { boats, clients } = useStoreState(AppStore);
+    const { boats, clients, services } = useStoreState(AppStore);
+    console.log('services', services);
 
     const getClientNameById = (clientId) => {
         const client = clients.find((c) => c.id === clientId);

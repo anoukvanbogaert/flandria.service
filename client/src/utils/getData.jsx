@@ -3,7 +3,6 @@ import {
     doc,
     getDoc,
     getDocs,
-    query,
     setDoc,
     addDoc,
     deleteDoc,
@@ -255,41 +254,36 @@ export const getBoats = async () => {
     }
 };
 
-export const getServices = async (user) => {
+export const getServices = async () => {
     console.log('firing getServices');
 
     try {
-        const serviceRef = collection(db, 'clients', user.uid, 'services');
-        const activeServiceRef = query(serviceRef);
-        const activeSubSnap = await getDocs(activeServiceRef);
-        const serviceArray = [];
-        // console.log('activeSubSnap', activeSubSnap);
-        if (activeSubSnap.docs.length > 0) {
-            // console.log('active subscriptions found');
-            activeSubSnap.docs.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                serviceArray.push({ ...data, id });
-            });
+        const servicesRef = collection(db, 'services');
+        const servicesSnapshot = await getDocs(servicesRef);
+
+        if (!servicesSnapshot.empty) {
+            const servicesArray = servicesSnapshot.docs
+                .map((doc) => {
+                    const data = doc.data();
+                    return data ? { id: doc.id, ...data } : null;
+                })
+                .filter((item) => item !== null);
 
             AppStore.update((s) => {
-                s.userDoc = {
-                    ...s.userDoc,
-                    services: serviceArray,
-                };
+                s.services = servicesArray;
             });
         } else {
-            // console.log('no active subscriptions found');
+            console.warn('No boats found');
             AppStore.update((s) => {
-                s.userDoc = {
-                    ...s.userDoc,
-                    services: [],
-                };
+                s.services = [];
             });
         }
     } catch (error) {
-        // Handle error here
-        console.error('getServices error', error);
+        console.error('getServiceTemplates error', error);
+        // Optionally, update the store to reflect the error state
+        AppStore.update((s) => {
+            s.serviceTemplates = [];
+        });
     }
 };
 
