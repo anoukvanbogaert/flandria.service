@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './AddSection/form.scss';
+import './forms/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { addToCollection, editInCollection } from '../utils/getData';
