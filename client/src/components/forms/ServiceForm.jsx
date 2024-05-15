@@ -17,12 +17,12 @@ import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
 
 const ServiceForm = ({ handleInputChange }) => {
-    const { clients, boats, serviceTemplates } = useStoreState(AppStore);
-    const { serviceData } = useStoreState(FormStore);
+    const { clients, boats, services, serviceTemplates } = useStoreState(AppStore);
+    const { editId, serviceData } = useStoreState(FormStore);
     const [userBoats, setUserboats] = useState([]);
 
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
-    console.log('clients', userBoats);
+    console.log('serviceData', serviceData);
 
     useEffect(() => {
         if (serviceData.client) {
@@ -30,6 +30,7 @@ const ServiceForm = ({ handleInputChange }) => {
             const client = clients.find((c) => c.id === clientId);
 
             if (client) {
+                console.log('client', client);
                 const boatInfo = client.boat
                     .map((boatId) => boats.find((boat) => boat.id === boatId))
                     .filter((boat) => boat !== undefined);
@@ -39,6 +40,23 @@ const ServiceForm = ({ handleInputChange }) => {
             }
         }
     }, [serviceData.client, clients, boats]);
+
+    useEffect(() => {
+        if (editId) {
+            const editData = services.find((service) => service.id === editId);
+            FormStore.update((s) => {
+                s.serviceData = editData || {};
+            });
+        }
+    }, [editId, services]);
+
+    useEffect(() => {
+        if (!editId) {
+            FormStore.update((s) => {
+                s.serviceData = { services: [], date: null, client: '', boat: [], remark: '' };
+            });
+        }
+    }, [editId]);
 
     return (
         <>
@@ -84,7 +102,7 @@ const ServiceForm = ({ handleInputChange }) => {
                         <InputLabel id='service-select-label'>Select vessel</InputLabel>
                         <Select
                             labelId='service-select-label'
-                            value={serviceData.boat || ''}
+                            value={serviceData.boat || []}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
                         >
@@ -113,7 +131,7 @@ const ServiceForm = ({ handleInputChange }) => {
                         <Select
                             labelId='service-select-label'
                             multiple
-                            value={serviceData.services}
+                            value={serviceData.services || ''}
                             onChange={(event) => handleInputChange('services', event.target.value)}
                             label='Select service'
                         >
