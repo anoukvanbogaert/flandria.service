@@ -54,7 +54,7 @@ export const addToCollection = async (collectionName, data) => {
                 const userCredential = await registerWithEmailPassword(data.email, dummyPassword);
                 console.log('userCredential', userCredential);
 
-                if (userCredential.user) {
+                if (userCredential) {
                     console.log('UID:', userCredential.uid);
 
                     // Prepare data for Firestore without sensitive password data
