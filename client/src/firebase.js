@@ -6,6 +6,7 @@ import {
     signInWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
+    createUserWithEmailAndPassword,
     sendPasswordResetEmail as firebaseSendPasswordResetEmail,
 } from 'firebase/auth';
 
@@ -69,7 +70,7 @@ export const sendPasswordResetEmail = async (email) => {
 
 export const registerWithEmailPassword = async (email, password) => {
     try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log('User created:', userCredential.user);
         return userCredential.user;
     } catch (error) {

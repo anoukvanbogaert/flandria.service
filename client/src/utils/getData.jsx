@@ -8,7 +8,7 @@ import {
     deleteDoc,
     updateDoc,
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, sendPasswordResetEmail, registerWithEmailPassword } from '../firebase';
 import { AppStore } from '../stores/AppStore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -39,7 +39,6 @@ export const getSetUserDoc = async (user) => {
             s.userDoc = userDoc;
         });
     } catch (error) {
-        // Handle error here
         console.error(error);
     }
 };
@@ -48,30 +47,73 @@ export const addToCollection = async (collectionName, data) => {
     console.log('collectionName', collectionName);
 
     try {
-        const docRef = await addDoc(collection(db, collectionName), data);
-        AppStore.update((s) => {
-            s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
-        });
-        if (collectionName === 'boats') {
-            await updateBoatOwnership(data.client, docRef.id);
-        }
+        if (collectionName === 'clients') {
+            const dummyPassword = 'temporaryPassword!';
+            try {
+                // Create user in Firebase Authentication
+                const userCredential = await registerWithEmailPassword(data.email, dummyPassword);
+                console.log('userCredential', userCredential);
 
-        if (collectionName === 'services') {
-            const boatServicesRef = collection(db, 'boats', data.boat, 'services');
-            const boatDocRef = await addDoc(boatServicesRef, data);
+                if (userCredential) {
+                    console.log('UID:', userCredential.uid);
 
+                    // Prepare data for Firestore without sensitive password data
+                    const clientData = {
+                        ...data,
+                        id: userCredential.uid, // Ensure that uid is stored
+                    };
+
+                    // Use the UID from Auth as the document ID in Firestore
+                    const docRef = doc(db, collectionName, userCredential.uid);
+
+                    // Set client data in Firestore using the same UID
+                    await setDoc(docRef, clientData);
+
+                    // Trigger a password reset email to allow the user to set their password
+                    await sendPasswordResetEmail(data.email);
+
+                    // Update local store if necessary
+                    AppStore.update((s) => {
+                        s[collectionName].push(clientData);
+                    });
+
+                    console.log('Client created and password reset email sent.');
+                    return docRef;
+                }
+            } catch (e) {
+                console.error('Error adding client:', e);
+                throw e;
+            }
+        } else if (collectionName === 'services' && data.boat) {
+            // Create a document reference for services collection
+            const docRef = doc(collection(db, collectionName));
+
+            // Set data in both service main collection and subcollection under the boat
+            await setDoc(docRef, data); // Set in the main services collection
+            const boatServicesRef = doc(db, 'boats', data.boat, 'services', docRef.id);
+            await setDoc(boatServicesRef, data); // Set in the subcollection
+
+            // Update local store
             AppStore.update((s) => {
+                s.services.push({ ...data, id: docRef.id });
                 const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
                 if (boatIndex !== -1) {
-                    if (!s.boats[boatIndex].services) {
-                        s.boats[boatIndex].services = [];
-                    }
-                    s.boats[boatIndex].services.push({ ...data, id: boatDocRef.id });
+                    s.boats[boatIndex].services = s.boats[boatIndex].services || [];
+                    s.boats[boatIndex].services.push(data);
                 }
             });
+        } else {
+            // For other collections
+            const docRef = await addDoc(collection(db, collectionName), data);
+            AppStore.update((s) => {
+                s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
+            });
+            if (collectionName === 'boats') {
+                await updateBoatOwnership(data.client, docRef.id);
+            }
+            console.log('Document written with ID: ', docRef.id);
+            return docRef;
         }
-        console.log('Document written with ID: ', docRef.id);
-        return docRef;
     } catch (e) {
         console.error('Error adding document: ', e);
         throw e;
@@ -110,9 +152,7 @@ export const updateBoatOwnership = async (clientId, boatId) => {
     try {
         if (clientDoc.exists()) {
             const clientData = clientDoc.data();
-            // Check if 'boat' field exists and is an array
             let boatArray = clientData.boat || [];
-            // Check if boatId is not already in the array to avoid duplicates
             if (!boatArray.includes(boatId)) {
                 boatArray.push(boatId);
                 await updateDoc(clientRef, {
@@ -124,7 +164,7 @@ export const updateBoatOwnership = async (clientId, boatId) => {
                 AppStore.update((s) => {
                     const index = s.clients.findIndex((client) => client.id === clientId);
                     if (index !== -1) {
-                        s.clients[index].boat = boatArray; // Directly assign the new array
+                        s.clients[index].boat = boatArray;
                     }
                 });
             } else {
@@ -139,17 +179,50 @@ export const updateBoatOwnership = async (clientId, boatId) => {
     }
 };
 
-export const deleteFromCollection = async (collectionName, docId, store, clientId) => {
+export const deleteFromCollection = async (collectionName, docId, store) => {
     const docRef = doc(db, collectionName, docId);
+
+    // if a service is deleted, it also needs to be removed from the boats.services subcollection
+    if (collectionName === 'services') {
+        const serviceDoc = await getDoc(docRef);
+        const boatId = serviceDoc.data().boat;
+        if (boatId) {
+            await deleteFromSubCollection('boats', 'services', docId, boatId, store);
+        }
+    }
+    // if a client is removed, they also need to be removed from the boats (if any) they're assigned to
+    if (collectionName === 'clients') {
+        const clientDoc = await getDoc(docRef);
+        const boatIds = clientDoc.data().boat;
+
+        if (boatIds && boatIds.length > 0) {
+            const updatePromises = boatIds.map((boatId) => {
+                const boatDocRef = doc(db, 'boats', boatId);
+                return updateDoc(boatDocRef, { client: null });
+            });
+
+            await Promise.all(updatePromises);
+        }
+    }
+
+    if (collectionName === 'boats') {
+        const boatDoc = await getDoc(docRef);
+        const clientId = boatDoc.data().client;
+
+        if (clientId) {
+            const clientDocRef = doc(db, 'clients', clientId);
+            const clientDoc = await getDoc(clientDocRef);
+            const currentBoats = clientDoc.data().boat || [];
+
+            const updatedBoats = currentBoats.filter((boatId) => boatId !== docId);
+
+            await updateDoc(clientDocRef, { boat: updatedBoats });
+        }
+    }
+
     await deleteDoc(docRef);
 
-    // if (collectionName === 'boats') {
-    //     const clientRef = doc(db, 'clients', clientId);
-    // }
-    console.log('store', store);
-
     if (store) {
-        console.log('store', store);
         store.update((s) => {
             const updatedData = s[collectionName].filter((item) => item.id !== docId);
             return { ...s, [collectionName]: updatedData };
@@ -157,8 +230,33 @@ export const deleteFromCollection = async (collectionName, docId, store, clientI
     }
 };
 
+export const deleteFromSubCollection = async (
+    collectionName,
+    subCollectionName,
+    docId,
+    boatId,
+    store
+) => {
+    const serviceSubDocRef = doc(db, collectionName, boatId, subCollectionName, docId);
+    await deleteDoc(serviceSubDocRef);
+
+    if (store) {
+        store.update((s) => {
+            const updatedBoats = s.boats.map((boat) => {
+                if (boat.id === boatId) {
+                    const updatedServices = boat.services.filter(
+                        (serviceId) => serviceId !== docId
+                    );
+                    return { ...boat, services: updatedServices };
+                }
+                return boat;
+            });
+            return { ...s, boats: updatedBoats };
+        });
+    }
+};
+
 export const getServiceTemplates = async () => {
-    console.log('firing getservicetemplates');
     try {
         const serviceTemplateRef = collection(db, 'serviceTemplates');
         const serviceTemplateSnapshot = await getDocs(serviceTemplateRef);
@@ -166,7 +264,6 @@ export const getServiceTemplates = async () => {
         if (!serviceTemplateSnapshot.empty) {
             const serviceTemplateArray = serviceTemplateSnapshot.docs
                 .map((doc) => {
-                    // Ensure each document has data before mapping
                     const data = doc.data();
                     return data ? { id: doc.id, ...data } : null;
                 })
@@ -183,7 +280,6 @@ export const getServiceTemplates = async () => {
         }
     } catch (error) {
         console.error('getServiceTemplates error', error);
-        // Optionally, update the store to reflect the error state
         AppStore.update((s) => {
             s.serviceTemplates = [];
         });
@@ -191,7 +287,6 @@ export const getServiceTemplates = async () => {
 };
 
 export const getClients = async () => {
-    console.log('firing getclients');
     try {
         const clientsRef = collection(db, 'clients');
         const clientsSnapshot = await getDocs(clientsRef);
@@ -215,7 +310,6 @@ export const getClients = async () => {
         }
     } catch (error) {
         console.error('getServiceTemplates error', error);
-        // Optionally, update the store to reflect the error state
         AppStore.update((s) => {
             s.serviceTemplates = [];
         });
@@ -223,7 +317,6 @@ export const getClients = async () => {
 };
 
 export const getBoats = async () => {
-    console.log('firing getboats');
     try {
         const boatsRef = collection(db, 'boats');
         const boatsSnapshot = await getDocs(boatsRef);
@@ -247,7 +340,6 @@ export const getBoats = async () => {
         }
     } catch (error) {
         console.error('getServiceTemplates error', error);
-        // Optionally, update the store to reflect the error state
         AppStore.update((s) => {
             s.serviceTemplates = [];
         });
@@ -280,7 +372,6 @@ export const getServices = async () => {
         }
     } catch (error) {
         console.error('getServiceTemplates error', error);
-        // Optionally, update the store to reflect the error state
         AppStore.update((s) => {
             s.serviceTemplates = [];
         });
@@ -292,8 +383,6 @@ export const addUserToDataBase = (userInfo, password) => {
 
     createUserWithEmailAndPassword(auth, userInfo.email, password)
         .then((userCredential) => {
-            // User created successfully in Firebase Auth, now add user info to Firebase Database
-            // const uid = userCredential.user.uid;
             return db.doc('users', userInfo.uid).set(userInfo);
         })
         .then(() => {

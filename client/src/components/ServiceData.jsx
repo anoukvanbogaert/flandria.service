@@ -28,8 +28,7 @@ const BoatData = ({ setOpenModal }) => {
 
     const onDeleteClick = (serviceId, clientId) => {
         console.log('Deleting service:', serviceId);
-        // below needs to be turned into deletefromsubcollection
-        // deleteFromCollection('boats', boatId, AppStore);
+        deleteFromCollection('services', serviceId, AppStore);
     };
 
     //This useffect looks for rows to highlight

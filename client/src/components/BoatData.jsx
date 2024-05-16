@@ -27,7 +27,6 @@ const BoatData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (boatId, clientId) => {
-        console.log('Deleting boat:', boatId);
         deleteFromCollection('boats', boatId, AppStore);
     };
 
