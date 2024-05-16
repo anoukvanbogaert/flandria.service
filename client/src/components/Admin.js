@@ -17,22 +17,42 @@ const Admin = () => {
         <Box className='admin__container'>
             <Box className='admin__form'>
                 <AdminOptions setSelection={setSelection} />
-                {selection && (
-                    <Button
-                        variant='contained'
-                        startIcon={<Add />}
-                        color='secondary'
-                        sx={{
-                            justifySelf: 'left',
-                            marginTop: '5rem',
-                            fontWeight: 'bold',
-                            width: 'fit-content',
-                        }}
-                        onClick={() => setOpenModal(true)}
-                    >
-                        Add a {selection}
-                    </Button>
-                )}
+                <Box
+                    sx={{
+                        justifySelf: 'left',
+                        marginTop: '5rem',
+                    }}
+                >
+                    {selection && (
+                        <Button
+                            variant='contained'
+                            startIcon={<Add />}
+                            color='secondary'
+                            sx={{
+                                fontWeight: 'bold',
+                                width: 'fit-content',
+                            }}
+                            onClick={() => setOpenModal(true)}
+                        >
+                            Add a {selection}
+                        </Button>
+                    )}
+                    {selection === 'service' && (
+                        <Button
+                            variant='outlined'
+                            startIcon={<Add />}
+                            color='secondary'
+                            sx={{
+                                fontWeight: 'bold',
+                                marginLeft: '2rem',
+                                width: 'fit-content',
+                            }}
+                            onClick={() => setOpenModal(true)}
+                        >
+                            Add a service template
+                        </Button>
+                    )}
+                </Box>
                 {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
                 {selection === 'boat' && <BoatData setOpenModal={setOpenModal} />}
                 {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
