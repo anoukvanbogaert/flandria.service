@@ -8,6 +8,7 @@ import { useStoreState } from 'pullstate';
 import ClientForm from './forms/ClientForm';
 import BoatForm from './forms/BoatForm';
 import ServiceForm from './forms/ServiceForm';
+import ServiceTemplateForm from './forms/ServiceTemplateForm';
 import { FormStore } from '../stores/FormStore';
 
 const AdminForms = ({ selection, setOpenModal }) => {
@@ -75,6 +76,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 return <BoatForm handleInputChange={handleInputChange('boatData')} />;
             case 'service':
                 return <ServiceForm handleInputChange={handleInputChange('serviceData')} />;
+
             default:
                 return null;
         }

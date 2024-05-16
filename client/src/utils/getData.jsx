@@ -8,7 +8,7 @@ import {
     deleteDoc,
     updateDoc,
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, sendPasswordResetEmail, registerWithEmailPassword } from '../firebase';
 import { AppStore } from '../stores/AppStore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -47,36 +47,73 @@ export const addToCollection = async (collectionName, data) => {
     console.log('collectionName', collectionName);
 
     try {
-        let docRef;
-        if (collectionName === 'services' && data.boat) {
-            docRef = doc(collection(db, collectionName));
+        if (collectionName === 'clients') {
+            const dummyPassword = 'temporaryPassword!';
+            try {
+                // Create user in Firebase Authentication
+                const userCredential = await registerWithEmailPassword(data.email, dummyPassword);
+                console.log('userCredential', userCredential);
 
+                if (userCredential.user) {
+                    console.log('UID:', userCredential.uid);
+
+                    // Prepare data for Firestore without sensitive password data
+                    const clientData = {
+                        ...data,
+                        id: userCredential.uid, // Ensure that uid is stored
+                    };
+
+                    // Use the UID from Auth as the document ID in Firestore
+                    const docRef = doc(db, collectionName, userCredential.uid);
+
+                    // Set client data in Firestore using the same UID
+                    await setDoc(docRef, clientData);
+
+                    // Trigger a password reset email to allow the user to set their password
+                    await sendPasswordResetEmail(data.email);
+
+                    // Update local store if necessary
+                    AppStore.update((s) => {
+                        s[collectionName].push(clientData);
+                    });
+
+                    console.log('Client created and password reset email sent.');
+                    return docRef;
+                }
+            } catch (e) {
+                console.error('Error adding client:', e);
+                throw e;
+            }
+        } else if (collectionName === 'services' && data.boat) {
+            // Create a document reference for services collection
+            const docRef = doc(collection(db, collectionName));
+
+            // Set data in both service main collection and subcollection under the boat
+            await setDoc(docRef, data); // Set in the main services collection
             const boatServicesRef = doc(db, 'boats', data.boat, 'services', docRef.id);
-            await setDoc(boatServicesRef, data);
-            await setDoc(docRef, data);
+            await setDoc(boatServicesRef, data); // Set in the subcollection
 
+            // Update local store
             AppStore.update((s) => {
+                s.services.push({ ...data, id: docRef.id });
                 const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
                 if (boatIndex !== -1) {
-                    if (!s.boats[boatIndex].services) {
-                        s.boats[boatIndex].services = [];
-                    }
-                    s.boats[boatIndex].services.push({ ...data, id: docRef.id });
+                    s.boats[boatIndex].services = s.boats[boatIndex].services || [];
+                    s.boats[boatIndex].services.push(data);
                 }
-                s.services.push({ ...data, id: docRef.id });
             });
         } else {
-            // For other collections like boats
-            docRef = await addDoc(collection(db, collectionName), data);
+            // For other collections
+            const docRef = await addDoc(collection(db, collectionName), data);
             AppStore.update((s) => {
                 s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
             });
             if (collectionName === 'boats') {
                 await updateBoatOwnership(data.client, docRef.id);
             }
+            console.log('Document written with ID: ', docRef.id);
+            return docRef;
         }
-        console.log('Document written with ID: ', docRef.id);
-        return docRef;
     } catch (e) {
         console.error('Error adding document: ', e);
         throw e;
@@ -220,7 +257,6 @@ export const deleteFromSubCollection = async (
 };
 
 export const getServiceTemplates = async () => {
-    console.log('firing getservicetemplates');
     try {
         const serviceTemplateRef = collection(db, 'serviceTemplates');
         const serviceTemplateSnapshot = await getDocs(serviceTemplateRef);
@@ -251,7 +287,6 @@ export const getServiceTemplates = async () => {
 };
 
 export const getClients = async () => {
-    console.log('firing getclients');
     try {
         const clientsRef = collection(db, 'clients');
         const clientsSnapshot = await getDocs(clientsRef);
@@ -282,7 +317,6 @@ export const getClients = async () => {
 };
 
 export const getBoats = async () => {
-    console.log('firing getboats');
     try {
         const boatsRef = collection(db, 'boats');
         const boatsSnapshot = await getDocs(boatsRef);

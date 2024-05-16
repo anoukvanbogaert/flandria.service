@@ -12,6 +12,7 @@ import { Add } from '@mui/icons-material/';
 const Admin = () => {
     const [selection, setSelection] = useState('boat');
     const [openModal, setOpenModal] = useState(false);
+    const [openTemplateModal, setOpenTemplateModal] = useState(false);
 
     return (
         <Box className='admin__container'>
@@ -37,7 +38,7 @@ const Admin = () => {
                             Add a {selection}
                         </Button>
                     )}
-                    {selection === 'service' && (
+                    {/* {selection === 'service' && (
                         <Button
                             variant='outlined'
                             startIcon={<Add />}
@@ -47,11 +48,11 @@ const Admin = () => {
                                 marginLeft: '2rem',
                                 width: 'fit-content',
                             }}
-                            onClick={() => setOpenModal(true)}
+                            // onClick={() => setOpenModal(true)}
                         >
                             Add a service template
                         </Button>
-                    )}
+                    )} */}
                 </Box>
                 {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
                 {selection === 'boat' && <BoatData setOpenModal={setOpenModal} />}
