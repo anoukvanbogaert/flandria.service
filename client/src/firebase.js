@@ -32,7 +32,7 @@ export const signInWithGooglePopup = async () => {
     provider.setCustomParameters({ prompt: 'select_account' });
     try {
         const result = await signInWithPopup(auth, provider);
-        // You might want to return the user or handle navigation here
+        console.log('result.user', result.user);
         return result.user;
     } catch (error) {
         console.error('Google sign-in error:', error);
@@ -61,10 +61,10 @@ export const logout = () => {
 export const sendPasswordResetEmail = async (email) => {
     try {
         await firebaseSendPasswordResetEmail(auth, email);
-        alert('Password reset link sent!');
+        return true;
     } catch (error) {
         console.error('Password reset error:', error);
-        alert(error.message);
+        return error.message;
     }
 };
 

@@ -122,7 +122,7 @@ export default function ButtonBaseDemo({ setSelection }) {
                     <Image>
                         <Typography
                             component='span'
-                            variant='h2'
+                            variant='h1'
                             color='inherit'
                             sx={{
                                 fontWeight: 'bolder',
