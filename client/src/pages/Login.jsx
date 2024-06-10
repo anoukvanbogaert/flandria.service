@@ -7,7 +7,7 @@ import {
     registerWithEmailPassword,
 } from '../firebase';
 import Logo from '../assets/images/logo1.png';
-import { Container, Box, Typography, TextField, Button, Link, Alert } from '@mui/material';
+import { Container, Box, Typography, TextField, Button, Link, Alert, Divider } from '@mui/material';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -95,7 +95,7 @@ const Login = () => {
                 }}
             >
                 <Typography component='h1' variant='h5' marginBottom={3}>
-                    {isSignUp ? 'Sign Up' : 'Sign In'}
+                    {isSignUp ? 'Sign Up' : 'Log In to My Flandria'}
                 </Typography>
                 {error && (
                     <Alert severity='error' sx={{ width: '100%', mb: 2, animation: 'bounce 0.5s' }}>
@@ -150,8 +150,9 @@ const Login = () => {
                         color='primary'
                         sx={{ mb: 2, py: 1.5 }}
                     >
-                        {isSignUp ? 'Sign Up' : 'Sign In with Email'}
+                        {isSignUp ? 'Sign Up' : 'Log In'}
                     </Button>
+                    <Divider sx={{ mb: '1rem' }}></Divider>
                     {!isSignUp && (
                         <Button
                             onClick={() =>
@@ -169,7 +170,7 @@ const Login = () => {
                             variant='outlined'
                             sx={{ py: 1.5 }}
                         >
-                            Login with Google
+                            Continue with Google
                         </Button>
                     )}
                     <Link
@@ -179,7 +180,7 @@ const Login = () => {
                         sx={{ mt: 2, width: '1', textAlign: 'end' }}
                     >
                         {isSignUp
-                            ? 'Already have an account? Sign In'
+                            ? 'Already have an account? Log In'
                             : "Don't have an account? Sign Up"}
                     </Link>
                 </Box>
