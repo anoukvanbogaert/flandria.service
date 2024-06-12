@@ -7,6 +7,7 @@ import {
     registerWithEmailPassword,
 } from '../firebase';
 import Logo from '../assets/images/logo1.png';
+import googleLogo from '../assets/images/google-icon.webp';
 import { Container, Box, Typography, TextField, Button, Link, Alert, Divider } from '@mui/material';
 
 const Login = () => {
@@ -80,7 +81,7 @@ const Login = () => {
             />
             <Box
                 sx={{
-                    maxWidth: '768px',
+                    maxWidth: '500px',
                     width: '100%',
                     display: 'flex',
 
@@ -89,12 +90,18 @@ const Login = () => {
                     justifyContent: 'center',
                     overflow: 'hidden',
                     padding: 4,
-                    borderRadius: 2,
+                    borderRadius: '10px',
                     boxShadow: 3,
                     bgcolor: 'background.paper',
                 }}
             >
-                <Typography component='h1' variant='h5' marginBottom={3}>
+                <Typography
+                    component='h1'
+                    variant='h5'
+                    marginBottom={'2rem'}
+                    fontSize={'2rem'}
+                    fontWeight={'bold'}
+                >
                     {isSignUp ? 'Sign Up' : 'Log In to My Flandria'}
                 </Typography>
                 {error && (
@@ -107,7 +114,55 @@ const Login = () => {
                         {info}
                     </Alert>
                 )}
-                <Box sx={{ mt: 1, width: '100%' }}>
+
+                {!isSignUp && (
+                    <Button
+                        onClick={() =>
+                            signInWithGooglePopup()
+                                .then((user) => {
+                                    if (user.uid === 'mXz2zFCHHSbOcvTx7PzMGW7aCD03') {
+                                        navigate('/admin');
+                                    } else {
+                                        navigate('/home');
+                                    }
+                                })
+                                .catch((error) => console.error('Login error:', error))
+                        }
+                        fullWidth
+                        variant='outlined'
+                        sx={{ py: 1.5, borderRadius: '50px' }}
+                    >
+                        <img
+                            src={googleLogo}
+                            alt='Flandria Yachts'
+                            style={{
+                                width: 'auto',
+                                height: '38px',
+                                marginRight: '0.5rem',
+                            }}
+                        />
+                        <Typography
+                            variant='body'
+                            fontWeight={'800'}
+                            fontSize={'16px'}
+                            textTransform={'uppercase'}
+                            margin={0}
+                        >
+                            Continue with Google
+                        </Typography>
+                    </Button>
+                )}
+                <Box sx={{ width: '100%' }}>
+                    {!isSignUp && <Divider sx={{ m: '2rem 0' }}></Divider>}
+                    <Typography
+                        // component='h1'
+                        variant='body'
+                        fontWeight={'bold'}
+                        margin={0}
+                    >
+                        Email
+                    </Typography>
+
                     <TextField
                         margin='normal'
                         required
@@ -120,12 +175,20 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         variant='outlined'
-                        sx={{ mb: '1rem', minWidth: '100%' }}
+                        sx={{ marginBottom: '1rem', marginTop: '0.5rem', minWidth: '100%' }}
                     />
+                    <Typography
+                        // component='h1'
+                        variant='body'
+                        fontWeight={'bold'}
+                        margin={0}
+                    >
+                        Password
+                    </Typography>
                     <TextField
                         id='password'
                         variant='outlined'
-                        sx={{ mb: 1, width: '100%' }}
+                        sx={{ mb: 1, width: '100%', marginTop: '0.5rem' }}
                         fullWidth
                         type='password'
                         placeholder='Password'
@@ -137,8 +200,8 @@ const Login = () => {
                         <Link
                             component='button'
                             variant='body2'
-                            onClick={handleForgotPassword} // Changed to call handleForgotPassword
-                            sx={{ mb: 2, width: '1', textAlign: 'end' }}
+                            onClick={handleForgotPassword}
+                            sx={{ width: '1', textAlign: 'end' }}
                         >
                             Forgot password?
                         </Link>
@@ -148,31 +211,18 @@ const Login = () => {
                         fullWidth
                         variant='contained'
                         color='primary'
-                        sx={{ mb: 2, py: 1.5 }}
+                        sx={{
+                            mb: 2,
+                            marginTop: '1.5rem',
+                            padding: '17px 15px',
+                            borderRadius: '50px',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                        }}
                     >
                         {isSignUp ? 'Sign Up' : 'Log In'}
                     </Button>
-                    <Divider sx={{ mb: '1rem' }}></Divider>
-                    {!isSignUp && (
-                        <Button
-                            onClick={() =>
-                                signInWithGooglePopup()
-                                    .then((user) => {
-                                        if (user.uid === 'mXz2zFCHHSbOcvTx7PzMGW7aCD03') {
-                                            navigate('/admin');
-                                        } else {
-                                            navigate('/home');
-                                        }
-                                    })
-                                    .catch((error) => console.error('Login error:', error))
-                            }
-                            fullWidth
-                            variant='outlined'
-                            sx={{ py: 1.5 }}
-                        >
-                            Continue with Google
-                        </Button>
-                    )}
+
                     <Link
                         component='button'
                         variant='body2'
