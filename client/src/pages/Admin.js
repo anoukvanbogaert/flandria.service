@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './Admin.scss';
-import BoatData from './BoatData';
-import ClientData from './ClientData';
-import ServiceData from './ServiceData';
-import AdminOptions from './AdminOptions';
-import AdminForms from './AdminForms';
+import BoatData from '../components/BoatData';
+import ClientData from '../components/ClientData';
+import ServiceData from '../components/ServiceData';
+import AdminOptions from '../components/AdminOptions';
+import AdminForms from '../components/AdminForms';
 import { Button, Box } from '@mui/material';
 
 import { Add } from '@mui/icons-material/';
@@ -12,7 +12,6 @@ import { Add } from '@mui/icons-material/';
 const Admin = () => {
     const [selection, setSelection] = useState('boat');
     const [openModal, setOpenModal] = useState(false);
-    const [openTemplateModal, setOpenTemplateModal] = useState(false);
 
     return (
         <Box className='admin__container'>

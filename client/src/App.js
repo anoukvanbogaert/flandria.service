@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { createTheme, ThemeProvider } from '@mui/material';
 
 import Navbar from './components/Navbar';
-import Home from './components/Home';
-import Admin from './components/Admin';
+import Home from './pages/Home';
+import Admin from './pages/Admin';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppStore } from './stores/AppStore';
 import {
