@@ -7,12 +7,15 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    Divider,
+    Dialog,
 } from '@mui/material';
 
-import { AccountCircle, DirectionsBoat, Build, Comment, DateRange } from '@mui/icons-material';
+import { AccountCircle, DirectionsBoat, Build, Comment, DateRange, Add } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useStoreState } from 'pullstate';
+import ServiceTemplateForm from './ServiceTemplateForm';
 import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
 
@@ -22,6 +25,22 @@ const ServiceForm = ({ handleInputChange }) => {
     const [userBoats, setUserboats] = useState([]);
     const [clientValue, setClientValue] = useState(null);
     const [boatValue, setBoatValue] = useState(null);
+    const [openAddService, setOpenAddService] = useState(false);
+    console.log('openAddService', openAddService);
+
+    const handleServiceChange = (event) => {
+        const newValue = event.target.value;
+        const filteredValue = newValue.filter((item) => item !== 'add_new_service');
+        handleInputChange('services', filteredValue);
+    };
+
+    const handleOpenAddServiceModal = () => {
+        setOpenAddService(true);
+    };
+
+    const handleCloseAddServiceModal = () => {
+        setOpenAddService(false);
+    };
 
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
 
@@ -140,9 +159,22 @@ const ServiceForm = ({ handleInputChange }) => {
                             labelId='service-select-label'
                             multiple
                             value={serviceData.services || ''}
-                            onChange={(event) => handleInputChange('services', event.target.value)}
+                            onChange={handleServiceChange}
                             label='Select service'
                         >
+                            <MenuItem
+                                sx={{ fontWeight: 'bold', background: '#ceeefd', color: '#045174' }}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    console.log('opening modal');
+                                    setOpenAddService(true);
+                                }}
+                                value={'add_new_service'}
+                            >
+                                <Add fontSize='small' sx={{ marginRight: '0.5rem' }} /> Add a
+                                service
+                            </MenuItem>
+                            <Divider sx={{ m: ' 0 !important' }} />
                             {filteredServiceTemplates.map((template) => (
                                 <MenuItem key={template.id} value={template.description}>
                                     {template.description}
@@ -192,6 +224,9 @@ const ServiceForm = ({ handleInputChange }) => {
                     />
                 </Grid>
             </Grid>
+            <Dialog open={openAddService} onClose={handleCloseAddServiceModal}>
+                <ServiceTemplateForm />
+            </Dialog>
         </>
     );
 };
