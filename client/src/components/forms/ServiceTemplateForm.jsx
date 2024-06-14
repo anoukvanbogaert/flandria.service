@@ -4,10 +4,11 @@ import { ArrowBack } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
+import { editInCollection, addToCollection } from '../../utils/getData';
 
-const ServiceTemplateForm = () => {
+const ServiceTemplateForm = ({ setOpenAddService }) => {
     const { clients, boats, services } = useStoreState(AppStore);
-    const { editId, serviceData } = useStoreState(FormStore);
+    const { editId, serviceData, serviceTemplateData } = useStoreState(FormStore);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -15,6 +16,7 @@ const ServiceTemplateForm = () => {
         item2: '',
         item3: '',
     });
+    console.log('formData', formData);
 
     const fields = [
         { id: 'name', label: 'Service Name', placeholder: 'Service Name', name: 'name' },
@@ -22,6 +24,14 @@ const ServiceTemplateForm = () => {
         { id: 'item2', label: 'Item 2', placeholder: 'Item 2', name: 'item2' },
         { id: 'item3', label: 'Item 3', placeholder: 'Item 3', name: 'item3' },
     ];
+
+    const handleSave = async () => {
+        // if (serviceTemplateData.id) {
+        //     await editInCollection('serviceTemplates', serviceTemplateData.id, formData);
+        // } else {
+        await addToCollection('serviceTemplates', formData);
+        // }
+    };
 
     useEffect(() => {
         if (editId) {
@@ -44,9 +54,24 @@ const ServiceTemplateForm = () => {
     };
 
     return (
-        <Grid container spacing={3} sx={{ width: '600px', margin: 0, paddingRight: '1.5rem' }}>
+        <Grid
+            container
+            spacing={3}
+            sx={{
+                width: '600px',
+                margin: 0,
+                paddingRight: '1.5rem',
+                backgroundColor: '#ceeefd',
+            }}
+        >
             <Grid item xs={12}>
-                <Typography id='modal-title' variant='h2' component='h2' color='primary'>
+                <Typography
+                    id='modal-title'
+                    variant='h2'
+                    component='h2'
+                    color='primary'
+                    sx={{ fontWeight: 'bold' }}
+                >
                     Which service would you like to add?
                 </Typography>
             </Grid>
@@ -74,10 +99,16 @@ const ServiceTemplateForm = () => {
                     <Button
                         startIcon={<ArrowBack />}
                         sx={{ color: 'grey', textTransform: 'none', marginRight: '8px' }}
+                        onClick={() => setOpenAddService(false)}
                     >
                         Back
                     </Button>
-                    <Button variant='contained' color='primary' sx={{ textTransform: 'none' }}>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        sx={{ textTransform: 'none' }}
+                        onClick={handleSave}
+                    >
                         Save
                     </Button>
                 </Box>

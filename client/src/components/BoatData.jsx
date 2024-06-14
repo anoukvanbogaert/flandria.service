@@ -30,6 +30,17 @@ const BoatData = ({ setOpenModal }) => {
         deleteFromCollection('boats', boatId, AppStore);
     };
 
+    const onRowClick = (rowData, rowMeta) => {
+        const boat = boats[rowMeta.dataIndex];
+        console.log('boat', boat);
+        AppStore.update((s) => {
+            s.individualData = {
+                collection: 'boats',
+                id: boat.id,
+            };
+        });
+    };
+
     //This useffect looks for rows to highlight
     useEffect(() => {
         const lastAddedBoat = boats.find((boat) => boat.lastAdded);
@@ -115,7 +126,7 @@ const BoatData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
-
+        onRowClick: onRowClick,
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],

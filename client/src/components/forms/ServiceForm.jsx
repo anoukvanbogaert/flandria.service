@@ -27,20 +27,11 @@ const ServiceForm = ({ handleInputChange }) => {
     const [clientValue, setClientValue] = useState(null);
     const [boatValue, setBoatValue] = useState(null);
     const [openAddService, setOpenAddService] = useState(false);
-    console.log('openAddService', openAddService);
 
     const handleServiceChange = (event) => {
         const newValue = event.target.value;
         const filteredValue = newValue.filter((item) => item !== 'add_new_service');
         handleInputChange('services', filteredValue);
-    };
-
-    const handleOpenAddServiceModal = () => {
-        setOpenAddService(true);
-    };
-
-    const handleCloseAddServiceModal = () => {
-        setOpenAddService(false);
     };
 
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
@@ -249,8 +240,8 @@ const ServiceForm = ({ handleInputChange }) => {
                     />
                 </Grid>
             </Grid>
-            <Dialog open={openAddService} onClose={handleCloseAddServiceModal}>
-                <ServiceTemplateForm />
+            <Dialog open={openAddService}>
+                <ServiceTemplateForm setOpenAddService={setOpenAddService} />
             </Dialog>
         </>
     );
