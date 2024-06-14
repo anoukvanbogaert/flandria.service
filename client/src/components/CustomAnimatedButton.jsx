@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, ButtonBase, Typography } from '@mui/material/';
+import { AppStore } from '../stores/AppStore';
 
 const images = [
     {
@@ -113,6 +114,12 @@ export default function ButtonBaseDemo({ setSelection }) {
                         width: image.width,
                     }}
                     onClick={() => {
+                        AppStore.update((s) => {
+                            s.individualData = {
+                                collection: '',
+                                id: null,
+                            };
+                        });
                         setSelection(`${image.selection}`);
                         setSelected(`${image.selection}`);
                     }}

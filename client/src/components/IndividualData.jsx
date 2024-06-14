@@ -53,7 +53,7 @@ const IndividualData = () => {
     return (
         <Box
             sx={{
-                backgroundColor: '#ceeefd',
+                // backgroundColor: '#ceeefd',
                 margin: '2rem 0 -3rem 0',
                 borderRadius: '10px',
                 color: '#045174',

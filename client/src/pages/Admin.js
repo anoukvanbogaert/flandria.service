@@ -44,7 +44,9 @@ const Admin = () => {
                     )}
                 </Box>
                 {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
-                {selection === 'boat' && <BoatData setOpenModal={setOpenModal} />}
+                {selection === 'boat' && (
+                    <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
+                )}
                 {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
                 {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
             </Box>
