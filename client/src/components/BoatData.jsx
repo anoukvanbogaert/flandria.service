@@ -6,10 +6,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection, getClientNameById } from '../utils/getData';
+import { deleteFromCollection, getClientNameById, handleRowClick } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal, setSelection, handleRowClick }) => {
+const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
@@ -26,15 +26,7 @@ const BoatData = ({ setOpenModal, setSelection, handleRowClick }) => {
     };
 
     const onRowClick = (rowData, rowMeta) => {
-        const boat = boats[rowMeta.dataIndex];
-        console.log('boat', boat);
-        AppStore.update((s) => {
-            s.individualData = {
-                collection: 'boats',
-                id: boat.id,
-            };
-        });
-        handleRowClick();
+        handleRowClick(rowData, rowMeta, boats, 'boats');
     };
 
     //This useffect looks for rows to highlight

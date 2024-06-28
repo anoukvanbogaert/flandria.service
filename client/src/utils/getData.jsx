@@ -402,3 +402,14 @@ export const getBoatNameById = (boatId, boats) => {
     const boat = boats.find((b) => b.id === boatId);
     return boat ? boat.boatName : 'Unknown';
 };
+
+export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {
+    const item = collection[rowMeta.dataIndex];
+    console.log('item', item);
+    AppStore.update((s) => {
+        s.individualData = {
+            collection: collectionString,
+            id: item.id || item.uid,
+        };
+    });
+};

@@ -48,16 +48,16 @@ const Admin = () => {
                     sx={{ display: 'flex', flexDirection: 'row' }}
                 >
                     <Box
-                        className={`boat-data ${
-                            individualData.id ? 'boat-data-collapsed boat-data-sliding-out' : ''
+                        className={`data-table ${
+                            individualData.id ? 'data-table-collapsed boat-data-sliding-out' : ''
                         }`}
                     >
                         {selection === 'boat' && (
                             <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
                         )}
+                        {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
+                        {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
                     </Box>
-                    {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
-                    {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
                     {individualData.id && (
                         <Box
                             className={`individual-data ${

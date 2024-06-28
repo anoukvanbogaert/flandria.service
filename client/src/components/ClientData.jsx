@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection } from '../utils/getData';
+import { deleteFromCollection, handleRowClick } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
@@ -25,8 +25,11 @@ const ClientData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (clientId) => {
-        console.log('Deleting client:', clientId);
         deleteFromCollection('clients', clientId, AppStore);
+    };
+
+    const onRowClick = (rowData, rowMeta) => {
+        handleRowClick(rowData, rowMeta, clients, 'clients');
     };
 
     const columns = [
@@ -85,6 +88,7 @@ const ClientData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
+        onRowClick: onRowClick,
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],
