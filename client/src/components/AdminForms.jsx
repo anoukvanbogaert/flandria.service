@@ -31,8 +31,8 @@ const AdminForms = ({ selection, setOpenModal }) => {
 
         try {
             if (selection === 'client') {
-                if (clientData.id) {
-                    await editInCollection('clients', clientData.id, clientData);
+                if (clientData.uid) {
+                    await editInCollection('clients', clientData.uid, clientData);
                 } else {
                     await addToCollection('clients', clientData);
                 }

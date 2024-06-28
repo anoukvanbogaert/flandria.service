@@ -78,7 +78,6 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                                         id: boat.client,
                                     };
                                 });
-                                setSelection('');
                                 console.log(`Client ID: ${boat.client}`);
                             }}
                             sx={{
@@ -102,10 +101,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
             name: 'model',
             label: 'Model',
         },
-        {
-            name: 'techSpecs',
-            label: 'Tech Specs',
-        },
+
         {
             name: '',
             label: '',

@@ -2,18 +2,20 @@ import React from 'react';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
-import { getClientNameById } from '../utils/getData';
+import { getClientNameById, getBoatNameById } from '../utils/getData';
+import { Chip } from '@mui/material';
 
 const IndividualData = () => {
     const { clients, boats, services, individualData } = useStoreState(AppStore);
     const individualCollection = individualData.collection;
     const individualId = individualData.id;
+    console.log('individualData', individualData);
 
     const findData = (uid) => {
         let data;
         switch (individualCollection) {
             case 'clients':
-                data = clients.find((item) => item.id === uid);
+                data = clients.find((item) => item.uid === uid);
                 break;
             case 'boats':
                 data = boats.find((item) => item.id === uid);
@@ -22,8 +24,7 @@ const IndividualData = () => {
                         ...data,
                         owner: getClientNameById(data.client, clients),
                     };
-                    delete data.client;
-                    delete data.LastAdded;
+                    delete data.lastAdded;
                 }
                 break;
             case 'services':
@@ -56,7 +57,32 @@ const IndividualData = () => {
     const dataToShow = findData(individualId);
     const titleToShow = findTitle();
 
-    const orderedKeys = ['boatName', 'owner', 'id', 'brand', 'model'];
+    const keyMapping = {
+        boatName: 'Boat Name',
+        name: 'Client Name',
+        owner: 'Owner',
+        email: 'Email',
+        id: 'Boat ID',
+        uid: 'Client ID',
+        client: 'Client ID',
+        brand: 'Brand',
+        model: 'Model',
+        boat: 'Boat(s)',
+        remark: 'Remark',
+    };
+
+    const orderedKeys = [
+        'boatName',
+        'owner',
+        'name',
+        'email',
+        'uid',
+        'id',
+        'client',
+        'brand',
+        'model',
+        'remark',
+    ];
     const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
         const indexA = orderedKeys.indexOf(a);
         const indexB = orderedKeys.indexOf(b);
@@ -88,19 +114,60 @@ const IndividualData = () => {
                 {sortedEntries.map(([key, value], index) => (
                     <Grid item xs={12} container key={index}>
                         <Grid item xs={5}>
-                            <Typography
-                                variant='subtitle1'
-                                sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}
-                            >
-                                {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
+                            <Typography variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                                {keyMapping[key]}
                             </Typography>
                         </Grid>
                         <Grid item xs={7}>
-                            <Typography variant='subtitle1'>
-                                {typeof value === 'object'
-                                    ? JSON.stringify(value, null, 2)
-                                    : value.toString()}
-                            </Typography>
+                            {key === 'owner' ? (
+                                <Chip
+                                    label={value.toString()}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        AppStore.update((s) => {
+                                            s.individualData = {
+                                                collection: 'clients',
+                                                id: dataToShow.client,
+                                            };
+                                        });
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#ceeefd',
+                                        color: '#045174',
+                                        cursor: 'pointer',
+                                        fontSize: '15px',
+                                    }}
+                                />
+                            ) : key === 'boat' ? (
+                                value.map((boatId) => (
+                                    <Chip
+                                        key={boatId}
+                                        label={getBoatNameById(boatId, boats)}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            AppStore.update((s) => {
+                                                s.individualData = {
+                                                    collection: 'boats',
+                                                    id: boatId,
+                                                };
+                                            });
+                                        }}
+                                        sx={{
+                                            backgroundColor: 'lightGreen',
+                                            color: 'darkGreen',
+                                            cursor: 'pointer',
+                                            fontSize: '15px',
+                                            margin: '5px',
+                                        }}
+                                    />
+                                ))
+                            ) : (
+                                <Typography variant='subtitle1'>
+                                    {typeof value === 'object'
+                                        ? JSON.stringify(value, null, 2)
+                                        : value.toString()}
+                                </Typography>
+                            )}
                         </Grid>
                     </Grid>
                 ))}
