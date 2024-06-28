@@ -1,24 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     signInWithGooglePopup,
     handleEmailLogin,
     sendPasswordResetEmail,
     registerWithEmailPassword,
-    auth,
 } from '../firebase';
 import Logo from '../assets/images/logo1.png';
-import { Container, Box, Typography, TextField, Button, Link, Alert } from '@mui/material';
-import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
+import googleLogo from '../assets/images/google-icon.webp';
+import { Container, Box, Typography, TextField, Button, Link, Alert, Divider } from '@mui/material';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState('');
+    const [info, setInfo] = useState('');
     const navigate = useNavigate();
-    const { userDoc } = useStoreState(AppStore);
 
     const handleAction = async (event) => {
         event.preventDefault();
@@ -32,6 +30,7 @@ const Login = () => {
             navigate('/admin' || '/home');
         } catch (error) {
             console.error('Login error:', error);
+            setInfo('');
             setError('An error occurred. Please try again.');
         }
     };
@@ -43,17 +42,21 @@ const Login = () => {
 
     const handleForgotPassword = async () => {
         if (!email) {
-            setError('Please enter your email address to reset your password.');
+            setError('');
+            setInfo('Please enter your email address to reset your password.');
             return;
         }
         try {
-            const actionCodeSettings = {
-                url: 'http://localhost:3000/home',
-                handleCodeInApp: false,
-            };
-            await sendPasswordResetEmail(email, actionCodeSettings);
-            setError('Password reset email sent. Please check your inbox.');
+            const functionMessage = await sendPasswordResetEmail(email);
+            if (functionMessage === true) {
+                setError('');
+                setInfo('Password reset email sent. Please check your inbox.');
+            } else {
+                setInfo('');
+                setError(functionMessage);
+            }
         } catch (error) {
+            setInfo('');
             setError('An error occurred while sending the password reset email. Please try again.');
         }
     };
@@ -78,28 +81,88 @@ const Login = () => {
             />
             <Box
                 sx={{
-                    maxWidth: '768px',
+                    maxWidth: '500px',
                     width: '100%',
                     display: 'flex',
+
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    overflow: 'hidden',
                     padding: 4,
-                    borderRadius: 2,
+                    borderRadius: '10px',
                     boxShadow: 3,
                     bgcolor: 'background.paper',
                 }}
             >
-                <Typography component='h1' variant='h5' marginBottom={3}>
-                    {isSignUp ? 'Sign Up' : 'Sign In'}
+                <Typography
+                    component='h1'
+                    variant='h5'
+                    marginBottom={'2rem'}
+                    fontSize={'2rem'}
+                    fontWeight={'bold'}
+                >
+                    {isSignUp ? 'Sign Up' : 'Log In to My Flandria'}
                 </Typography>
                 {error && (
-                    <Alert severity='error' sx={{ width: '100%', mb: 2 }}>
+                    <Alert severity='error' sx={{ width: '100%', mb: 2, animation: 'bounce 0.5s' }}>
                         {error}
                     </Alert>
                 )}
+                {info && (
+                    <Alert severity='info' sx={{ width: '100%', mb: 2, animation: 'bounce 0.5s' }}>
+                        {info}
+                    </Alert>
+                )}
 
-                <Box sx={{ mt: 1, width: '100%' }}>
+                {!isSignUp && (
+                    <Button
+                        onClick={() =>
+                            signInWithGooglePopup()
+                                .then((user) => {
+                                    if (user.uid === 'mXz2zFCHHSbOcvTx7PzMGW7aCD03') {
+                                        navigate('/admin');
+                                    } else {
+                                        navigate('/home');
+                                    }
+                                })
+                                .catch((error) => console.error('Login error:', error))
+                        }
+                        fullWidth
+                        variant='outlined'
+                        sx={{ py: 1.5, borderRadius: '50px' }}
+                    >
+                        <img
+                            src={googleLogo}
+                            alt='Flandria Yachts'
+                            style={{
+                                width: 'auto',
+                                height: '38px',
+                                marginRight: '0.5rem',
+                            }}
+                        />
+                        <Typography
+                            variant='body'
+                            fontWeight={'800'}
+                            fontSize={'16px'}
+                            textTransform={'uppercase'}
+                            margin={0}
+                        >
+                            Continue with Google
+                        </Typography>
+                    </Button>
+                )}
+                <Box sx={{ width: '100%' }}>
+                    {!isSignUp && <Divider sx={{ m: '2rem 0' }}></Divider>}
+                    <Typography
+                        // component='h1'
+                        variant='body'
+                        fontWeight={'bold'}
+                        margin={0}
+                    >
+                        Email
+                    </Typography>
+
                     <TextField
                         margin='normal'
                         required
@@ -112,12 +175,20 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         variant='outlined'
-                        sx={{ mb: '1rem', minWidth: '100%' }}
+                        sx={{ marginBottom: '1rem', marginTop: '0.5rem', minWidth: '100%' }}
                     />
+                    <Typography
+                        // component='h1'
+                        variant='body'
+                        fontWeight={'bold'}
+                        margin={0}
+                    >
+                        Password
+                    </Typography>
                     <TextField
                         id='password'
                         variant='outlined'
-                        sx={{ mb: 1, width: '100%' }}
+                        sx={{ mb: 1, width: '100%', marginTop: '0.5rem' }}
                         fullWidth
                         type='password'
                         placeholder='Password'
@@ -129,8 +200,8 @@ const Login = () => {
                         <Link
                             component='button'
                             variant='body2'
-                            onClick={handleForgotPassword} // Changed to call handleForgotPassword
-                            sx={{ mb: 2, width: '1', textAlign: 'end' }}
+                            onClick={handleForgotPassword}
+                            sx={{ width: '1', textAlign: 'end' }}
                         >
                             Forgot password?
                         </Link>
@@ -140,26 +211,18 @@ const Login = () => {
                         fullWidth
                         variant='contained'
                         color='primary'
-                        sx={{ mb: 2, py: 1.5 }}
+                        sx={{
+                            mb: 2,
+                            marginTop: '1.5rem',
+                            padding: '17px 15px',
+                            borderRadius: '50px',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                        }}
                     >
-                        {isSignUp ? 'Sign Up' : 'Sign In with Email'}
+                        {isSignUp ? 'Sign Up' : 'Log In'}
                     </Button>
-                    {!isSignUp && (
-                        <Button
-                            onClick={() =>
-                                signInWithGooglePopup()
-                                    .then((user) => {
-                                        navigate('/home');
-                                    })
-                                    .catch((error) => console.error('Login error:', error))
-                            }
-                            fullWidth
-                            variant='outlined'
-                            sx={{ py: 1.5 }}
-                        >
-                            Login with Google
-                        </Button>
-                    )}
+
                     <Link
                         component='button'
                         variant='body2'
@@ -167,7 +230,7 @@ const Login = () => {
                         sx={{ mt: 2, width: '1', textAlign: 'end' }}
                     >
                         {isSignUp
-                            ? 'Already have an account? Sign In'
+                            ? 'Already have an account? Log In'
                             : "Don't have an account? Sign Up"}
                     </Link>
                 </Box>

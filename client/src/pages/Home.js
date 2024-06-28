@@ -1,5 +1,5 @@
 import React from 'react';
-import OverviewList from './OverviewList';
+import OverviewList from '../components/OverviewList';
 import './Home.scss';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';

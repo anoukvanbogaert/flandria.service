@@ -9,7 +9,7 @@ import './data.css';
 import { deleteFromCollection } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal }) => {
+const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
@@ -28,6 +28,18 @@ const BoatData = ({ setOpenModal }) => {
 
     const onDeleteClick = (boatId, clientId) => {
         deleteFromCollection('boats', boatId, AppStore);
+    };
+
+    const onRowClick = (rowData, rowMeta) => {
+        const boat = boats[rowMeta.dataIndex];
+        console.log('boat', boat);
+        AppStore.update((s) => {
+            s.individualData = {
+                collection: 'boats',
+                id: boat.id,
+            };
+        });
+        setSelection('');
     };
 
     //This useffect looks for rows to highlight
@@ -115,7 +127,7 @@ const BoatData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
-
+        onRowClick: onRowClick,
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],

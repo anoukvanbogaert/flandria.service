@@ -7,12 +7,16 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    Divider,
+    Dialog,
+    Chip,
 } from '@mui/material';
 
-import { AccountCircle, DirectionsBoat, Build, Comment, DateRange } from '@mui/icons-material';
+import { AccountCircle, DirectionsBoat, Build, Comment, DateRange, Add } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useStoreState } from 'pullstate';
+import ServiceTemplateForm from './ServiceTemplateForm';
 import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
 
@@ -22,6 +26,13 @@ const ServiceForm = ({ handleInputChange }) => {
     const [userBoats, setUserboats] = useState([]);
     const [clientValue, setClientValue] = useState(null);
     const [boatValue, setBoatValue] = useState(null);
+    const [openAddService, setOpenAddService] = useState(false);
+
+    const handleServiceChange = (event) => {
+        const newValue = event.target.value;
+        const filteredValue = newValue.filter((item) => item !== 'add_new_service');
+        handleInputChange('services', filteredValue);
+    };
 
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
 
@@ -134,17 +145,54 @@ const ServiceForm = ({ handleInputChange }) => {
                     <Build color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
-                    <FormControl fullWidth variant='filled' size='small'>
+                    <FormControl fullWidth variant='filled' size='small' sx={{ padding: 0 }}>
                         <InputLabel id='service-select-label'>Select service</InputLabel>
                         <Select
                             labelId='service-select-label'
                             multiple
-                            value={serviceData.services || ''}
-                            onChange={(event) => handleInputChange('services', event.target.value)}
+                            value={serviceData.services || []}
+                            onChange={handleServiceChange}
                             label='Select service'
+                            renderValue={(selected) => (
+                                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                    {selected.map((value) => (
+                                        <Chip
+                                            key={value}
+                                            label={value}
+                                            style={{
+                                                backgroundColor: '#045174',
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                                marginRight: '0.5rem',
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         >
+                            <MenuItem
+                                sx={{
+                                    fontWeight: 'bold',
+                                    background: '#ceeefd',
+                                    color: '#045174',
+                                    padding: '0 1rem',
+                                }}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    setOpenAddService(true);
+                                }}
+                                value='add_new_service'
+                            >
+                                <Add fontSize='small' sx={{ marginRight: '0.5rem' }} /> Add a
+                                service
+                            </MenuItem>
+                            <Divider sx={{ m: '0 !important' }} />
                             {filteredServiceTemplates.map((template) => (
-                                <MenuItem key={template.id} value={template.description}>
+                                <MenuItem
+                                    key={template.id}
+                                    value={template.description}
+                                    sx={{ padding: '0 1rem' }}
+                                >
                                     {template.description}
                                 </MenuItem>
                             ))}
@@ -192,6 +240,9 @@ const ServiceForm = ({ handleInputChange }) => {
                     />
                 </Grid>
             </Grid>
+            <Dialog open={openAddService}>
+                <ServiceTemplateForm setOpenAddService={setOpenAddService} />
+            </Dialog>
         </>
     );
 };
