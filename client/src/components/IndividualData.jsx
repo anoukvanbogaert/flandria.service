@@ -3,7 +3,8 @@ import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
 import { getClientNameById, getBoatNameById } from '../utils/getData';
-import { Chip } from '@mui/material';
+import { Chip, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const IndividualData = () => {
     const { clients, boats, services, individualData } = useStoreState(AppStore);
@@ -92,29 +93,57 @@ const IndividualData = () => {
         return 0;
     });
 
-    console.log('sortedEntries', sortedEntries);
-
     return (
         <Box
             sx={{
                 margin: '2rem',
                 borderRadius: '10px',
                 color: '#045174',
-                width: '30%',
-                minWidth: 'min-content',
+
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'start',
             }}
         >
-            <Typography variant='h4' sx={{ fontWeight: 'bold', marginBottom: '2rem' }}>
-                {`${titleToShow} Info`}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <Typography
+                    variant='h4'
+                    sx={{
+                        fontWeight: 'bold',
+                        marginBottom: '2rem',
+                    }}
+                >
+                    {`${titleToShow} Info`}
+                </Typography>
+                <IconButton
+                    aria-label='close'
+                    size='small'
+                    sx={{ display: 'flex', alignItems: 'flex-start' }}
+                    onClick={() => {
+                        AppStore.update((s) => {
+                            s.individualData = {
+                                collection: '',
+                                id: null,
+                            };
+                        });
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            </Box>
             <Grid container>
                 {sortedEntries.map(([key, value], index) => (
                     <Grid item xs={12} container key={index}>
                         <Grid item xs={5}>
-                            <Typography variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                            <Typography
+                                variant='subtitle1'
+                                sx={{
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                }}
+                            >
                                 {keyMapping[key]}
                             </Typography>
                         </Grid>

@@ -9,7 +9,7 @@ import './data.css';
 import { deleteFromCollection, getClientNameById } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal, setSelection }) => {
+const BoatData = ({ setOpenModal, setSelection, handleRowClick }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
@@ -34,6 +34,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                 id: boat.id,
             };
         });
+        handleRowClick();
     };
 
     //This useffect looks for rows to highlight

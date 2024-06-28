@@ -42,14 +42,31 @@ const Admin = () => {
                         </Button>
                     )}
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
-                    {selection === 'boat' && (
-                        <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
-                    )}
+                {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
+                <Box
+                    className={`admin__data-container`}
+                    sx={{ display: 'flex', flexDirection: 'row' }}
+                >
+                    <Box
+                        className={`boat-data ${
+                            individualData.id ? 'boat-data-collapsed boat-data-sliding-out' : ''
+                        }`}
+                    >
+                        {selection === 'boat' && (
+                            <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
+                        )}
+                    </Box>
                     {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
                     {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
-                    {individualData.id && <IndividualData />}
+                    {individualData.id && (
+                        <Box
+                            className={`individual-data ${
+                                individualData.id ? 'individual-data-visible' : ''
+                            }`}
+                        >
+                            <IndividualData />
+                        </Box>
+                    )}
                 </Box>
             </Box>
         </Box>

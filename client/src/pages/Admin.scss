@@ -40,3 +40,24 @@
 
     width: 100%;
 }
+
+.boat-data,
+.individual-data {
+    transition: flex-basis 300ms ease-in-out;
+}
+
+.boat-data {
+    flex-basis: 100%; /* Ensures it takes up the full space when individual data is not visible */
+}
+
+.boat-data-collapsed {
+    flex-basis: 70%; /* Takes up 70% of the space when individual data is visible */
+}
+
+.individual-data {
+    flex-basis: 0%; /* Starts off not taking any space */
+}
+
+.individual-data-visible {
+    flex-basis: 30%; /* Takes up 30% of the space when it becomes visible */
+}
