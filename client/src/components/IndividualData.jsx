@@ -2,13 +2,12 @@ import React from 'react';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
+import { getClientNameById } from '../utils/getData';
 
 const IndividualData = () => {
     const { clients, boats, services, individualData } = useStoreState(AppStore);
     const individualCollection = individualData.collection;
     const individualId = individualData.id;
-
-    console.log('individualData', individualData);
 
     const findData = (uid) => {
         let data;
@@ -18,6 +17,14 @@ const IndividualData = () => {
                 break;
             case 'boats':
                 data = boats.find((item) => item.id === uid);
+                if (data) {
+                    data = {
+                        ...data,
+                        owner: getClientNameById(data.client, clients),
+                    };
+                    delete data.client;
+                    delete data.LastAdded;
+                }
                 break;
             case 'services':
                 data = services.find((item) => item.id === uid);
@@ -48,45 +55,54 @@ const IndividualData = () => {
 
     const dataToShow = findData(individualId);
     const titleToShow = findTitle();
-    console.log('dataToShow', dataToShow);
+
+    const orderedKeys = ['boatName', 'owner', 'id', 'brand', 'model'];
+    const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
+        const indexA = orderedKeys.indexOf(a);
+        const indexB = orderedKeys.indexOf(b);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return 0;
+    });
+
+    console.log('sortedEntries', sortedEntries);
 
     return (
         <Box
             sx={{
-                // backgroundColor: '#ceeefd',
-                margin: '2rem 0 -3rem 0',
+                margin: '2rem',
                 borderRadius: '10px',
                 color: '#045174',
-                width: 'min-content',
+                width: '30%',
+                minWidth: 'min-content',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'start',
             }}
         >
-            <Grid container spacing={0} sx={{ margin: '2rem', width: 'auto' }}>
-                <Grid item xs={12} sx={{ padding: '0 !important' }}>
-                    <Typography
-                        variant='h4'
-                        sx={{ fontWeight: 'bold', marginBottom: '2rem' }}
-                    >{`${titleToShow} info`}</Typography>
-                </Grid>
-                {Object.entries(dataToShow).map(([key, value], index) => (
-                    <React.Fragment key={index}>
-                        <Grid item xs={12} container wrap='nowrap' spacing={1}>
-                            <Grid item>
-                                <Typography
-                                    variant='subtitle1'
-                                    sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}
-                                >
-                                    {key}:
-                                </Typography>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography variant='subtitle1'>
-                                    {typeof value === 'object'
-                                        ? JSON.stringify(value, null, 2)
-                                        : value.toString()}
-                                </Typography>
-                            </Grid>
+            <Typography variant='h4' sx={{ fontWeight: 'bold', marginBottom: '2rem' }}>
+                {`${titleToShow} Info`}
+            </Typography>
+            <Grid container>
+                {sortedEntries.map(([key, value], index) => (
+                    <Grid item xs={12} container key={index}>
+                        <Grid item xs={5}>
+                            <Typography
+                                variant='subtitle1'
+                                sx={{ fontWeight: 'bold', textTransform: 'capitalize' }}
+                            >
+                                {key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()}
+                            </Typography>
                         </Grid>
-                    </React.Fragment>
+                        <Grid item xs={7}>
+                            <Typography variant='subtitle1'>
+                                {typeof value === 'object'
+                                    ? JSON.stringify(value, null, 2)
+                                    : value.toString()}
+                            </Typography>
+                        </Grid>
+                    </Grid>
                 ))}
             </Grid>
         </Box>

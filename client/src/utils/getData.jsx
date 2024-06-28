@@ -392,3 +392,8 @@ export const addUserToDataBase = (userInfo, password) => {
             console.error('Error adding user:', error);
         });
 };
+
+export const getClientNameById = (clientId, clients) => {
+    const client = clients.find((c) => c.id === clientId);
+    return client ? client.name : 'Unknown';
+};

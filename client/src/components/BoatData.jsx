@@ -1,23 +1,18 @@
 import { React, useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection } from '../utils/getData';
+import { deleteFromCollection, getClientNameById } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
-
-    const getClientNameById = (clientId) => {
-        const client = clients.find((c) => c.id === clientId);
-        return client ? client.name : 'Unknown';
-    };
 
     const onEditClick = (boatId) => {
         FormStore.update((s) => {
@@ -39,7 +34,6 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                 id: boat.id,
             };
         });
-        setSelection('');
     };
 
     //This useffect looks for rows to highlight
@@ -73,7 +67,30 @@ const BoatData = ({ setOpenModal, setSelection }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const boat = boats[dataIndex];
-                    return getClientNameById(boat.client);
+                    return boat.client ? (
+                        <Chip
+                            label={getClientNameById(boat.client, clients)}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                AppStore.update((s) => {
+                                    s.individualData = {
+                                        collection: 'clients',
+                                        id: boat.client,
+                                    };
+                                });
+                                setSelection('');
+                                console.log(`Client ID: ${boat.client}`);
+                            }}
+                            sx={{
+                                backgroundColor: '#ceeefd',
+                                color: '#045174',
+                                cursor: 'pointer',
+                                fontSize: '15px',
+                            }}
+                        />
+                    ) : (
+                        getClientNameById(boat.client, clients) || 'Unknown'
+                    );
                 },
             },
         },

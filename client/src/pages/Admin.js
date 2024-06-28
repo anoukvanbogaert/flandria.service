@@ -21,7 +21,6 @@ const Admin = () => {
         <Box className='admin__container'>
             <Box className='admin__form'>
                 <AdminOptions setSelection={setSelection} />
-                {individualData.id && <IndividualData />}
                 <Box
                     sx={{
                         justifySelf: 'left',
@@ -43,12 +42,15 @@ const Admin = () => {
                         </Button>
                     )}
                 </Box>
-                {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
-                {selection === 'boat' && (
-                    <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
-                )}
-                {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
-                {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                    {openModal && <AdminForms selection={selection} setOpenModal={setOpenModal} />}
+                    {selection === 'boat' && (
+                        <BoatData setOpenModal={setOpenModal} setSelection={setSelection} />
+                    )}
+                    {selection === 'client' && <ClientData setOpenModal={setOpenModal} />}
+                    {selection === 'service' && <ServiceData setOpenModal={setOpenModal} />}
+                    {individualData.id && <IndividualData />}
+                </Box>
             </Box>
         </Box>
     );
