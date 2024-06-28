@@ -6,14 +6,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection } from '../utils/getData';
+import { deleteFromCollection, handleRowClick } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);
 
     const getClientNameById = (clientId) => {
-        const client = clients.find((c) => c.id === clientId);
+        const client = clients.find((c) => c.uid === clientId);
         return client ? client.name : 'Unknown';
     };
 
@@ -25,8 +25,11 @@ const ClientData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (clientId) => {
-        console.log('Deleting client:', clientId);
         deleteFromCollection('clients', clientId, AppStore);
+    };
+
+    const onRowClick = (rowData, rowMeta) => {
+        handleRowClick(rowData, rowMeta, clients, 'clients');
     };
 
     const columns = [
@@ -63,14 +66,14 @@ const ClientData = ({ setOpenModal }) => {
                     return (
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <IconButton
-                                onClick={() => onEditClick(client.id)}
+                                onClick={() => onEditClick(client.uid)}
                                 aria-label='edit'
                                 color='secondary'
                             >
                                 <EditIcon />
                             </IconButton>
                             <IconButton
-                                onClick={() => onDeleteClick(client.id)}
+                                onClick={() => onDeleteClick(client.uid)}
                                 aria-label='delete'
                                 color='error'
                             >
@@ -85,6 +88,7 @@ const ClientData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
+        onRowClick: onRowClick,
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],

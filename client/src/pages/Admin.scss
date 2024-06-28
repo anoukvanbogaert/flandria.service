@@ -40,3 +40,24 @@
 
     width: 100%;
 }
+
+.data-table,
+.individual-data {
+    transition: flex-basis 300ms ease-in-out;
+}
+
+.data-table {
+    flex-basis: 100%; /* Ensures it takes up the full space when individual data is not visible */
+}
+
+.data-table-collapsed {
+    flex-basis: 70%; /* Takes up 70% of the space when individual data is visible */
+}
+
+.individual-data {
+    flex-basis: 0%;
+}
+
+.individual-data-visible {
+    flex-basis: 30%;
+}

@@ -57,7 +57,7 @@ const ServiceForm = ({ handleInputChange }) => {
         if (editId) {
             const editData = services.find((service) => service.id === editId) || serviceData;
             const clientName =
-                clients.find((client) => client.id === editData.client)?.name || 'Unknown';
+                clients.find((client) => client.uid === editData.client)?.name || 'Unknown';
             setClientValue(clientName);
             const boatInfo = boats.find((boat) => boat.id === editData.boat) || 'Unknown';
             setBoatValue(boatInfo);

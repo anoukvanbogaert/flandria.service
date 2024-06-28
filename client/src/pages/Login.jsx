@@ -77,7 +77,7 @@ const Login = () => {
             <img
                 src={Logo}
                 alt='Flandria Yachts'
-                style={{ width: 360, height: 'auto', margin: '4rem 0' }}
+                style={{ width: '15rem', height: 'auto', margin: '4rem 0' }}
             />
             <Box
                 sx={{

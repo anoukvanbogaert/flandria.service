@@ -12,7 +12,7 @@ const ClientForm = ({ handleInputChange }) => {
 
     useEffect(() => {
         if (editId) {
-            const editData = clients.find((client) => client.id === editId);
+            const editData = clients.find((client) => client.uid === editId);
             FormStore.update((s) => {
                 s.clientData = editData || {};
             });

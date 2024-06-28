@@ -60,7 +60,7 @@ export const addToCollection = async (collectionName, data) => {
                     // Prepare data for Firestore without sensitive password data
                     const clientData = {
                         ...data,
-                        id: userCredential.uid, // Ensure that uid is stored
+                        uid: userCredential.uid, // Ensure that uid is stored
                     };
 
                     // Use the UID from Auth as the document ID in Firestore
@@ -162,7 +162,7 @@ export const updateBoatOwnership = async (clientId, boatId) => {
 
                 // Update local AppStore state
                 AppStore.update((s) => {
-                    const index = s.clients.findIndex((client) => client.id === clientId);
+                    const index = s.clients.findIndex((client) => client.uid === clientId);
                     if (index !== -1) {
                         s.clients[index].boat = boatArray;
                     }
@@ -295,7 +295,7 @@ export const getClients = async () => {
             const clientsArray = clientsSnapshot.docs
                 .map((doc) => {
                     const data = doc.data();
-                    return data ? { id: doc.id, ...data } : null;
+                    return data ? { uid: doc.id, ...data } : null;
                 })
                 .filter((item) => item !== null);
 
@@ -391,4 +391,25 @@ export const addUserToDataBase = (userInfo, password) => {
         .catch((error) => {
             console.error('Error adding user:', error);
         });
+};
+
+export const getClientNameById = (clientId, clients) => {
+    const client = clients.find((c) => c.uid === clientId);
+    return client ? client.name : 'Unknown';
+};
+
+export const getBoatNameById = (boatId, boats) => {
+    const boat = boats.find((b) => b.id === boatId);
+    return boat ? boat.boatName : 'Unknown';
+};
+
+export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {
+    const item = collection[rowMeta.dataIndex];
+    console.log('item', item);
+    AppStore.update((s) => {
+        s.individualData = {
+            collection: collectionString,
+            id: item.id || item.uid,
+        };
+    });
 };
