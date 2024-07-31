@@ -1,21 +1,44 @@
-import { React, useEffect } from 'react';
-import { Email, AccountCircle, DirectionsBoat } from '@mui/icons-material';
-import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { React, useEffect, useState } from 'react';
+import {
+    Email,
+    AccountCircle,
+    DirectionsBoat,
+    ContactMail,
+    Home,
+    Phone,
+    MedicalServices,
+} from '@mui/icons-material';
+import {
+    TextField,
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Typography,
+} from '@mui/material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../../stores/AppStore';
 import { FormStore } from '../../../stores/FormStore';
 import Residence from './Residence';
+import Domicile from './Domicile';
+import Cellphones from './Cellphones';
 
 const ClientForm = ({ handleInputChange }) => {
+    const [loading, setLoading] = useState(true);
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
+    console.log('clientData', clientData);
+    console.log('editId', editId);
 
     useEffect(() => {
         if (editId) {
             const editData = clients.find((client) => client.uid === editId);
+            console.log('editData', editData);
             FormStore.update((s) => {
                 s.clientData = editData || {};
             });
+            setLoading(false);
         }
     }, [editId, clients]);
 
@@ -27,10 +50,14 @@ const ClientForm = ({ handleInputChange }) => {
         }
     }, [editId]);
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <Grid
             container
-            spacing={3}
+            spacing={2}
             alignItems='center'
             justifyContent='space-between'
             sx={{ marginLeft: 0, width: 'auto ' }}
@@ -40,9 +67,9 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    label='Add name'
+                    hiddenLabel
                     value={clientData.name}
-                    placeholder='Name'
+                    placeholder='Full Name'
                     variant='filled'
                     fullWidth
                     size='small'
@@ -56,7 +83,7 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    label='Add email'
+                    hiddenLabel
                     value={clientData.email}
                     placeholder='Email'
                     variant='filled'
@@ -70,27 +97,39 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <FormControl fullWidth variant='filled' size='small'>
-                    <InputLabel id='service-select-label'>Select vessel</InputLabel>
+                    <InputLabel id='service-select-label'></InputLabel>
                     <Select
                         labelId='service-select-label'
                         value={clientData.boat || []}
                         multiple
                         onChange={(event) => handleInputChange('boat', event.target.value)}
-                        label='Select vessel (if any)'
+                        hiddenLabel
                     >
                         {boats.map((boat) => (
                             <MenuItem key={boat.id} value={boat.id}>
-                                {`${boat.name} (${boat.brand}, ${boat.model})`}
+                                {`${boat.boatName} (${boat.brand} ${boat.model})`}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
             </Grid>
             <Grid item xs={1}>
-                <Email color='secondary' />
+                <ContactMail color='secondary' />
             </Grid>
             <Grid item xs={11}>
                 <Residence handleInputChange={handleInputChange} clientData={clientData} />
+            </Grid>
+            <Grid item xs={1}>
+                <Home color='secondary' />
+            </Grid>
+            <Grid item xs={11}>
+                <Domicile handleInputChange={handleInputChange} clientData={clientData} />
+            </Grid>
+            <Grid item xs={1}>
+                <Phone color='secondary' />
+            </Grid>
+            <Grid item xs={11}>
+                <Cellphones handleInputChange={handleInputChange} clientData={clientData} />
             </Grid>
         </Grid>
     );
