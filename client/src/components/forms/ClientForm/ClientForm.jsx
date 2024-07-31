@@ -2,13 +2,13 @@ import { React, useEffect } from 'react';
 import { Email, AccountCircle, DirectionsBoat } from '@mui/icons-material';
 import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../../stores/AppStore';
-import { FormStore } from '../../stores/FormStore';
+import { AppStore } from '../../../stores/AppStore';
+import { FormStore } from '../../../stores/FormStore';
+import Residence from './Residence';
 
 const ClientForm = ({ handleInputChange }) => {
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
-    console.log('clientData', clientData);
 
     useEffect(() => {
         if (editId) {
@@ -42,7 +42,7 @@ const ClientForm = ({ handleInputChange }) => {
                 <TextField
                     label='Add name'
                     value={clientData.name}
-                    placeholder='Add name'
+                    placeholder='Name'
                     variant='filled'
                     fullWidth
                     size='small'
@@ -58,7 +58,7 @@ const ClientForm = ({ handleInputChange }) => {
                 <TextField
                     label='Add email'
                     value={clientData.email}
-                    placeholder='Add email'
+                    placeholder='Email'
                     variant='filled'
                     fullWidth
                     size='small'
@@ -85,6 +85,12 @@ const ClientForm = ({ handleInputChange }) => {
                         ))}
                     </Select>
                 </FormControl>
+            </Grid>
+            <Grid item xs={1}>
+                <Email color='secondary' />
+            </Grid>
+            <Grid item xs={11}>
+                <Residence handleInputChange={handleInputChange} clientData={clientData} />
             </Grid>
         </Grid>
     );
