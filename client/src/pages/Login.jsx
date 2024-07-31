@@ -94,6 +94,11 @@ const Login = () => {
                     boxShadow: 3,
                     bgcolor: 'background.paper',
                 }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        handleAction(e);
+                    }
+                }}
             >
                 <Typography
                     component='h1'
