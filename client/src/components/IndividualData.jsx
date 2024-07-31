@@ -61,16 +61,23 @@ const IndividualData = () => {
     const keyMapping = {
         boatName: 'Boat Name',
         name: 'Client Name',
+        uid: 'Client ID',
         owner: 'Owner',
         email: 'Email',
         id: 'Boat ID',
-        uid: 'Client ID',
         client: 'Client ID',
         brand: 'Brand',
         model: 'Model',
         boat: 'Boat(s)',
         remark: 'Remark',
-        Residence: 'Residence',
+        residence: 'Residence',
+        domicile: 'Domicile',
+        cellphone1: 'Cellphone 1',
+        cellphone2: 'Cellphone 2',
+        nieNumber: 'NIEº',
+        idNumber: 'IDº',
+        emergencyContact1: 'ICE 1',
+        emergencyContact2: 'ICE 2',
     };
 
     const orderedKeys = [
@@ -78,42 +85,22 @@ const IndividualData = () => {
         'owner',
         'name',
         'email',
-        'residence',
-        'uid',
         'id',
+        'uid',
+        'boat',
+        'residence',
+        'domicile',
+        'cellphone1',
+        'cellphone2',
+        'idNumber',
+        'nieNumber',
+        'emergencyContact1',
+        'emergencyContact2',
         'client',
         'brand',
         'model',
         'remark',
     ];
-
-    const subKeyMapping = {
-        number: 'Number',
-        street: 'Street',
-        city: 'City',
-        province: 'Province',
-        zip: 'Zip Code',
-        country: 'Country',
-    };
-
-    const subOrderedKeys = ['number', 'street', 'city', 'province', 'zip', 'country'];
-
-    const renderResidence = (residenceData) => {
-        const sortedSubEntries = Object.entries(residenceData).sort(([a], [b]) => {
-            const indexA = subOrderedKeys.indexOf(a);
-            const indexB = subOrderedKeys.indexOf(b);
-            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-            if (indexA !== -1) return -1;
-            if (indexB !== -1) return 1;
-            return 0;
-        });
-
-        const subKeys = sortedSubEntries.map(([subKey]) => subKeyMapping[subKey] || subKey);
-        const subValues = sortedSubEntries.map(([, subValue]) => subValue);
-        console.log('subKeys', subKeys);
-
-        return { subKeys, subValues };
-    };
 
     const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
         const indexA = orderedKeys.indexOf(a);
@@ -123,12 +110,6 @@ const IndividualData = () => {
         if (indexB !== -1) return 1;
         return 0;
     });
-
-    const residenceData = sortedEntries.find(([key]) => key === 'Residence');
-    console.log('residenceData', residenceData);
-    const residenceKeys = residenceData ? renderResidence(residenceData[1]).subKeys : null;
-
-    const residenceValues = residenceData ? renderResidence(residenceData[1]).subValues : null;
 
     return (
         <Box
@@ -171,45 +152,20 @@ const IndividualData = () => {
             <Grid container>
                 {sortedEntries.map(([key, value], index) => (
                     <Grid item xs={12} container key={index}>
-                        <Grid item xs={5}>
-                            {key === 'Residence' ? (
-                                <>
-                                    <Typography
-                                        variant='subtitle1'
-                                        sx={{
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        {keyMapping[key]}
-                                    </Typography>
-                                    {residenceKeys.map((subKey, subIndex) => (
-                                        <Grid item xs={12} container key={subIndex}>
-                                            <Grid item xs={5} sx={{ paddingLeft: '1rem' }}>
-                                                <Typography
-                                                    variant='subtitle1'
-                                                    sx={{ fontWeight: 'bold' }}
-                                                >
-                                                    {subKey}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    ))}
-                                </>
-                            ) : (
-                                <Typography
-                                    variant='subtitle1'
-                                    sx={{
-                                        fontWeight: 'bold',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        height: '100%',
-                                    }}
-                                >
-                                    {keyMapping[key]}
-                                </Typography>
-                            )}
+                        <Grid item xs={4}>
+                            <Typography
+                                variant='subtitle1'
+                                sx={{
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                }}
+                            >
+                                {keyMapping[key]}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={7}>
+                        <Grid item xs={8}>
                             {key === 'owner' ? (
                                 <Chip
                                     label={value.toString()}
@@ -252,16 +208,23 @@ const IndividualData = () => {
                                         }}
                                     />
                                 ))
-                            ) : key === 'Residence' ? (
-                                <>
-                                    <Typography variant='subtitle1'>&#8203;</Typography>
-
-                                    {residenceValues.map((value, index) => (
-                                        <Grid item xs={12} container key={index}>
-                                            <Typography variant='subtitle1'>{value}</Typography>
-                                        </Grid>
-                                    ))}
-                                </>
+                            ) : key === 'residence' || key === 'domicile' ? (
+                                <Box>
+                                    <Box sx={{ height: '1rem' }} />
+                                    <Typography variant='subtitle2'>
+                                        {`${value.street} ${value.number}`}
+                                    </Typography>
+                                    <Typography variant='subtitle2'>
+                                        {`${value.zip} ${value.city}`}
+                                    </Typography>
+                                    <Typography variant='subtitle2'>{value.province}</Typography>
+                                    <Typography variant='subtitle2'>{value.country}</Typography>
+                                </Box>
+                            ) : key === 'emergencyContact1' || key === 'emergencyContact2' ? (
+                                <Box>
+                                    <Typography variant='subtitle2'>{value.name}</Typography>
+                                    <Typography variant='subtitle2'>{value.cellphone}</Typography>
+                                </Box>
                             ) : (
                                 <Typography variant='subtitle1'>
                                     {typeof value === 'object'
