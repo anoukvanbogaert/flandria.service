@@ -3,6 +3,7 @@ import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
 import { getClientNameById, getBoatNameById } from '../utils/getData';
+import { keyMapping, orderedKeys, findData, findTitle } from '../utils/individualDataHelpers';
 import { Chip, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -10,97 +11,16 @@ const IndividualData = () => {
     const { clients, boats, services, individualData } = useStoreState(AppStore);
     const individualCollection = individualData.collection;
     const individualId = individualData.id;
-    console.log('individualData', individualData);
 
-    const findData = (uid) => {
-        let data;
-        switch (individualCollection) {
-            case 'clients':
-                data = clients.find((item) => item.uid === uid);
-                break;
-            case 'boats':
-                data = boats.find((item) => item.id === uid);
-                if (data) {
-                    data = {
-                        ...data,
-                        owner: getClientNameById(data.client, clients),
-                    };
-                    delete data.lastAdded;
-                }
-                break;
-            case 'services':
-                data = services.find((item) => item.id === uid);
-                break;
-            default:
-                data = null;
-        }
-        return data;
-    };
-
-    const findTitle = () => {
-        let title;
-        switch (individualCollection) {
-            case 'clients':
-                title = 'Client';
-                break;
-            case 'boats':
-                title = 'Boat';
-                break;
-            case 'services':
-                title = 'Service';
-                break;
-            default:
-                title = null;
-        }
-        return title;
-    };
-
-    const dataToShow = findData(individualId);
-    const titleToShow = findTitle();
-
-    const keyMapping = {
-        boatName: 'Boat Name',
-        name: 'Client Name',
-        uid: 'Client ID',
-        owner: 'Owner',
-        email: 'Email',
-        id: 'Boat ID',
-        client: 'Client ID',
-        brand: 'Brand',
-        model: 'Model',
-        boat: 'Boat(s)',
-        remark: 'Remark',
-        residence: 'Residence',
-        domicile: 'Domicile',
-        cellphone1: 'Cellphone 1',
-        cellphone2: 'Cellphone 2',
-        nieNumber: 'NIEº',
-        idNumber: 'IDº',
-        emergencyContact1: 'ICE 1',
-        emergencyContact2: 'ICE 2',
-    };
-
-    const orderedKeys = [
-        'boatName',
-        'owner',
-        'name',
-        'email',
-        'id',
-        'uid',
-        'boat',
-        'residence',
-        'domicile',
-        'cellphone1',
-        'cellphone2',
-        'idNumber',
-        'nieNumber',
-        'emergencyContact1',
-        'emergencyContact2',
-        'client',
-        'brand',
-        'model',
-        'remark',
-    ];
+    const dataToShow = findData(
+        individualId,
+        individualCollection,
+        clients,
+        boats,
+        services,
+        getClientNameById
+    );
+    const titleToShow = findTitle(individualCollection);
 
     const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
         const indexA = orderedKeys.indexOf(a);
