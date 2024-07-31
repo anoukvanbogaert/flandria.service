@@ -70,6 +70,7 @@ const IndividualData = () => {
         model: 'Model',
         boat: 'Boat(s)',
         remark: 'Remark',
+        Residence: 'Residence',
     };
 
     const orderedKeys = [
@@ -77,6 +78,7 @@ const IndividualData = () => {
         'owner',
         'name',
         'email',
+        'residence',
         'uid',
         'id',
         'client',
@@ -84,6 +86,35 @@ const IndividualData = () => {
         'model',
         'remark',
     ];
+
+    const subKeyMapping = {
+        number: 'Number',
+        street: 'Street',
+        city: 'City',
+        province: 'Province',
+        zip: 'Zip Code',
+        country: 'Country',
+    };
+
+    const subOrderedKeys = ['number', 'street', 'city', 'province', 'zip', 'country'];
+
+    const renderResidence = (residenceData) => {
+        const sortedSubEntries = Object.entries(residenceData).sort(([a], [b]) => {
+            const indexA = subOrderedKeys.indexOf(a);
+            const indexB = subOrderedKeys.indexOf(b);
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return 0;
+        });
+
+        const subKeys = sortedSubEntries.map(([subKey]) => subKeyMapping[subKey] || subKey);
+        const subValues = sortedSubEntries.map(([, subValue]) => subValue);
+        console.log('subKeys', subKeys);
+
+        return { subKeys, subValues };
+    };
+
     const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
         const indexA = orderedKeys.indexOf(a);
         const indexB = orderedKeys.indexOf(b);
@@ -92,6 +123,12 @@ const IndividualData = () => {
         if (indexB !== -1) return 1;
         return 0;
     });
+
+    const residenceData = sortedEntries.find(([key]) => key === 'Residence');
+    console.log('residenceData', residenceData);
+    const residenceKeys = residenceData ? renderResidence(residenceData[1]).subKeys : null;
+
+    const residenceValues = residenceData ? renderResidence(residenceData[1]).subValues : null;
 
     return (
         <Box
@@ -118,7 +155,7 @@ const IndividualData = () => {
                 <IconButton
                     aria-label='close'
                     size='small'
-                    sx={{ display: 'flex', alignItems: 'flex-start' }}
+                    sx={{ display: 'flex', alignItems: 'flex-start', height: 'fit-content' }}
                     onClick={() => {
                         AppStore.update((s) => {
                             s.individualData = {
@@ -135,17 +172,42 @@ const IndividualData = () => {
                 {sortedEntries.map(([key, value], index) => (
                     <Grid item xs={12} container key={index}>
                         <Grid item xs={5}>
-                            <Typography
-                                variant='subtitle1'
-                                sx={{
-                                    fontWeight: 'bold',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    height: '100%',
-                                }}
-                            >
-                                {keyMapping[key]}
-                            </Typography>
+                            {key === 'Residence' ? (
+                                <>
+                                    <Typography
+                                        variant='subtitle1'
+                                        sx={{
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {keyMapping[key]}
+                                    </Typography>
+                                    {residenceKeys.map((subKey, subIndex) => (
+                                        <Grid item xs={12} container key={subIndex}>
+                                            <Grid item xs={5} sx={{ paddingLeft: '1rem' }}>
+                                                <Typography
+                                                    variant='subtitle1'
+                                                    sx={{ fontWeight: 'bold' }}
+                                                >
+                                                    {subKey}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    ))}
+                                </>
+                            ) : (
+                                <Typography
+                                    variant='subtitle1'
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        height: '100%',
+                                    }}
+                                >
+                                    {keyMapping[key]}
+                                </Typography>
+                            )}
                         </Grid>
                         <Grid item xs={7}>
                             {key === 'owner' ? (
@@ -190,6 +252,16 @@ const IndividualData = () => {
                                         }}
                                     />
                                 ))
+                            ) : key === 'Residence' ? (
+                                <>
+                                    <Typography variant='subtitle1'>&#8203;</Typography>
+
+                                    {residenceValues.map((value, index) => (
+                                        <Grid item xs={12} container key={index}>
+                                            <Typography variant='subtitle1'>{value}</Typography>
+                                        </Grid>
+                                    ))}
+                                </>
                             ) : (
                                 <Typography variant='subtitle1'>
                                     {typeof value === 'object'
