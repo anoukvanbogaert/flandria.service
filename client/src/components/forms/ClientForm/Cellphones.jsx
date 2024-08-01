@@ -16,73 +16,26 @@ const Cellphones = ({ handleInputChange, clientData }) => {
                 Contact
             </Typography>
             <Grid container spacing={2}>
-                <Grid item xs={2}>
+                <Grid item xs={6}>
                     <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.number}
+                        label='Cellphone 1'
+                        value={clientData?.cellphone1}
                         placeholder='#'
-                        variant='filled'
+                        variant='outlined'
                         fullWidth
                         size='small'
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'number')}
+                        onChange={(e) => handleInputChange('cellphone1', e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.street}
+                        label='Cellphone 2'
+                        value={clientData?.cellphone2}
                         placeholder='Street'
-                        variant='filled'
+                        variant='outlined'
                         size='small'
                         fullWidth
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'street')}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.zip}
-                        placeholder='ZIP'
-                        variant='filled'
-                        size='small'
-                        fullWidth
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'zip')}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.city}
-                        placeholder='City'
-                        variant='filled'
-                        size='small'
-                        fullWidth
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'city')}
-                    />
-                </Grid>
-            </Grid>
-            <Box sx={{ height: '1rem' }} />
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.province}
-                        placeholder='Province'
-                        variant='filled'
-                        fullWidth
-                        size='small'
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'province')}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        hiddenLabel
-                        value={clientData?.domicile?.country}
-                        placeholder='Country'
-                        variant='filled'
-                        size='small'
-                        fullWidth
-                        onChange={(e) => handleInputChange('domicile', e.target.value, 'country')}
+                        onChange={(e) => handleInputChange('cellphone2', e.target.value)}
                     />
                 </Grid>
             </Grid>
