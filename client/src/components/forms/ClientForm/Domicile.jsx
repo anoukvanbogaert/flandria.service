@@ -18,10 +18,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
             <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField
-                        hiddenLabel
+                        label='#'
                         value={clientData?.domicile?.number}
                         placeholder='#'
-                        variant='filled'
+                        variant='outlined'
                         fullWidth
                         size='small'
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'number')}
@@ -29,10 +29,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 </Grid>
                 <Grid item xs={4}>
                     <TextField
-                        hiddenLabel
+                        label='Street'
                         value={clientData?.domicile?.street}
                         placeholder='Street'
-                        variant='filled'
+                        variant='outlined'
                         size='small'
                         fullWidth
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'street')}
@@ -40,10 +40,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 </Grid>
                 <Grid item xs={3}>
                     <TextField
-                        hiddenLabel
+                        label='ZIP'
                         value={clientData?.domicile?.zip}
                         placeholder='ZIP'
-                        variant='filled'
+                        variant='outlined'
                         size='small'
                         fullWidth
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'zip')}
@@ -51,10 +51,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 </Grid>
                 <Grid item xs={3}>
                     <TextField
-                        hiddenLabel
+                        label='City'
                         value={clientData?.domicile?.city}
                         placeholder='City'
-                        variant='filled'
+                        variant='outlined'
                         size='small'
                         fullWidth
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'city')}
@@ -65,10 +65,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <TextField
-                        hiddenLabel
+                        label='Province'
                         value={clientData?.domicile?.province}
                         placeholder='Province'
-                        variant='filled'
+                        variant='outlined'
                         fullWidth
                         size='small'
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'province')}
@@ -76,10 +76,10 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
-                        hiddenLabel
+                        label='Country'
                         value={clientData?.domicile?.country}
                         placeholder='Country'
-                        variant='filled'
+                        variant='outlined'
                         size='small'
                         fullWidth
                         onChange={(e) => handleInputChange('domicile', e.target.value, 'country')}

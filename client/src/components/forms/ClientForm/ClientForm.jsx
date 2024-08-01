@@ -70,7 +70,7 @@ const ClientForm = ({ handleInputChange }) => {
                     hiddenLabel
                     value={clientData.name}
                     placeholder='Full Name'
-                    variant='filled'
+                    variant='outlined'
                     fullWidth
                     size='small'
                     onChange={(e) => {
@@ -86,7 +86,7 @@ const ClientForm = ({ handleInputChange }) => {
                     hiddenLabel
                     value={clientData.email}
                     placeholder='Email'
-                    variant='filled'
+                    variant='outlined'
                     fullWidth
                     size='small'
                     onChange={(e) => handleInputChange('email', e.target.value)}
@@ -96,7 +96,7 @@ const ClientForm = ({ handleInputChange }) => {
                 <DirectionsBoat color='secondary' />
             </Grid>
             <Grid item xs={11}>
-                <FormControl fullWidth variant='filled' size='small'>
+                <FormControl fullWidth variant='outlined' size='small'>
                     <InputLabel id='service-select-label'></InputLabel>
                     <Select
                         labelId='service-select-label'
