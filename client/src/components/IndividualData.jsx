@@ -3,6 +3,7 @@ import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
 import { getClientNameById, getBoatNameById } from '../utils/getData';
+import { keyMapping, orderedKeys, findData, findTitle } from '../utils/individualDataHelpers';
 import { Chip, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -10,80 +11,17 @@ const IndividualData = () => {
     const { clients, boats, services, individualData } = useStoreState(AppStore);
     const individualCollection = individualData.collection;
     const individualId = individualData.id;
-    console.log('individualData', individualData);
 
-    const findData = (uid) => {
-        let data;
-        switch (individualCollection) {
-            case 'clients':
-                data = clients.find((item) => item.uid === uid);
-                break;
-            case 'boats':
-                data = boats.find((item) => item.id === uid);
-                if (data) {
-                    data = {
-                        ...data,
-                        owner: getClientNameById(data.client, clients),
-                    };
-                    delete data.lastAdded;
-                }
-                break;
-            case 'services':
-                data = services.find((item) => item.id === uid);
-                break;
-            default:
-                data = null;
-        }
-        return data;
-    };
+    const dataToShow = findData(
+        individualId,
+        individualCollection,
+        clients,
+        boats,
+        services,
+        getClientNameById
+    );
+    const titleToShow = findTitle(individualCollection);
 
-    const findTitle = () => {
-        let title;
-        switch (individualCollection) {
-            case 'clients':
-                title = 'Client';
-                break;
-            case 'boats':
-                title = 'Boat';
-                break;
-            case 'services':
-                title = 'Service';
-                break;
-            default:
-                title = null;
-        }
-        return title;
-    };
-
-    const dataToShow = findData(individualId);
-    const titleToShow = findTitle();
-
-    const keyMapping = {
-        boatName: 'Boat Name',
-        name: 'Client Name',
-        owner: 'Owner',
-        email: 'Email',
-        id: 'Boat ID',
-        uid: 'Client ID',
-        client: 'Client ID',
-        brand: 'Brand',
-        model: 'Model',
-        boat: 'Boat(s)',
-        remark: 'Remark',
-    };
-
-    const orderedKeys = [
-        'boatName',
-        'owner',
-        'name',
-        'email',
-        'uid',
-        'id',
-        'client',
-        'brand',
-        'model',
-        'remark',
-    ];
     const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
         const indexA = orderedKeys.indexOf(a);
         const indexB = orderedKeys.indexOf(b);
@@ -118,7 +56,7 @@ const IndividualData = () => {
                 <IconButton
                     aria-label='close'
                     size='small'
-                    sx={{ display: 'flex', alignItems: 'flex-start' }}
+                    sx={{ display: 'flex', alignItems: 'flex-start', height: 'fit-content' }}
                     onClick={() => {
                         AppStore.update((s) => {
                             s.individualData = {
@@ -134,7 +72,7 @@ const IndividualData = () => {
             <Grid container>
                 {sortedEntries.map(([key, value], index) => (
                     <Grid item xs={12} container key={index}>
-                        <Grid item xs={5}>
+                        <Grid item xs={4}>
                             <Typography
                                 variant='subtitle1'
                                 sx={{
@@ -147,7 +85,7 @@ const IndividualData = () => {
                                 {keyMapping[key]}
                             </Typography>
                         </Grid>
-                        <Grid item xs={7}>
+                        <Grid item xs={8}>
                             {key === 'owner' ? (
                                 <Chip
                                     label={value.toString()}
@@ -190,6 +128,23 @@ const IndividualData = () => {
                                         }}
                                     />
                                 ))
+                            ) : key === 'residence' || key === 'domicile' ? (
+                                <Box>
+                                    <Box sx={{ height: '1rem' }} />
+                                    <Typography variant='subtitle2'>
+                                        {`${value.street} ${value.number}`}
+                                    </Typography>
+                                    <Typography variant='subtitle2'>
+                                        {`${value.zip} ${value.city}`}
+                                    </Typography>
+                                    <Typography variant='subtitle2'>{value.province}</Typography>
+                                    <Typography variant='subtitle2'>{value.country}</Typography>
+                                </Box>
+                            ) : key === 'emergencyContact1' || key === 'emergencyContact2' ? (
+                                <Box>
+                                    <Typography variant='subtitle2'>{value.name}</Typography>
+                                    <Typography variant='subtitle2'>{value.cellphone}</Typography>
+                                </Box>
                             ) : (
                                 <Typography variant='subtitle1'>
                                     {typeof value === 'object'
