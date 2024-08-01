@@ -125,7 +125,12 @@ export const editInCollection = async (collectionName, docId, data) => {
         const docRef = doc(db, collectionName, docId);
         await updateDoc(docRef, data);
         AppStore.update((s) => {
-            const index = s[collectionName].findIndex((item) => item.id === docId);
+            let index;
+            if (collectionName === 'clients') {
+                index = s[collectionName].findIndex((item) => item.uid === docId);
+            } else {
+                index = s[collectionName].findIndex((item) => item.id === docId);
+            }
             if (index !== -1) {
                 s[collectionName][index] = {
                     ...s[collectionName][index],

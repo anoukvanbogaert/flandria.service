@@ -32,6 +32,7 @@ const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
+    console.log('clients', clients);
 
     useEffect(() => {
         if (editId) {
