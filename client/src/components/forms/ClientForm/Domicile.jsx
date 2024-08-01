@@ -19,7 +19,7 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 <Grid item xs={2}>
                     <TextField
                         label='#'
-                        value={clientData?.domicile?.number}
+                        value={clientData?.domicile?.number || ''}
                         placeholder='#'
                         variant='outlined'
                         fullWidth
@@ -30,7 +30,7 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 <Grid item xs={4}>
                     <TextField
                         label='Street'
-                        value={clientData?.domicile?.street}
+                        value={clientData?.domicile?.street || ''}
                         placeholder='Street'
                         variant='outlined'
                         size='small'
@@ -41,7 +41,7 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 <Grid item xs={3}>
                     <TextField
                         label='ZIP'
-                        value={clientData?.domicile?.zip}
+                        value={clientData?.domicile?.zip || ''}
                         placeholder='ZIP'
                         variant='outlined'
                         size='small'
@@ -66,7 +66,7 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Province'
-                        value={clientData?.domicile?.province}
+                        value={clientData?.domicile?.province || ''}
                         placeholder='Province'
                         variant='outlined'
                         fullWidth
@@ -77,7 +77,7 @@ const Domicile = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Country'
-                        value={clientData?.domicile?.country}
+                        value={clientData?.domicile?.country || ''}
                         placeholder='Country'
                         variant='outlined'
                         size='small'

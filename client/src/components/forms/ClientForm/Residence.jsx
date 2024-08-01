@@ -18,7 +18,7 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={2}>
                     <TextField
                         label='#'
-                        value={clientData.residence?.number}
+                        value={clientData.residence?.number || ''}
                         placeholder='#'
                         variant='outlined'
                         fullWidth
@@ -29,7 +29,7 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={4}>
                     <TextField
                         label='Street'
-                        value={clientData?.residence?.street}
+                        value={clientData?.residence?.street || ''}
                         placeholder='Street'
                         variant='outlined'
                         size='small'
@@ -40,7 +40,7 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={3}>
                     <TextField
                         label='ZIP'
-                        value={clientData?.residence?.zip}
+                        value={clientData?.residence?.zip || ''}
                         placeholder='ZIP'
                         variant='outlined'
                         size='small'
@@ -65,7 +65,7 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Province'
-                        value={clientData?.residence?.province}
+                        value={clientData?.residence?.province || ''}
                         placeholder='Province'
                         variant='outlined'
                         fullWidth
@@ -76,7 +76,7 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Country'
-                        value={clientData?.residence?.country}
+                        value={clientData?.residence?.country || ''}
                         placeholder='Country'
                         variant='outlined'
                         size='small'

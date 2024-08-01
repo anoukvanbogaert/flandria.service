@@ -23,13 +23,12 @@ import { FormStore } from '../../../stores/FormStore';
 import Residence from './Residence';
 import Domicile from './Domicile';
 import Cellphones from './Cellphones';
+import ICE from './ICE';
 
 const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
-    console.log('clientData', clientData);
-    console.log('editId', editId);
 
     useEffect(() => {
         if (editId) {
@@ -67,8 +66,8 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    hiddenLabel
-                    value={clientData.name}
+                    hiddenlabel
+                    value={clientData.name || ''}
                     placeholder='Full Name'
                     variant='outlined'
                     fullWidth
@@ -83,8 +82,8 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    hiddenLabel
-                    value={clientData.email}
+                    hiddenlabel
+                    value={clientData.email || ''}
                     placeholder='Email'
                     variant='outlined'
                     fullWidth
@@ -103,7 +102,7 @@ const ClientForm = ({ handleInputChange }) => {
                         value={clientData.boat || []}
                         multiple
                         onChange={(event) => handleInputChange('boat', event.target.value)}
-                        hiddenLabel
+                        hiddenlabel
                     >
                         {boats.map((boat) => (
                             <MenuItem key={boat.id} value={boat.id}>
@@ -130,6 +129,12 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <Cellphones handleInputChange={handleInputChange} clientData={clientData} />
+            </Grid>
+            <Grid item xs={1}>
+                <MedicalServices color='secondary' />
+            </Grid>
+            <Grid item xs={11}>
+                <ICE handleInputChange={handleInputChange} clientData={clientData} />
             </Grid>
         </Grid>
     );

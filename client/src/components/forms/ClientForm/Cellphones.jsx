@@ -19,7 +19,7 @@ const Cellphones = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Cellphone 1'
-                        value={clientData?.cellphone1}
+                        value={clientData?.cellphone1 || ''}
                         placeholder='#'
                         variant='outlined'
                         fullWidth
@@ -30,7 +30,7 @@ const Cellphones = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Cellphone 2'
-                        value={clientData?.cellphone2}
+                        value={clientData?.cellphone2 || ''}
                         placeholder='Street'
                         variant='outlined'
                         size='small'

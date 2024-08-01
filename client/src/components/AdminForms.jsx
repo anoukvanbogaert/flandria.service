@@ -17,20 +17,19 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     const handleInputChange = (section) => (field, value, subField) => {
-        console.log('subField', subField);
-        if (subField) {
-            FormStore.update((s) => {
-                if (s[section]) {
-                    s[section][field][subField] = value;
+        FormStore.update((s) => {
+            if (!s[section]) {
+                s[section] = {};
+            }
+            if (subField) {
+                if (!s[section][field]) {
+                    s[section][field] = {};
                 }
-            });
-        } else {
-            FormStore.update((s) => {
-                if (s[section]) {
-                    s[section][field] = value;
-                }
-            });
-        }
+                s[section][field][subField] = value;
+            } else {
+                s[section][field] = value;
+            }
+        });
     };
 
     const handleSave = async () => {
