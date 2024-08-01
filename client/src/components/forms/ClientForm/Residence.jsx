@@ -4,16 +4,6 @@ import { TextField, Grid, Box, Typography } from '@mui/material';
 const Residence = ({ handleInputChange, clientData }) => {
     return (
         <>
-            <Typography
-                variant='subtitle1'
-                sx={{
-                    fontWeight: 'bold',
-                    marginBottom: '0.5rem',
-                    color: '#045174',
-                }}
-            >
-                Residence
-            </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField

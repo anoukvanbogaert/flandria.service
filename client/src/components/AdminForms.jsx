@@ -146,10 +146,10 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 </Backdrop>
                 <Typography
                     id='modal-title'
-                    variant='h2'
+                    variant='h4'
                     component='h2'
-                    color='primary'
-                    sx={{ marginBottom: '2rem' }}
+                    color='#045174'
+                    sx={{ marginBottom: '2rem', fontWeight: 'bold' }}
                 >
                     Fill in the details
                 </Typography>

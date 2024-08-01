@@ -5,16 +5,6 @@ const Domicile = ({ handleInputChange, clientData }) => {
     console.log('clientData', clientData);
     return (
         <>
-            <Typography
-                variant='subtitle1'
-                sx={{
-                    fontWeight: 'bold',
-                    marginBottom: '0.5rem',
-                    color: '#045174',
-                }}
-            >
-                Domicile
-            </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField
