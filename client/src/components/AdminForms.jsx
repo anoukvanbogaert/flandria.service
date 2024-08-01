@@ -5,7 +5,7 @@ import { Check, Close } from '@mui/icons-material';
 import { addToCollection, editInCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 
-import ClientForm from './forms/ClientForm';
+import ClientForm from './forms/ClientForm/ClientForm';
 import BoatForm from './forms/BoatForm';
 import ServiceForm from './forms/ServiceForm';
 import ServiceTemplateForm from './forms/ServiceTemplateForm';
@@ -16,9 +16,17 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const [loading, setLoading] = useState(false);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
-    const handleInputChange = (section) => (field, value) => {
+    const handleInputChange = (section) => (field, value, subField) => {
         FormStore.update((s) => {
-            if (s[section]) {
+            if (!s[section]) {
+                s[section] = {};
+            }
+            if (subField) {
+                if (!s[section][field]) {
+                    s[section][field] = {};
+                }
+                s[section][field][subField] = value;
+            } else {
                 s[section][field] = value;
             }
         });
@@ -138,10 +146,10 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 </Backdrop>
                 <Typography
                     id='modal-title'
-                    variant='h2'
+                    variant='h4'
                     component='h2'
-                    color='primary'
-                    sx={{ marginBottom: '2rem' }}
+                    color='#045174'
+                    sx={{ marginBottom: '2rem', fontWeight: 'bold' }}
                 >
                     Fill in the details
                 </Typography>
