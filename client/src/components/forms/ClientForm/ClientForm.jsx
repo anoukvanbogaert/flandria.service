@@ -7,16 +7,9 @@ import {
     Home,
     Phone,
     MedicalServices,
+    Fingerprint,
 } from '@mui/icons-material';
-import {
-    TextField,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Typography,
-} from '@mui/material';
+import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../../stores/AppStore';
 import { FormStore } from '../../../stores/FormStore';
@@ -24,6 +17,7 @@ import Residence from './Residence';
 import Domicile from './Domicile';
 import Cellphones from './Cellphones';
 import ICE from './ICE';
+import Identity from './Identity';
 
 const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);
@@ -135,6 +129,12 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <ICE handleInputChange={handleInputChange} clientData={clientData} />
+            </Grid>
+            <Grid item xs={1}>
+                <Fingerprint color='secondary' />
+            </Grid>
+            <Grid item xs={11}>
+                <Identity handleInputChange={handleInputChange} clientData={clientData} />
             </Grid>
         </Grid>
     );
