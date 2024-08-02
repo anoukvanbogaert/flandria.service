@@ -32,12 +32,11 @@ const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);
     const { boats, clients } = useStoreState(AppStore);
     const { editId, clientData } = useStoreState(FormStore);
-    console.log('clients', clients);
 
     useEffect(() => {
         if (editId) {
+            console.log('editId', editId);
             const editData = clients.find((client) => client.uid === editId);
-            console.log('editData', editData);
             FormStore.update((s) => {
                 s.clientData = editData || {};
             });
@@ -47,11 +46,12 @@ const ClientForm = ({ handleInputChange }) => {
 
     useEffect(() => {
         if (!editId) {
+            setLoading(false);
             FormStore.update((s) => {
                 s.clientData = { email: '', boat: [], name: '' };
             });
         }
-    }, [editId]);
+    }, [editId, clients]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -109,7 +109,11 @@ const ClientForm = ({ handleInputChange }) => {
                         hiddenlabel
                     >
                         {boats.map((boat) => (
-                            <MenuItem key={boat.id} value={boat.id}>
+                            <MenuItem
+                                key={boat.id}
+                                value={boat.id}
+                                disabled={boat?.client && boat?.client !== clientData.uid}
+                            >
                                 {`${boat.boatName} (${boat.brand} ${boat.model})`}
                             </MenuItem>
                         ))}

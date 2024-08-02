@@ -2,7 +2,6 @@ import React from 'react';
 import { TextField, Grid, Box, Typography } from '@mui/material';
 
 const ICE = ({ handleInputChange, clientData }) => {
-    console.log('clientData', clientData);
     return (
         <>
             <Grid container spacing={2}>

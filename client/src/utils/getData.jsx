@@ -44,19 +44,14 @@ export const getSetUserDoc = async (user) => {
 };
 
 export const addToCollection = async (collectionName, data) => {
-    console.log('collectionName', collectionName);
-
     try {
         if (collectionName === 'clients') {
             const dummyPassword = 'temporaryPassword!';
             try {
                 // Create user in Firebase Authentication
                 const userCredential = await registerWithEmailPassword(data.email, dummyPassword);
-                console.log('userCredential', userCredential);
 
                 if (userCredential) {
-                    console.log('UID:', userCredential.uid);
-
                     // Prepare data for Firestore without sensitive password data
                     const clientData = {
                         ...data,
@@ -78,6 +73,29 @@ export const addToCollection = async (collectionName, data) => {
                     });
 
                     console.log('Client created and password reset email sent.');
+
+                    //Update boats collection
+
+                    const addedBoats = data.boat;
+                    for (const boatId of addedBoats) {
+                        const boatDocRef = doc(db, 'boats', boatId);
+                        const boatDoc = await getDoc(boatDocRef);
+                        if (boatDoc.exists()) {
+                            const boatData = boatDoc.data();
+                            if (boatData.client !== clientData.uid) {
+                                await updateDoc(boatDocRef, { client: clientData.uid });
+                            }
+
+                            //locally update boats
+                            AppStore.update((s) => {
+                                const boatIndex = s.boats.findIndex((boat) => boat.id === boatId);
+                                if (boatIndex !== -1) {
+                                    s.boats[boatIndex].client = clientData.uid;
+                                }
+                            });
+                        }
+                    }
+
                     return docRef;
                 }
             } catch (e) {
@@ -121,9 +139,61 @@ export const addToCollection = async (collectionName, data) => {
 };
 
 export const editInCollection = async (collectionName, docId, data) => {
+    console.log('data', data);
     try {
         const docRef = doc(db, collectionName, docId);
         await updateDoc(docRef, data);
+
+        if (collectionName === 'clients') {
+            const client = AppStore.getRawState().clients.find((client) => client.uid === docId);
+            const previousBoats = client?.boat || [];
+            console.log('previousBoats', previousBoats);
+
+            // Handle added boats
+            const addedBoats = data.boat?.filter((boatId) => !previousBoats.includes(boatId)) || [];
+            console.log('addedBoats', addedBoats);
+            for (const boatId of addedBoats) {
+                const boatDocRef = doc(db, 'boats', boatId);
+                const boatDoc = await getDoc(boatDocRef);
+                if (boatDoc.exists()) {
+                    const boatData = boatDoc.data();
+                    if (boatData.client !== docId) {
+                        await updateDoc(boatDocRef, { client: docId });
+                    }
+
+                    //locally update boats
+                    AppStore.update((s) => {
+                        const boatIndex = s.boats.findIndex((boat) => boat.id === boatId);
+                        if (boatIndex !== -1) {
+                            s.boats[boatIndex].client = docId;
+                        }
+                    });
+                }
+            }
+
+            // Handle removed boats
+            const removedBoats = previousBoats.filter((boatId) => !data.boat?.includes(boatId));
+            console.log('removedBoats', removedBoats);
+            for (const boatId of removedBoats) {
+                const boatDocRef = doc(db, 'boats', boatId);
+                const boatDoc = await getDoc(boatDocRef);
+                if (boatDoc.exists()) {
+                    const boatData = boatDoc.data();
+                    if (boatData.client === docId) {
+                        await updateDoc(boatDocRef, { client: null });
+                    }
+
+                    //locally update removed boats
+                    AppStore.update((s) => {
+                        const boatIndex = s.boats.findIndex((boat) => boat.id === boatId);
+                        if (boatIndex !== -1) {
+                            s.boats[boatIndex].client = null;
+                        }
+                    });
+                }
+            }
+        }
+
         AppStore.update((s) => {
             let index;
             if (collectionName === 'clients') {
@@ -139,6 +209,7 @@ export const editInCollection = async (collectionName, docId, data) => {
                 };
             }
         });
+
         if (collectionName === 'boats') {
             await updateBoatOwnership(data.client, docId);
         }
@@ -228,8 +299,17 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
     await deleteDoc(docRef);
 
     if (store) {
+        console.log('store', store);
+        console.log('docId', docId);
         store.update((s) => {
-            const updatedData = s[collectionName].filter((item) => item.id !== docId);
+            let updatedData;
+            if (collectionName === 'clients') {
+                console.log('here');
+                updatedData = s[collectionName].filter((item) => item.uid !== docId);
+                console.log('updatedData', updatedData);
+            } else {
+                updatedData = s[collectionName].filter((item) => item.id !== docId);
+            }
             return { ...s, [collectionName]: updatedData };
         });
     }
@@ -400,12 +480,13 @@ export const addUserToDataBase = (userInfo, password) => {
 
 export const getClientNameById = (clientId, clients) => {
     const client = clients.find((c) => c.uid === clientId);
-    return client ? client.name : 'Unknown';
+    return client ? client.name : '';
 };
 
 export const getBoatNameById = (boatId, boats) => {
     const boat = boats.find((b) => b.id === boatId);
-    return boat ? boat.boatName : 'Unknown';
+    console.log('boatId', boatId);
+    return boat ? boat.boatName : '';
 };
 
 export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {

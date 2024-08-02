@@ -2,7 +2,6 @@ import React from 'react';
 import { TextField, Grid, Box, Typography } from '@mui/material';
 
 const Cellphones = ({ handleInputChange, clientData }) => {
-    console.log('clientData', clientData);
     return (
         <Grid container spacing={2}>
             <Grid item xs={6}>

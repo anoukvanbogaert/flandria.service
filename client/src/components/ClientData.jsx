@@ -1,12 +1,12 @@
 import React from 'react';
 import MUIDataTable from 'mui-datatables';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection, handleRowClick } from '../utils/getData';
+import { deleteFromCollection, handleRowClick, getBoatNameById } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
@@ -43,13 +43,40 @@ const ClientData = ({ setOpenModal }) => {
             label: 'Email',
         },
         {
-            name: 'Placeholder',
-            label: 'Placeholder',
+            name: 'boat',
+            label: 'Boat(s)',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    const client = clients[dataIndex];
+
+                    return client.boat && client.boat.length > 0
+                        ? client.boat.map((boatId, index) => (
+                              <Chip
+                                  key={index}
+                                  label={getBoatNameById(boatId, boats)}
+                                  onClick={(event) => {
+                                      event.stopPropagation();
+                                      AppStore.update((s) => {
+                                          s.individualData = {
+                                              collection: 'boats',
+                                              id: boatId,
+                                          };
+                                      });
+                                  }}
+                                  sx={{
+                                      backgroundColor: '#ceeefd',
+                                      color: '#045174',
+                                      cursor: 'pointer',
+                                      fontSize: '15px',
+                                      marginRight: '5px',
+                                  }}
+                              />
+                          ))
+                        : getBoatNameById(client.boat, boats) || '';
+                },
+            },
         },
-        {
-            name: 'Placeholder',
-            label: 'Placeholder',
-        },
+
         {
             name: '',
             label: '',
