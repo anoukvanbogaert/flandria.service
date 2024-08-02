@@ -86,7 +86,7 @@ const IndividualData = () => {
                             </Typography>
                         </Grid>
                         <Grid item xs={8}>
-                            {key === 'owner' ? (
+                            {key === 'owner' && value ? (
                                 <Chip
                                     label={value.toString()}
                                     onClick={(event) => {

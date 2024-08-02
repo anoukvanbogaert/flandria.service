@@ -26,7 +26,7 @@ import Domicile from './Domicile';
 import Cellphones from './Cellphones';
 import ICE from './ICE';
 import Identity from './Identity';
-import Subtitle from './Subtitle';
+import Subtitle from '../../Subtitle';
 
 const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);

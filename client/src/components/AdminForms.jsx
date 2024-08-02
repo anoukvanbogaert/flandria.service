@@ -6,7 +6,7 @@ import { addToCollection, editInCollection } from '../utils/getData';
 import { useStoreState } from 'pullstate';
 
 import ClientForm from './forms/ClientForm/ClientForm';
-import BoatForm from './forms/BoatForm';
+import BoatForm from './forms/BoatForm/BoatForm';
 import ServiceForm from './forms/ServiceForm';
 import ServiceTemplateForm from './forms/ServiceTemplateForm';
 import { FormStore } from '../stores/FormStore';

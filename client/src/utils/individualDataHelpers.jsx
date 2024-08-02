@@ -18,6 +18,8 @@ export const keyMapping = {
     idNumber: 'IDº',
     emergencyContact1: 'ICE 1',
     emergencyContact2: 'ICE 2',
+    port: 'Port',
+    flag: 'Flag',
 };
 
 export const orderedKeys = [
@@ -39,6 +41,8 @@ export const orderedKeys = [
     'client',
     'brand',
     'model',
+    'flag',
+    'port',
     'remark',
 ];
 

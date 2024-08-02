@@ -1,11 +1,22 @@
 import { React, useEffect, useState } from 'react';
 import { Autocomplete, TextField, Grid } from '@mui/material';
 
-import { AccountCircle, DirectionsBoat, Badge, ShortText, Comment } from '@mui/icons-material';
+import {
+    AccountCircle,
+    DirectionsBoat,
+    Badge,
+    ShortText,
+    Comment,
+    Flag,
+} from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
 
-import { AppStore } from '../../stores/AppStore';
-import { FormStore } from '../../stores/FormStore';
+import { AppStore } from '../../../stores/AppStore';
+import { FormStore } from '../../../stores/FormStore';
+
+import Subtitle from '../../Subtitle';
+import BrandModel from './BrandModel';
+import PortFlag from './PortFlag';
 
 const BoatForm = ({ handleInputChange }) => {
     const { clients, boats } = useStoreState(AppStore);
@@ -55,7 +66,7 @@ const BoatForm = ({ handleInputChange }) => {
                                 {...params}
                                 label='Choose a client'
                                 fullWidth
-                                variant='filled'
+                                variant='outlined'
                                 size='small'
                             />
                         )}
@@ -69,40 +80,27 @@ const BoatForm = ({ handleInputChange }) => {
                         label='Boat Name'
                         placeholder='Enter boat name'
                         fullWidth
-                        value={boatData.boatName}
-                        variant='filled'
+                        value={boatData.boatName || ''}
+                        variant='outlined'
                         size='small'
                         onChange={(e) => handleInputChange('boatName', e.target.value)}
                     />
                 </Grid>
+                <Subtitle subtitle='Brand + Model' />
                 <Grid item xs={1}>
                     <DirectionsBoat color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField
-                        label='Boat Brand'
-                        placeholder='e.g. Sunseeker'
-                        fullWidth
-                        value={boatData.brand}
-                        variant='filled'
-                        size='small'
-                        onChange={(e) => handleInputChange('brand', e.target.value)}
-                    />
+                    <BrandModel handleInputChange={handleInputChange} boatData={boatData} />
                 </Grid>
+                <Subtitle subtitle='Port + Flag' />
                 <Grid item xs={1}>
-                    <ShortText color='secondary' />
+                    <Flag color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField
-                        label='Boat Model'
-                        value={boatData.model}
-                        placeholder='e.g. Manhattan'
-                        fullWidth
-                        variant='filled'
-                        size='small'
-                        onChange={(e) => handleInputChange('model', e.target.value)}
-                    />
+                    <PortFlag handleInputChange={handleInputChange} boatData={boatData} />
                 </Grid>
+                <Subtitle subtitle='Notes' />
                 <Grid item xs={1}>
                     <Comment color='secondary' />
                 </Grid>
@@ -111,8 +109,8 @@ const BoatForm = ({ handleInputChange }) => {
                         label='Remark'
                         placeholder='Enter any remarks'
                         fullWidth
-                        value={boatData.remark}
-                        variant='filled'
+                        value={boatData.remark || ''}
+                        variant='outlined'
                         size='small'
                         multiline
                         rows={4}
