@@ -1,14 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import { Autocomplete, TextField, Grid } from '@mui/material';
 
-import {
-    AccountCircle,
-    DirectionsBoat,
-    Badge,
-    ShortText,
-    Comment,
-    Flag,
-} from '@mui/icons-material';
+import { AccountCircle, DirectionsBoat, Badge, Comment, Flag } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
 
 import { AppStore } from '../../../stores/AppStore';
@@ -34,7 +27,7 @@ const BoatForm = ({ handleInputChange }) => {
                 s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editId, boats]);
+    }, [editId, boats, boatData]);
 
     return (
         <>
@@ -53,11 +46,12 @@ const BoatForm = ({ handleInputChange }) => {
                         freeSolo
                         options={clients.map((option) => ({
                             label: option.name,
-                            uid: option.id,
+                            uid: option.uid,
                         }))}
                         value={clientValue}
                         onChange={(event, newValue) => {
                             setClientValue(newValue);
+                            console.log('newValue', newValue);
                             handleInputChange('client', newValue ? newValue.uid : '');
                         }}
                         getOptionLabel={(option) => option.label || ''}

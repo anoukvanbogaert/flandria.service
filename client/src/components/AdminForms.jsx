@@ -35,7 +35,6 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const handleSave = async () => {
         setLoading(true);
         setOperationStatus('idle');
-        console.log('selection', selection);
 
         try {
             if (selection === 'client') {
@@ -52,6 +51,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     await addToCollection('boats', boatData);
                 }
             } else if (selection === 'service') {
+                console.log('serviceData', serviceData);
                 if (serviceData.id) {
                     await editInCollection('services', serviceData.id, serviceData);
                 } else {
@@ -98,6 +98,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 setOpenModal(false);
                 FormStore.update((s) => {
                     s.editId = null;
+                    s.serviceData = null;
                 });
             }}
             aria-labelledby='modal-title'

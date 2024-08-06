@@ -139,7 +139,6 @@ export const addToCollection = async (collectionName, data) => {
 };
 
 export const editInCollection = async (collectionName, docId, data) => {
-    console.log('data', data);
     try {
         const docRef = doc(db, collectionName, docId);
         await updateDoc(docRef, data);
@@ -224,6 +223,8 @@ export const editInCollection = async (collectionName, docId, data) => {
 export const updateBoatOwnership = async (clientId, boatId) => {
     const clientRef = doc(db, 'clients', clientId);
     const clientDoc = await getDoc(clientRef);
+    console.log('clientId', clientId);
+    console.log('boatId', boatId);
 
     try {
         if (clientDoc.exists()) {
@@ -485,7 +486,6 @@ export const getClientNameById = (clientId, clients) => {
 
 export const getBoatNameById = (boatId, boats) => {
     const boat = boats.find((b) => b.id === boatId);
-    console.log('boatId', boatId);
     return boat ? boat.boatName : '';
 };
 

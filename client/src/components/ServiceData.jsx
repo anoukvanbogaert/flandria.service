@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection } from '../utils/getData';
+import { deleteFromCollection, getClientNameById } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const BoatData = ({ setOpenModal }) => {
@@ -70,7 +70,7 @@ const BoatData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getInfoById(service.client, clients, 'name');
+                    return getClientNameById(service.client, clients);
                 },
             },
         },
