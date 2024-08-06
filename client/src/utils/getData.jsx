@@ -210,7 +210,7 @@ export const editInCollection = async (collectionName, docId, data) => {
             }
         });
 
-        if (collectionName === 'boats') {
+        if (collectionName === 'boats' && data.client) {
             await updateBoatOwnership(data.client, docId);
         }
 
