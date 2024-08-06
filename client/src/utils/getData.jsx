@@ -45,6 +45,7 @@ export const getSetUserDoc = async (user) => {
 
 export const addToCollection = async (collectionName, data) => {
     try {
+        console.log('collectionName', collectionName);
         if (collectionName === 'clients') {
             const dummyPassword = 'temporaryPassword!';
             try {
@@ -103,22 +104,13 @@ export const addToCollection = async (collectionName, data) => {
                 throw e;
             }
         } else if (collectionName === 'services' && data.boat) {
-            // Create a document reference for services collection
             const docRef = doc(collection(db, collectionName));
 
-            // Set data in both service main collection and subcollection under the boat
-            await setDoc(docRef, data); // Set in the main services collection
-            const boatServicesRef = doc(db, 'boats', data.boat, 'services', docRef.id);
-            await setDoc(boatServicesRef, data); // Set in the subcollection
+            await setDoc(docRef, data);
 
             // Update local store
             AppStore.update((s) => {
                 s.services.push({ ...data, id: docRef.id });
-                const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
-                if (boatIndex !== -1) {
-                    s.boats[boatIndex].services = s.boats[boatIndex].services || [];
-                    s.boats[boatIndex].services.push(data);
-                }
             });
         } else {
             // For other collections
@@ -492,6 +484,7 @@ export const getBoatNameById = (boatId, boats) => {
 export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {
     const item = collection[rowMeta.dataIndex];
     console.log('item', item);
+    console.log('collectionString', collectionString);
     AppStore.update((s) => {
         s.individualData = {
             collection: collectionString,

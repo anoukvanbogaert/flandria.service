@@ -71,7 +71,7 @@ const ServiceForm = ({ handleInputChange }) => {
     useEffect(() => {
         if (!editId) {
             FormStore.update((s) => {
-                s.serviceData = { services: [], date: null, client: '', boat: '', remark: '' };
+                s.serviceData = { services: [], date: null, client: '', boat: [], remark: '' };
             });
         }
     }, [editId]);
@@ -121,7 +121,7 @@ const ServiceForm = ({ handleInputChange }) => {
                         <InputLabel id='service-select-label'>Select vessel</InputLabel>
                         <Select
                             labelId='service-select-label'
-                            value={serviceData.boat || ''}
+                            value={serviceData.boat || []}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
                             disabled={serviceData?.id}

@@ -17,6 +17,9 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     const handleInputChange = (section) => (field, value, subField) => {
+        console.log('field', field);
+        console.log('section', section);
+        console.log('subField', subField);
         FormStore.update((s) => {
             if (!s[section]) {
                 s[section] = {};
@@ -26,6 +29,9 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     s[section][field] = {};
                 }
                 s[section][field][subField] = value;
+            }
+            if (section === 'serviceData' && field === 'boat') {
+                s[section][field] = [value];
             } else {
                 s[section][field] = value;
             }
