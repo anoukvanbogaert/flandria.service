@@ -40,6 +40,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
         try {
             if (selection === 'client') {
                 if (clientData.uid) {
+                    console.log('firing');
                     await editInCollection('clients', clientData.uid, clientData);
                 } else {
                     await addToCollection('clients', clientData);

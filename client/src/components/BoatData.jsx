@@ -81,7 +81,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                             }}
                         />
                     ) : (
-                        getClientNameById(boat.client, clients) || 'Unknown'
+                        getClientNameById(boat.client, clients) || ''
                     );
                 },
             },
