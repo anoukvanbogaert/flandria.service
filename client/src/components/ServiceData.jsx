@@ -27,7 +27,6 @@ const BoatData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (serviceId, clientId) => {
-        console.log('Deleting service:', serviceId);
         deleteFromCollection('services', serviceId, AppStore);
     };
 
@@ -60,12 +59,17 @@ const BoatData = ({ setOpenModal }) => {
     const columns = [
         {
             name: 'boatName',
-            label: 'Boat Name',
+            label: 'Boat',
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    console.log('service', service);
-                    return getInfoById(service.boat[0], boats, 'boatName');
+                    return (
+                        <Box>
+                            {getInfoById(service.boat[0], boats, 'boatName')} (
+                            {getInfoById(service.boat[0], boats, 'brand')}
+                            {getInfoById(service.boat[0], boats, 'model')})
+                        </Box>
+                    );
                 },
             },
         },
@@ -101,26 +105,7 @@ const BoatData = ({ setOpenModal }) => {
                 },
             },
         },
-        {
-            name: 'brand',
-            label: 'Brand',
-            options: {
-                customBodyRenderLite: (dataIndex) => {
-                    const service = services[dataIndex];
-                    return getInfoById(service.boat[0], boats, 'brand');
-                },
-            },
-        },
-        {
-            name: 'model',
-            label: 'Model',
-            options: {
-                customBodyRenderLite: (dataIndex) => {
-                    const service = services[dataIndex];
-                    return getInfoById(service.boat[0], boats, 'model');
-                },
-            },
-        },
+
         // {
         //     name: 'date',
         //     label: 'Date',
@@ -128,6 +113,10 @@ const BoatData = ({ setOpenModal }) => {
         {
             name: 'services',
             label: 'Service(s) performed',
+        },
+        {
+            name: 'remark',
+            label: 'Remarks',
         },
         {
             name: '',

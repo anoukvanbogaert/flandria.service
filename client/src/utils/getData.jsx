@@ -251,15 +251,12 @@ export const updateBoatOwnership = async (clientId, boatId) => {
 export const deleteFromCollection = async (collectionName, docId, store) => {
     const docRef = doc(db, collectionName, docId);
 
-    // if a service is deleted, it also needs to be removed from the boats.services subcollection
     if (collectionName === 'services') {
+        console.log('firing');
         const serviceDoc = await getDoc(docRef);
         const boatId = serviceDoc.data().boat;
-        if (boatId) {
-            await deleteFromSubCollection('boats', 'services', docId, boatId, store);
-        }
     }
-    // if a client is removed, they also need to be removed from the boats (if any) they're assigned to
+
     if (collectionName === 'clients') {
         const clientDoc = await getDoc(docRef);
         const boatIds = clientDoc.data().boat;
@@ -483,8 +480,6 @@ export const getBoatNameById = (boatId, boats) => {
 
 export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {
     const item = collection[rowMeta.dataIndex];
-    console.log('item', item);
-    console.log('collectionString', collectionString);
     AppStore.update((s) => {
         s.individualData = {
             collection: collectionString,

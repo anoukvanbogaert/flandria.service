@@ -39,7 +39,6 @@ const IndividualData = () => {
             if (indexB !== -1) return 1;
             return 0;
         });
-    console.log('sortedEntries', sortedEntries);
 
     return (
         <Box
