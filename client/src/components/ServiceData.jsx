@@ -9,7 +9,7 @@ import './data.css';
 import { deleteFromCollection, getClientNameById, handleRowClick } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal }) => {
+const ServiceData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients, services } = useStoreState(AppStore);
@@ -106,13 +106,33 @@ const BoatData = ({ setOpenModal }) => {
             },
         },
 
-        // {
-        //     name: 'date',
-        //     label: 'Date',
-        // },
+        {
+            name: 'date',
+            label: 'Date',
+            options: {
+                customBodyRender: (value) => {
+                    if (value) {
+                        console.log('value', value);
+                        const date = new Date(value * 1000);
+
+                        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        return date.toLocaleDateString('en-US', options);
+                    }
+                    return value;
+                },
+            },
+        },
         {
             name: 'services',
             label: 'Service(s) performed',
+            options: {
+                customBodyRender: (value) => {
+                    if (Array.isArray(value)) {
+                        return value.join(', ');
+                    }
+                    return value;
+                },
+            },
         },
         {
             name: 'remark',
@@ -187,4 +207,4 @@ const BoatData = ({ setOpenModal }) => {
     );
 };
 
-export default BoatData;
+export default ServiceData;
