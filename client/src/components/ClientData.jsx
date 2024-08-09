@@ -43,7 +43,6 @@ const ClientData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const client = clients[dataIndex];
-                    console.log('client.boat', client.boat);
 
                     return client.boat && client.boat.length > 0
                         ? client.boat.map((boatId, index) => (

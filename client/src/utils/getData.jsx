@@ -133,6 +133,9 @@ export const addToCollection = async (collectionName, data) => {
 export const editInCollection = async (collectionName, docId, data) => {
     try {
         const docRef = doc(db, collectionName, docId);
+        const currentDoc = await getDoc(docRef);
+        const currentData = currentDoc.data();
+
         await updateDoc(docRef, data);
 
         if (collectionName === 'clients') {
@@ -202,6 +205,31 @@ export const editInCollection = async (collectionName, docId, data) => {
         });
 
         if (collectionName === 'boats' && data.client) {
+            console.log('updating ownership');
+            console.log('data.client', data.client);
+
+            const oldClientId = currentData.client;
+            console.log('oldClientId', oldClientId);
+
+            if (oldClientId && oldClientId !== data.client) {
+                console.log('data.client', data.client);
+                const oldClientDocRef = doc(db, 'clients', oldClientId);
+                const oldClientDoc = await getDoc(oldClientDocRef);
+                const oldClientBoats = oldClientDoc.data().boat || [];
+
+                const updatedBoats = oldClientBoats.filter((boatId) => boatId !== docId);
+                await updateDoc(oldClientDocRef, { boat: updatedBoats });
+
+                AppStore.update((s) => {
+                    const oldClientIndex = s.clients.findIndex(
+                        (client) => client.uid === oldClientId
+                    );
+                    if (oldClientIndex !== -1) {
+                        s.clients[oldClientIndex].boat = updatedBoats;
+                    }
+                });
+            }
+
             await updateBoatOwnership(data.client, docId);
         }
 
@@ -213,10 +241,11 @@ export const editInCollection = async (collectionName, docId, data) => {
 };
 
 export const updateBoatOwnership = async (clientId, boatId) => {
-    const clientRef = doc(db, 'clients', clientId);
-    const clientDoc = await getDoc(clientRef);
+    console.log('updating2');
     console.log('clientId', clientId);
     console.log('boatId', boatId);
+    const clientRef = doc(db, 'clients', clientId);
+    const clientDoc = await getDoc(clientRef);
 
     try {
         if (clientDoc.exists()) {
