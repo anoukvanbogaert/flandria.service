@@ -283,14 +283,21 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
             const updatedBoats = currentBoats.filter((boatId) => boatId !== docId);
 
             await updateDoc(clientDocRef, { boat: updatedBoats });
+
+            if (store) {
+                store.update((s) => {
+                    const clientIndex = s.clients.findIndex((client) => client.uid === clientId);
+                    if (clientIndex !== -1) {
+                        s.clients[clientIndex].boat = updatedBoats;
+                    }
+                });
+            }
         }
     }
 
     await deleteDoc(docRef);
 
     if (store) {
-        console.log('store', store);
-        console.log('docId', docId);
         store.update((s) => {
             let updatedData;
             if (collectionName === 'clients') {
@@ -299,6 +306,7 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
                 console.log('updatedData', updatedData);
             } else {
                 updatedData = s[collectionName].filter((item) => item.id !== docId);
+                console.log('updatedData', updatedData);
             }
             return { ...s, [collectionName]: updatedData };
         });
@@ -484,6 +492,15 @@ export const handleRowClick = (rowData, rowMeta, collection, collectionString) =
         s.individualData = {
             collection: collectionString,
             id: item.id || item.uid,
+        };
+    });
+};
+
+export const closeIndividualData = () => {
+    AppStore.update((s) => {
+        s.individualData = {
+            collection: '',
+            id: '',
         };
     });
 };

@@ -12,11 +12,6 @@ import { FormStore } from '../stores/FormStore';
 const ClientData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);
 
-    const getClientNameById = (clientId) => {
-        const client = clients.find((c) => c.uid === clientId);
-        return client ? client.name : 'Unknown';
-    };
-
     const onEditClick = (clientId) => {
         FormStore.update((s) => {
             s.editId = clientId;
@@ -48,6 +43,7 @@ const ClientData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const client = clients[dataIndex];
+                    console.log('client.boat', client.boat);
 
                     return client.boat && client.boat.length > 0
                         ? client.boat.map((boatId, index) => (
