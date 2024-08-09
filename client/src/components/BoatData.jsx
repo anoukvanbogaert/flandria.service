@@ -27,7 +27,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
         setOpenModal(true);
     };
 
-    const onDeleteClick = (boatId, clientId) => {
+    const onDeleteClick = (boatId) => {
         closeIndividualData();
         console.log('boatId', boatId);
 
@@ -139,7 +139,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                             <IconButton
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    onDeleteClick(boat.id, boat.client);
+                                    onDeleteClick(boat.id);
                                 }}
                                 aria-label='delete'
                                 color='error'

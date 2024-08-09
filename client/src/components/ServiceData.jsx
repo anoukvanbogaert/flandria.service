@@ -16,6 +16,7 @@ import { FormStore } from '../stores/FormStore';
 
 const ServiceData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
+    const [deletedRow, setDeletedRow] = useState(null);
 
     const { boats, clients, services } = useStoreState(AppStore);
 
@@ -31,9 +32,21 @@ const ServiceData = ({ setOpenModal }) => {
         setOpenModal(true);
     };
 
-    const onDeleteClick = (serviceId, clientId) => {
+    const onDeleteClick = (serviceId) => {
         closeIndividualData();
-        deleteFromCollection('services', serviceId, AppStore);
+        console.log('serviceId', serviceId);
+
+        const deletedService = services.find((service) => service.id === serviceId);
+        if (deletedService) {
+            console.log('deletedService', deletedService.id);
+            setDeletedRow(deletedService.id);
+            const timer = setTimeout(() => {
+                deleteFromCollection('services', serviceId, AppStore);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+        setDeletedRow(null);
     };
 
     const onRowClick = (rowData, rowMeta) => {
@@ -204,7 +217,12 @@ const ServiceData = ({ setOpenModal }) => {
         }),
         setRowProps: (row, dataIndex) => {
             return {
-                className: services[dataIndex].id === highlightedRow ? 'flash-background' : '',
+                className:
+                    services[dataIndex].id === highlightedRow
+                        ? 'flash-background'
+                        : services[dataIndex].id === deletedRow
+                        ? 'background-red'
+                        : '',
             };
         },
     };
