@@ -16,6 +16,7 @@ import { FormStore } from '../stores/FormStore';
 
 const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
+    const [deletedRow, setDeletedRow] = useState(null);
 
     const { boats, clients } = useStoreState(AppStore);
 
@@ -28,7 +29,19 @@ const BoatData = ({ setOpenModal, setSelection }) => {
 
     const onDeleteClick = (boatId, clientId) => {
         closeIndividualData();
-        deleteFromCollection('boats', boatId, AppStore);
+        console.log('boatId', boatId);
+
+        const deletedBoat = boats.find((boat) => boat.id === boatId);
+        if (deletedBoat) {
+            console.log('deletedBoat', deletedBoat.id);
+            setDeletedRow(deletedBoat.id);
+            const timer = setTimeout(() => {
+                deleteFromCollection('boats', boatId, AppStore);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+        setDeletedRow(null);
     };
 
     const onRowClick = (rowData, rowMeta) => {
@@ -161,7 +174,12 @@ const BoatData = ({ setOpenModal, setSelection }) => {
         }),
         setRowProps: (row, dataIndex) => {
             return {
-                className: boats[dataIndex].id === highlightedRow ? 'flash-background' : '',
+                className:
+                    boats[dataIndex].id === highlightedRow
+                        ? 'flash-background'
+                        : boats[dataIndex].id === deletedRow
+                        ? 'background-red'
+                        : '',
             };
         },
     };

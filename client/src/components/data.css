@@ -23,3 +23,8 @@
 .flash-background {
     animation: flash 1s ease-out infinite;
 }
+
+.background-red {
+    background-color: #f34b4b;
+    transition: background-color 2s ease-in-out;
+}

@@ -118,7 +118,7 @@ export const addToCollection = async (collectionName, data) => {
             AppStore.update((s) => {
                 s[collectionName].push({ ...data, id: docRef.id, lastAdded: true });
             });
-            if (collectionName === 'boats') {
+            if (collectionName === 'boats' && data.client) {
                 await updateBoatOwnership(data.client, docRef.id);
             }
             console.log('Document written with ID: ', docRef.id);
@@ -278,6 +278,7 @@ export const updateBoatOwnership = async (clientId, boatId) => {
 };
 
 export const deleteFromCollection = async (collectionName, docId, store) => {
+    console.log('deleting');
     const docRef = doc(db, collectionName, docId);
 
     if (collectionName === 'services') {
