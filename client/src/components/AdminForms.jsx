@@ -17,6 +17,9 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
 
     const handleInputChange = (section) => (field, value, subField) => {
+        console.log('field', field);
+        console.log('section', section);
+        console.log('subField', subField);
         FormStore.update((s) => {
             if (!s[section]) {
                 s[section] = {};
@@ -26,6 +29,9 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     s[section][field] = {};
                 }
                 s[section][field][subField] = value;
+            }
+            if (section === 'serviceData' && field === 'boat') {
+                s[section][field] = [value];
             } else {
                 s[section][field] = value;
             }
@@ -35,7 +41,6 @@ const AdminForms = ({ selection, setOpenModal }) => {
     const handleSave = async () => {
         setLoading(true);
         setOperationStatus('idle');
-        console.log('selection', selection);
 
         try {
             if (selection === 'client') {
@@ -52,6 +57,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                     await addToCollection('boats', boatData);
                 }
             } else if (selection === 'service') {
+                console.log('serviceData', serviceData);
                 if (serviceData.id) {
                     await editInCollection('services', serviceData.id, serviceData);
                 } else {
@@ -98,6 +104,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 setOpenModal(false);
                 FormStore.update((s) => {
                     s.editId = null;
+                    s.serviceData = null;
                 });
             }}
             aria-labelledby='modal-title'

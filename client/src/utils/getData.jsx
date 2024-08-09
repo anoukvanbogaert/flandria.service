@@ -45,6 +45,7 @@ export const getSetUserDoc = async (user) => {
 
 export const addToCollection = async (collectionName, data) => {
     try {
+        console.log('collectionName', collectionName);
         if (collectionName === 'clients') {
             const dummyPassword = 'temporaryPassword!';
             try {
@@ -103,22 +104,13 @@ export const addToCollection = async (collectionName, data) => {
                 throw e;
             }
         } else if (collectionName === 'services' && data.boat) {
-            // Create a document reference for services collection
             const docRef = doc(collection(db, collectionName));
 
-            // Set data in both service main collection and subcollection under the boat
-            await setDoc(docRef, data); // Set in the main services collection
-            const boatServicesRef = doc(db, 'boats', data.boat, 'services', docRef.id);
-            await setDoc(boatServicesRef, data); // Set in the subcollection
+            await setDoc(docRef, data);
 
             // Update local store
             AppStore.update((s) => {
                 s.services.push({ ...data, id: docRef.id });
-                const boatIndex = s.boats.findIndex((boat) => boat.id === data.boat);
-                if (boatIndex !== -1) {
-                    s.boats[boatIndex].services = s.boats[boatIndex].services || [];
-                    s.boats[boatIndex].services.push(data);
-                }
             });
         } else {
             // For other collections
@@ -139,7 +131,6 @@ export const addToCollection = async (collectionName, data) => {
 };
 
 export const editInCollection = async (collectionName, docId, data) => {
-    console.log('data', data);
     try {
         const docRef = doc(db, collectionName, docId);
         await updateDoc(docRef, data);
@@ -224,6 +215,8 @@ export const editInCollection = async (collectionName, docId, data) => {
 export const updateBoatOwnership = async (clientId, boatId) => {
     const clientRef = doc(db, 'clients', clientId);
     const clientDoc = await getDoc(clientRef);
+    console.log('clientId', clientId);
+    console.log('boatId', boatId);
 
     try {
         if (clientDoc.exists()) {
@@ -258,15 +251,12 @@ export const updateBoatOwnership = async (clientId, boatId) => {
 export const deleteFromCollection = async (collectionName, docId, store) => {
     const docRef = doc(db, collectionName, docId);
 
-    // if a service is deleted, it also needs to be removed from the boats.services subcollection
     if (collectionName === 'services') {
+        console.log('firing');
         const serviceDoc = await getDoc(docRef);
         const boatId = serviceDoc.data().boat;
-        if (boatId) {
-            await deleteFromSubCollection('boats', 'services', docId, boatId, store);
-        }
     }
-    // if a client is removed, they also need to be removed from the boats (if any) they're assigned to
+
     if (collectionName === 'clients') {
         const clientDoc = await getDoc(docRef);
         const boatIds = clientDoc.data().boat;
@@ -485,13 +475,11 @@ export const getClientNameById = (clientId, clients) => {
 
 export const getBoatNameById = (boatId, boats) => {
     const boat = boats.find((b) => b.id === boatId);
-    console.log('boatId', boatId);
     return boat ? boat.boatName : '';
 };
 
 export const handleRowClick = (rowData, rowMeta, collection, collectionString) => {
     const item = collection[rowMeta.dataIndex];
-    console.log('item', item);
     AppStore.update((s) => {
         s.individualData = {
             collection: collectionString,

@@ -1,14 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import { Autocomplete, TextField, Grid } from '@mui/material';
 
-import {
-    AccountCircle,
-    DirectionsBoat,
-    Badge,
-    ShortText,
-    Comment,
-    Flag,
-} from '@mui/icons-material';
+import { AccountCircle, DirectionsBoat, Badge, Comment, Flag } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
 
 import { AppStore } from '../../../stores/AppStore';
@@ -22,10 +15,15 @@ const BoatForm = ({ handleInputChange }) => {
     const { clients, boats } = useStoreState(AppStore);
     const { editId, boatData } = useStoreState(FormStore);
     const [clientValue, setClientValue] = useState(null);
+    console.log('clientValue', clientValue);
+    console.log('boatData', boatData);
 
     useEffect(() => {
         if (editId) {
             const editData = boats.find((boat) => boat.id === editId) || boatData;
+            const clientName =
+                clients.find((client) => client.uid === editData.client)?.name || 'Unknown';
+            setClientValue(clientName);
             FormStore.update((s) => {
                 s.boatData = editData || {};
             });
@@ -34,7 +32,7 @@ const BoatForm = ({ handleInputChange }) => {
                 s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editId, boats]);
+    }, [editId, boats, boatData]);
 
     return (
         <>
@@ -53,18 +51,19 @@ const BoatForm = ({ handleInputChange }) => {
                         freeSolo
                         options={clients.map((option) => ({
                             label: option.name,
-                            uid: option.id,
+                            uid: option.uid,
                         }))}
                         value={clientValue}
                         onChange={(event, newValue) => {
                             setClientValue(newValue);
+                            console.log('newValue', newValue);
                             handleInputChange('client', newValue ? newValue.uid : '');
                         }}
                         getOptionLabel={(option) => option.label || ''}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label='Choose a client'
+                                label={clientValue || 'Choose a client'}
                                 fullWidth
                                 variant='outlined'
                                 size='small'

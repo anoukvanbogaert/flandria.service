@@ -19,6 +19,7 @@ import { useStoreState } from 'pullstate';
 import ServiceTemplateForm from './ServiceTemplateForm';
 import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
+import { getBoatNameById, getClientNameById } from '../../utils/getData';
 
 const ServiceForm = ({ handleInputChange }) => {
     const { clients, boats, services, serviceTemplates } = useStoreState(AppStore);
@@ -27,6 +28,9 @@ const ServiceForm = ({ handleInputChange }) => {
     const [clientValue, setClientValue] = useState(null);
     const [boatValue, setBoatValue] = useState(null);
     const [openAddService, setOpenAddService] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    console.log('serviceData', serviceData);
 
     const handleServiceChange = (event) => {
         const newValue = event.target.value;
@@ -37,21 +41,21 @@ const ServiceForm = ({ handleInputChange }) => {
     const filteredServiceTemplates = serviceTemplates.filter((template) => template.description);
 
     useEffect(() => {
-        if (serviceData.client) {
-            const clientId = serviceData.client;
-            const client = clients.find((c) => c.id === clientId);
+        if (clientValue) {
+            const clientId = clientValue.uid;
+            const client = clients.find((c) => c.uid === clientId);
 
             if (client) {
-                console.log('client', client);
                 const boatInfo = client.boat
                     .map((boatId) => boats.find((boat) => boat.id === boatId))
                     .filter((boat) => boat !== undefined);
+
                 setUserboats(boatInfo);
             } else {
                 setUserboats([]);
             }
         }
-    }, [serviceData.client, clients, boats]);
+    }, [serviceData?.client, clients, boats]);
 
     useEffect(() => {
         if (editId) {
@@ -64,16 +68,22 @@ const ServiceForm = ({ handleInputChange }) => {
             FormStore.update((s) => {
                 s.serviceData = editData || {};
             });
+            setLoading(false);
         }
     }, [editId, services]);
 
     useEffect(() => {
         if (!editId) {
+            setLoading(false);
             FormStore.update((s) => {
                 s.serviceData = { services: [], date: null, client: '', boat: [], remark: '' };
             });
         }
     }, [editId]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -92,7 +102,7 @@ const ServiceForm = ({ handleInputChange }) => {
                         freeSolo
                         options={clients.map((option) => ({
                             label: option.name,
-                            uid: option.id,
+                            uid: option.uid,
                         }))}
                         value={clientValue}
                         onChange={(event, newValue) => {
@@ -103,10 +113,10 @@ const ServiceForm = ({ handleInputChange }) => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                disabled={serviceData.id}
-                                label={serviceData.id ? 'Client' : 'Choose a client'}
+                                disabled={serviceData.id ? true : false}
+                                label={serviceData.id ? clientValue : 'Choose a client'}
                                 fullWidth
-                                variant='filled'
+                                variant='outlined'
                                 size='small'
                             />
                         )}
@@ -116,22 +126,29 @@ const ServiceForm = ({ handleInputChange }) => {
                     <DirectionsBoat color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
-                    <FormControl fullWidth variant='filled' size='small'>
+                    <FormControl fullWidth variant='outlined' size='small'>
                         <InputLabel id='service-select-label'>Select vessel</InputLabel>
                         <Select
                             labelId='service-select-label'
-                            value={serviceData.boat || []}
+                            value={serviceData.boat[0] || ''}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
-                            disabled={serviceData.id}
+                            disabled={serviceData?.id}
                         >
-                            {userBoats.length > 0 ? (
+                            {/* editing mode */}
+                            {serviceData.id ? (
+                                <MenuItem value={serviceData.boat[0]}>
+                                    {getBoatNameById(serviceData.boat[0], boats)}
+                                </MenuItem>
+                            ) : // user has boats
+                            userBoats.length > 0 ? (
                                 userBoats.map((boat) => (
                                     <MenuItem key={boat.id} value={boat.id}>
-                                        {`${boat.name} (${boat.brand}, ${boat.model})`}
+                                        {`${boat.boatName} (${boat.brand}, ${boat.model})`}
                                     </MenuItem>
                                 ))
                             ) : (
+                                // user doesn't have boats
                                 <MenuItem disabled value=''>
                                     {serviceData.client
                                         ? 'This customer does not have any boats yet'
@@ -145,12 +162,12 @@ const ServiceForm = ({ handleInputChange }) => {
                     <Build color='secondary' />
                 </Grid>
                 <Grid item xs={11}>
-                    <FormControl fullWidth variant='filled' size='small' sx={{ padding: 0 }}>
+                    <FormControl fullWidth variant='outlined' size='small' sx={{ padding: 0 }}>
                         <InputLabel id='service-select-label'>Select service</InputLabel>
                         <Select
                             labelId='service-select-label'
                             multiple
-                            value={serviceData.services || []}
+                            value={serviceData.services || ''}
                             onChange={handleServiceChange}
                             label='Select service'
                             renderValue={(selected) => (
@@ -207,16 +224,20 @@ const ServiceForm = ({ handleInputChange }) => {
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             label='Select date'
-                            value={serviceData.date}
+                            value={
+                                serviceData.date.seconds
+                                    ? new Date(serviceData.date.seconds * 1000)
+                                    : null
+                            }
                             onChange={(newValue) => handleInputChange('date', newValue)}
-                            slotProps={{ textField: { size: 'small', variant: 'filled' } }}
+                            slotProps={{ textField: { size: 'small', variant: 'outlined' } }}
                             components={{
                                 OpenPickerIcon: TextField,
                             }}
                             componentsProps={{
                                 textField: {
                                     size: 'small',
-                                    variant: 'filled',
+                                    variant: 'outlined',
                                 },
                             }}
                         />
@@ -231,12 +252,11 @@ const ServiceForm = ({ handleInputChange }) => {
                         label='Remark'
                         multiline
                         rows={4}
+                        value={serviceData.remark || ''}
                         placeholder='Enter your remark here'
-                        variant='filled'
+                        variant='outlined'
                         fullWidth
-                        onChange={(event) =>
-                            handleInputChange('selectedRemark', event.target.value)
-                        }
+                        onChange={(event) => handleInputChange('remark', event.target.value)}
                     />
                 </Grid>
             </Grid>

@@ -9,15 +9,7 @@ import {
     MedicalServices,
     Fingerprint,
 } from '@mui/icons-material';
-import {
-    TextField,
-    Grid,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Typography,
-} from '@mui/material';
+import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../../stores/AppStore';
 import { FormStore } from '../../../stores/FormStore';

@@ -22,14 +22,23 @@ const IndividualData = () => {
     );
     const titleToShow = findTitle(individualCollection);
 
-    const sortedEntries = Object.entries(dataToShow).sort(([a], [b]) => {
-        const indexA = orderedKeys.indexOf(a);
-        const indexB = orderedKeys.indexOf(b);
-        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        if (indexA !== -1) return -1;
-        if (indexB !== -1) return 1;
-        return 0;
-    });
+    const filteredDataToShow = Object.keys(dataToShow).reduce((acc, key) => {
+        if (keyMapping[key] !== undefined) {
+            acc[key] = dataToShow[key];
+        }
+        return acc;
+    }, {});
+
+    const sortedEntries = Object.entries(filteredDataToShow)
+        .filter(([key]) => key in keyMapping)
+        .sort(([a], [b]) => {
+            const indexA = orderedKeys.indexOf(a);
+            const indexB = orderedKeys.indexOf(b);
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return 0;
+        });
 
     return (
         <Box

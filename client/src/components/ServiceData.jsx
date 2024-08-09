@@ -1,15 +1,15 @@
 import { React, useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection } from '../utils/getData';
+import { deleteFromCollection, getClientNameById, handleRowClick } from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
-const BoatData = ({ setOpenModal }) => {
+const ServiceData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
 
     const { boats, clients, services } = useStoreState(AppStore);
@@ -27,8 +27,11 @@ const BoatData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (serviceId, clientId) => {
-        console.log('Deleting service:', serviceId);
         deleteFromCollection('services', serviceId, AppStore);
+    };
+
+    const onRowClick = (rowData, rowMeta) => {
+        handleRowClick(rowData, rowMeta, services, 'services');
     };
 
     //This useffect looks for rows to highlight
@@ -56,11 +59,17 @@ const BoatData = ({ setOpenModal }) => {
     const columns = [
         {
             name: 'boatName',
-            label: 'Boat Name',
+            label: 'Boat',
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getInfoById(service.boat, boats, 'boatName');
+                    return (
+                        <Box>
+                            {getInfoById(service.boat[0], boats, 'boatName')} (
+                            {getInfoById(service.boat[0], boats, 'brand')}
+                            {getInfoById(service.boat[0], boats, 'model')})
+                        </Box>
+                    );
                 },
             },
         },
@@ -70,37 +79,64 @@ const BoatData = ({ setOpenModal }) => {
             options: {
                 customBodyRenderLite: (dataIndex) => {
                     const service = services[dataIndex];
-                    return getInfoById(service.client, clients, 'name');
+                    return service.client ? (
+                        <Chip
+                            label={getClientNameById(service.client, clients)}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                AppStore.update((s) => {
+                                    s.individualData = {
+                                        collection: 'clients',
+                                        id: service.client,
+                                    };
+                                });
+                                console.log(`Client ID: ${service.client}`);
+                            }}
+                            sx={{
+                                backgroundColor: '#ceeefd',
+                                color: '#045174',
+                                cursor: 'pointer',
+                                fontSize: '15px',
+                            }}
+                        />
+                    ) : (
+                        getClientNameById(service.client, clients) || ''
+                    );
                 },
             },
         },
+
         {
-            name: 'brand',
-            label: 'Brand',
+            name: 'date',
+            label: 'Date',
             options: {
-                customBodyRenderLite: (dataIndex) => {
-                    const service = services[dataIndex];
-                    return getInfoById(service.boat, boats, 'brand');
+                customBodyRender: (value) => {
+                    if (value) {
+                        console.log('value', value);
+                        const date = new Date(value * 1000);
+
+                        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        return date.toLocaleDateString('en-US', options);
+                    }
+                    return value;
                 },
             },
         },
-        {
-            name: 'model',
-            label: 'Model',
-            options: {
-                customBodyRenderLite: (dataIndex) => {
-                    const service = services[dataIndex];
-                    return getInfoById(service.boat, boats, 'model');
-                },
-            },
-        },
-        // {
-        //     name: 'date',
-        //     label: 'Date',
-        // },
         {
             name: 'services',
             label: 'Service(s) performed',
+            options: {
+                customBodyRender: (value) => {
+                    if (Array.isArray(value)) {
+                        return value.join(', ');
+                    }
+                    return value;
+                },
+            },
+        },
+        {
+            name: 'remark',
+            label: 'Remarks',
         },
         {
             name: '',
@@ -140,7 +176,7 @@ const BoatData = ({ setOpenModal }) => {
 
     const options = {
         selectableRows: 'none',
-
+        onRowClick: onRowClick,
         responsive: 'standard',
         viewColumns: false,
         rowsPerPageOptions: [],
@@ -171,4 +207,4 @@ const BoatData = ({ setOpenModal }) => {
     );
 };
 
-export default BoatData;
+export default ServiceData;
