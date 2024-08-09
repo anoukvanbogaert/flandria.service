@@ -6,7 +6,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 import './data.css';
-import { deleteFromCollection, handleRowClick, getBoatNameById } from '../utils/getData';
+import {
+    deleteFromCollection,
+    handleRowClick,
+    getBoatNameById,
+    closeIndividualData,
+} from '../utils/getData';
 import { FormStore } from '../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
@@ -20,6 +25,7 @@ const ClientData = ({ setOpenModal }) => {
     };
 
     const onDeleteClick = (clientId) => {
+        closeIndividualData();
         deleteFromCollection('clients', clientId, AppStore);
     };
 
@@ -95,7 +101,10 @@ const ClientData = ({ setOpenModal }) => {
                                 <EditIcon />
                             </IconButton>
                             <IconButton
-                                onClick={() => onDeleteClick(client.uid)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDeleteClick(client.uid);
+                                }}
                                 aria-label='delete'
                                 color='error'
                             >

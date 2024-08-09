@@ -95,7 +95,7 @@ const ClientForm = ({ handleInputChange }) => {
                     <InputLabel id='service-select-label'>Select Vessel</InputLabel>
                     <Select
                         labelId='service-select-label'
-                        value={clientData.boat || ''}
+                        value={clientData.boat || []}
                         label='Select vessel'
                         multiple
                         onChange={(event) => handleInputChange('boat', event.target.value)}

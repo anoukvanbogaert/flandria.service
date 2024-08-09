@@ -281,9 +281,8 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
     const docRef = doc(db, collectionName, docId);
 
     if (collectionName === 'services') {
-        console.log('firing');
-        const serviceDoc = await getDoc(docRef);
-        const boatId = serviceDoc.data().boat;
+        // const serviceDoc = await getDoc(docRef);
+        // const boatId = serviceDoc.data().boat;
     }
 
     if (collectionName === 'clients') {
@@ -293,6 +292,16 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
         if (boatIds && boatIds.length > 0) {
             const updatePromises = boatIds.map((boatId) => {
                 const boatDocRef = doc(db, 'boats', boatId);
+
+                if (store) {
+                    store.update((s) => {
+                        const boatIndex = s.boats.findIndex((boat) => boat.id === boatId);
+                        if (boatIndex !== -1) {
+                            s.boats[boatIndex].client = null;
+                        }
+                    });
+                }
+
                 return updateDoc(boatDocRef, { client: null });
             });
 
@@ -330,9 +339,7 @@ export const deleteFromCollection = async (collectionName, docId, store) => {
         store.update((s) => {
             let updatedData;
             if (collectionName === 'clients') {
-                console.log('here');
                 updatedData = s[collectionName].filter((item) => item.uid !== docId);
-                console.log('updatedData', updatedData);
             } else {
                 updatedData = s[collectionName].filter((item) => item.id !== docId);
                 console.log('updatedData', updatedData);
