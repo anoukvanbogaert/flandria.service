@@ -62,9 +62,9 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    hiddenlabel
                     value={clientData.name || ''}
                     placeholder='Full Name'
+                    label='Full Name'
                     variant='outlined'
                     fullWidth
                     size='small'
@@ -78,9 +78,9 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <TextField
-                    hiddenlabel
                     value={clientData.email || ''}
                     placeholder='Email'
+                    label='Email'
                     variant='outlined'
                     fullWidth
                     size='small'
@@ -92,10 +92,11 @@ const ClientForm = ({ handleInputChange }) => {
             </Grid>
             <Grid item xs={11}>
                 <FormControl fullWidth variant='outlined' size='small'>
-                    <InputLabel id='service-select-label'></InputLabel>
+                    <InputLabel id='service-select-label'>Select Vessel</InputLabel>
                     <Select
                         labelId='service-select-label'
-                        value={clientData.boat || []}
+                        value={clientData.boat || ''}
+                        label='Select vessel'
                         multiple
                         onChange={(event) => handleInputChange('boat', event.target.value)}
                         hiddenlabel

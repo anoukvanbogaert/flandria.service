@@ -15,8 +15,6 @@ const BoatForm = ({ handleInputChange }) => {
     const { clients, boats } = useStoreState(AppStore);
     const { editId, boatData } = useStoreState(FormStore);
     const [clientValue, setClientValue] = useState(null);
-    console.log('clientValue', clientValue);
-    console.log('boatData', boatData);
 
     useEffect(() => {
         if (editId) {
@@ -27,12 +25,16 @@ const BoatForm = ({ handleInputChange }) => {
             FormStore.update((s) => {
                 s.boatData = editData || {};
             });
-        } else {
+        }
+    }, [editId, boats]);
+
+    useEffect(() => {
+        if (!editId) {
             FormStore.update((s) => {
                 s.boatData = { client: '', boatName: '', brand: '', model: '', remark: '' };
             });
         }
-    }, [editId, boats, boatData]);
+    }, [editId]);
 
     return (
         <>
@@ -63,7 +65,7 @@ const BoatForm = ({ handleInputChange }) => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label={clientValue || 'Choose a client'}
+                                label={clientValue?.label || 'Choose a client'}
                                 fullWidth
                                 variant='outlined'
                                 size='small'

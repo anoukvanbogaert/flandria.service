@@ -19,7 +19,7 @@ const ServiceTemplateForm = ({ setOpenAddService }) => {
     console.log('formData', formData);
 
     const fields = [
-        { id: 'name', label: 'Service Name', placeholder: 'Service Name', name: 'name' },
+        { id: 'name', label: 'Service Name', placeholder: 'e.g. Engine Check', name: 'name' },
         { id: 'item1', label: 'Item 1', placeholder: 'Item 1', name: 'item1' },
         { id: 'item2', label: 'Item 2', placeholder: 'Item 2', name: 'item2' },
         { id: 'item3', label: 'Item 3', placeholder: 'Item 3', name: 'item3' },
