@@ -60,9 +60,13 @@ const ServiceForm = ({ handleInputChange }) => {
     useEffect(() => {
         if (editId) {
             const editData = services.find((service) => service.id === editId) || serviceData;
-            const clientName =
-                clients.find((client) => client.uid === editData.client)?.name || 'Unknown';
-            setClientValue(clientName);
+            const clientObject = clients.find((client) => client.uid === editData.client);
+
+            const clientValue = clientObject
+                ? { label: clientObject.name, uid: clientObject.uid }
+                : null;
+            setClientValue(clientValue);
+
             const boatInfo = boats.find((boat) => boat.id === editData.boat) || 'Unknown';
             setBoatValue(boatInfo);
             FormStore.update((s) => {
@@ -99,12 +103,14 @@ const ServiceForm = ({ handleInputChange }) => {
                 </Grid>
                 <Grid item xs={11}>
                     <Autocomplete
-                        freeSolo
+                        freeSolo={false}
+                        disabled={serviceData.id ? true : false}
                         options={clients.map((option) => ({
                             label: option.name,
                             uid: option.uid,
                         }))}
                         value={clientValue}
+                        isOptionEqualToValue={(option, value) => option.uid === value.uid}
                         onChange={(event, newValue) => {
                             setClientValue(newValue);
                             handleInputChange('client', newValue ? newValue.uid : '');
@@ -114,7 +120,7 @@ const ServiceForm = ({ handleInputChange }) => {
                             <TextField
                                 {...params}
                                 disabled={serviceData.id ? true : false}
-                                label={serviceData.id ? clientValue : 'Choose a client'}
+                                label='Client'
                                 fullWidth
                                 variant='outlined'
                                 size='small'
