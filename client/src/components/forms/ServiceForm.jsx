@@ -225,7 +225,7 @@ const ServiceForm = ({ handleInputChange }) => {
                         <DatePicker
                             label='Select date'
                             value={
-                                serviceData.date.seconds
+                                serviceData?.date?.seconds
                                     ? new Date(serviceData.date.seconds * 1000)
                                     : null
                             }
