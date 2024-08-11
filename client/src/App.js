@@ -114,13 +114,7 @@ function App() {
                         />
                         <Route
                             path='/admin'
-                            element={
-                                userDoc.superAdmin ? (
-                                    <AdminWithNavbar />
-                                ) : (
-                                    <Navigate to='/login' replace />
-                                )
-                            }
+                            element={userDoc.superAdmin ? <AdminWithNavbar /> : <HomeWithNavbar />}
                         />
                         <Route
                             path='/'
