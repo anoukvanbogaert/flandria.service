@@ -467,8 +467,6 @@ export const getBoats = async () => {
 };
 
 export const getServices = async () => {
-    console.log('firing getServices');
-
     try {
         const servicesRef = collection(db, 'services');
         const servicesSnapshot = await getDocs(servicesRef);
