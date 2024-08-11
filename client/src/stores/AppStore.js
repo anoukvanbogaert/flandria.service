@@ -10,4 +10,6 @@ export const AppStore = new Store({
     appBarHeight: 64,
     overview: null,
     individualData: { collection: '', id: '' },
+    userBoats: null,
+    userServices: null,
 });

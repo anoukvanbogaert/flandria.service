@@ -5,8 +5,10 @@ import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 
 const Home = () => {
-    const { userDoc } = useStoreState(AppStore);
+    const { userDoc, userBoats, userServices } = useStoreState(AppStore);
     console.log('userDoc', userDoc);
+    console.log('userBoats', userBoats);
+    console.log('userServices', userServices);
 
     const services = userDoc.services;
     return (
@@ -14,7 +16,7 @@ const Home = () => {
             <h1 className='home_title'>Services Overview</h1>
             <div className='home__container'>
                 <div className='home__welcome'>
-                    {services?.map((service, i) => (
+                    {userServices?.map((service, i) => (
                         <OverviewList key={i} service={service} />
                     ))}
                 </div>

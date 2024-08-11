@@ -15,6 +15,8 @@ import {
     getServiceTemplates,
     getClients,
     getBoats,
+    getUserBoats,
+    getUserServices,
 } from './utils/getData';
 import Login from './pages/Login';
 import { useStoreState } from 'pullstate';
@@ -93,7 +95,11 @@ function App() {
                 AppStore.update((s) => {
                     s.user = fbUser;
                 });
-                getSetUserDoc(fbUser);
+                const userDoc = getSetUserDoc(fbUser);
+                if (userDoc && !userDoc.superAdmin) {
+                    await getUserBoats(fbUser.uid);
+                    await getUserServices(fbUser.uid);
+                }
                 getServices(fbUser);
                 getServiceTemplates();
                 getClients();
