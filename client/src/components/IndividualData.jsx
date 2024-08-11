@@ -20,17 +20,18 @@ const IndividualData = () => {
         services,
         getClientNameById
     );
+
     const titleToShow = findTitle(individualCollection);
 
     const filteredDataToShow = Object.keys(dataToShow).reduce((acc, key) => {
-        if (keyMapping[key] !== undefined) {
+        if (keyMapping[individualCollection][key] !== undefined) {
             acc[key] = dataToShow[key];
         }
         return acc;
     }, {});
 
     const sortedEntries = Object.entries(filteredDataToShow)
-        .filter(([key]) => key in keyMapping)
+        .filter(([key]) => key in keyMapping[individualCollection])
         .sort(([a], [b]) => {
             const indexA = orderedKeys.indexOf(a);
             const indexB = orderedKeys.indexOf(b);
@@ -91,7 +92,7 @@ const IndividualData = () => {
                                     height: '100%',
                                 }}
                             >
-                                {keyMapping[key]}
+                                {keyMapping[individualCollection][key]}
                             </Typography>
                         </Grid>
                         <Grid item xs={8}>
@@ -153,6 +154,16 @@ const IndividualData = () => {
                                 <Box>
                                     <Typography variant='subtitle2'>{value.name}</Typography>
                                     <Typography variant='subtitle2'>{value.cellphone}</Typography>
+                                </Box>
+                            ) : key === 'services' ? (
+                                <Box>{value.join(', ')}</Box>
+                            ) : key === 'date' ? (
+                                <Box>
+                                    {new Date(value.seconds * 1000).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })}
                                 </Box>
                             ) : (
                                 <Typography variant='subtitle1'>

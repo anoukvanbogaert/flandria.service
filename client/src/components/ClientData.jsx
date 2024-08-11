@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import MUIDataTable from 'mui-datatables';
 import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,6 +16,8 @@ import { FormStore } from '../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);
+    const [highlightedRow, setHighlightedRow] = useState(null);
+    const [deletedRow, setDeletedRow] = useState(null);
 
     const onEditClick = (clientId) => {
         FormStore.update((s) => {
@@ -26,7 +28,17 @@ const ClientData = ({ setOpenModal }) => {
 
     const onDeleteClick = (clientId) => {
         closeIndividualData();
-        deleteFromCollection('clients', clientId, AppStore);
+
+        const deletedClient = clients.find((client) => client.uid === clientId);
+        if (deletedClient) {
+            setDeletedRow(deletedClient.uid);
+            const timer = setTimeout(() => {
+                deleteFromCollection('clients', clientId, AppStore);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+        setDeletedRow(null);
     };
 
     const onRowClick = (rowData, rowMeta) => {
@@ -136,6 +148,16 @@ const ClientData = ({ setOpenModal }) => {
         setTableProps: () => ({
             size: 'small',
         }),
+        setRowProps: (row, dataIndex) => {
+            return {
+                className:
+                    clients[dataIndex].uid === highlightedRow
+                        ? 'flash-background'
+                        : clients[dataIndex].uid === deletedRow
+                        ? 'background-red'
+                        : '',
+            };
+        },
     };
 
     return (
