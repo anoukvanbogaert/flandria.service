@@ -19,18 +19,16 @@ import { useStoreState } from 'pullstate';
 import ServiceTemplateForm from './ServiceTemplateForm';
 import { AppStore } from '../../stores/AppStore';
 import { FormStore } from '../../stores/FormStore';
-import { getBoatNameById, getClientNameById } from '../../utils/getData';
+import { getBoatNameById } from '../../utils/getData';
 
 const ServiceForm = ({ handleInputChange }) => {
     const { clients, boats, services, serviceTemplates } = useStoreState(AppStore);
     const { editId, serviceData } = useStoreState(FormStore);
     const [userBoats, setUserboats] = useState([]);
     const [clientValue, setClientValue] = useState(null);
-    const [boatValue, setBoatValue] = useState(null);
+    // const [boatValue, setBoatValue] = useState(null);
     const [openAddService, setOpenAddService] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    console.log('serviceData', serviceData);
 
     const handleServiceChange = (event) => {
         const newValue = event.target.value;
@@ -55,7 +53,7 @@ const ServiceForm = ({ handleInputChange }) => {
                 setUserboats([]);
             }
         }
-    }, [serviceData?.client, clients, boats]);
+    }, [serviceData?.client, clients, boats, clientValue]);
 
     useEffect(() => {
         if (editId) {
@@ -67,14 +65,14 @@ const ServiceForm = ({ handleInputChange }) => {
                 : null;
             setClientValue(clientValue);
 
-            const boatInfo = boats.find((boat) => boat.id === editData.boat) || 'Unknown';
-            setBoatValue(boatInfo);
+            // const boatInfo = boats.find((boat) => boat.id === editData.boat) || 'Unknown';
+            // setBoatValue(boatInfo);
             FormStore.update((s) => {
                 s.serviceData = editData || {};
             });
             setLoading(false);
         }
-    }, [editId, services]);
+    }, [editId, services, clients, serviceData]);
 
     useEffect(() => {
         if (!editId) {
@@ -155,7 +153,7 @@ const ServiceForm = ({ handleInputChange }) => {
                                 ))
                             ) : (
                                 // user doesn't have boats
-                                <MenuItem disabled value=''>
+                                <MenuItem disabled={true} value=''>
                                     {serviceData.client
                                         ? 'This customer does not have any boats yet'
                                         : 'Please select a customer first'}
