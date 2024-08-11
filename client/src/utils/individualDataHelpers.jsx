@@ -1,25 +1,37 @@
 export const keyMapping = {
-    boatName: 'Boat Name',
-    name: 'Client Name',
-    uid: 'Client ID',
-    owner: 'Owner',
-    email: 'Email',
-    id: 'Boat ID',
-    client: 'Client ID',
-    brand: 'Brand',
-    model: 'Model',
-    boat: 'Boat(s)',
-    remark: 'Remark',
-    residence: 'Residence',
-    domicile: 'Domicile',
-    cellphone1: 'Cellphone 1',
-    cellphone2: 'Cellphone 2',
-    nieNumber: 'NIEº',
-    idNumber: 'IDº',
-    emergencyContact1: 'ICE 1',
-    emergencyContact2: 'ICE 2',
-    port: 'Port',
-    flag: 'Flag',
+    boats: {
+        boatName: 'Boat Name',
+        uid: 'Client ID',
+        owner: 'Owner',
+        id: 'Boat ID',
+        brand: 'Brand',
+        model: 'Model',
+        remark: 'Remark',
+        port: 'Port',
+        flag: 'Flag',
+    },
+    clients: {
+        name: 'Client Name',
+        email: 'Email',
+        client: 'Client ID',
+        boat: 'Boat(s)',
+        residence: 'Residence',
+        domicile: 'Domicile',
+        cellphone1: 'Cellphone 1',
+        cellphone2: 'Cellphone 2',
+        nieNumber: 'NIEº',
+        idNumber: 'IDº',
+        emergencyContact1: 'ICE 1',
+        emergencyContact2: 'ICE 2',
+        remark: 'Remark',
+    },
+    services: {
+        boat: 'Boat Name',
+        owner: 'Owner',
+        date: 'Date',
+        services: 'Services',
+        remark: 'Remark',
+    },
 };
 
 export const orderedKeys = [
@@ -71,6 +83,12 @@ export const findData = (
             break;
         case 'services':
             data = services.find((item) => item.id === uid);
+            if (data) {
+                data = {
+                    ...data,
+                    owner: getClientNameById(data.client, clients),
+                };
+            }
             break;
         default:
             data = null;

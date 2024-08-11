@@ -137,7 +137,7 @@ const ServiceForm = ({ handleInputChange }) => {
                             value={serviceData.boat[0] || ''}
                             onChange={(event) => handleInputChange('boat', event.target.value)}
                             label='Select vessel'
-                            disabled={serviceData?.id}
+                            disabled={serviceData?.id ? true : false}
                         >
                             {/* editing mode */}
                             {serviceData.id ? (
