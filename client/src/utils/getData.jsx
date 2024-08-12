@@ -7,6 +7,8 @@ import {
     addDoc,
     deleteDoc,
     updateDoc,
+    query,
+    where,
 } from 'firebase/firestore';
 import { db, sendPasswordResetEmail, registerWithEmailPassword } from '../firebase';
 import { AppStore } from '../stores/AppStore';
@@ -40,6 +42,36 @@ export const getSetUserDoc = async (user) => {
         });
     } catch (error) {
         console.error(error);
+    }
+};
+
+export const getUserBoats = async (uid) => {
+    try {
+        const boatsQuery = query(collection(db, 'boats'), where('client', '==', uid));
+        const boatsSnap = await getDocs(boatsQuery);
+
+        const userBoats = boatsSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+        AppStore.update((s) => {
+            s.userBoats = userBoats;
+        });
+    } catch (error) {
+        console.error('Error fetching user boats:', error);
+    }
+};
+
+export const getUserServices = async (uid) => {
+    try {
+        const servicesQuery = query(collection(db, 'services'), where('client', '==', uid));
+        const servicesSnap = await getDocs(servicesQuery);
+
+        const userServices = servicesSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+        AppStore.update((s) => {
+            s.userServices = userServices;
+        });
+    } catch (error) {
+        console.error('Error fetching user services:', error);
     }
 };
 
