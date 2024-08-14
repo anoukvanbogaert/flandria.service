@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import './OverviewList.scss';
 
 const OverviewList = ({ service }) => {
-    const serviceDate = format(service.serviceDate.toDate(), 'dd MMMM yyyy');
+    const serviceDate = format(service.date.toDate(), 'dd MMMM yyyy');
     return (
         <ListItem className='services_container'>
             <Grid container alignItems='center'>
@@ -18,7 +18,7 @@ const OverviewList = ({ service }) => {
                     </ListItemAvatar>
                     <ListItemText
                         className='service_box_text'
-                        primary={service.serviceName}
+                        primary={service.services}
                         secondary={`Date: ${serviceDate}`}
                     />
                 </Grid>
@@ -28,7 +28,7 @@ const OverviewList = ({ service }) => {
                             <DescriptionIcon />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText className='service_box_text' primary={service.serviceRemark} />
+                    <ListItemText className='service_box_text' primary={service.remark} />
                 </Grid>
             </Grid>
         </ListItem>
