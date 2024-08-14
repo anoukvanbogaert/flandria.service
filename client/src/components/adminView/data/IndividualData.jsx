@@ -1,9 +1,9 @@
 import React from 'react';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
+import { AppStore } from '../../../stores/AppStore';
 import { Grid, Typography, Box } from '@mui/material';
-import { getClientNameById, getBoatNameById } from '../utils/getData';
-import { keyMapping, orderedKeys, findData, findTitle } from '../utils/individualDataHelpers';
+import { getClientNameById, getBoatNameById } from '../../../utils/getData';
+import { keyMapping, orderedKeys, findData, findTitle } from '../../../utils/individualDataHelpers';
 import { Chip, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 

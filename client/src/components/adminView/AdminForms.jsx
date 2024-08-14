@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import './forms/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { addToCollection, editInCollection } from '../utils/getData';
+import { addToCollection, editInCollection } from '../../utils/getData';
 import { useStoreState } from 'pullstate';
 
 import ClientForm from './forms/ClientForm/ClientForm';
 import BoatForm from './forms/BoatForm/BoatForm';
 import ServiceForm from './forms/ServiceForm';
-import ServiceTemplateForm from './forms/ServiceTemplateForm';
-import { FormStore } from '../stores/FormStore';
+import { FormStore } from '../../stores/FormStore';
 
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');

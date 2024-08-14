@@ -1,52 +1,52 @@
 import React from 'react';
-import { TextField, Grid, Box, Typography } from '@mui/material';
+import { TextField, Grid, Box } from '@mui/material';
 
-const Residence = ({ handleInputChange, clientData }) => {
+const Domicile = ({ handleInputChange, clientData }) => {
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField
                         label='#'
-                        value={clientData.residence?.number || ''}
+                        value={clientData?.domicile?.number || ''}
                         placeholder='#'
                         variant='outlined'
                         fullWidth
                         size='small'
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'number')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'number')}
                     />
                 </Grid>
                 <Grid item xs={4}>
                     <TextField
                         label='Street'
-                        value={clientData?.residence?.street || ''}
+                        value={clientData?.domicile?.street || ''}
                         placeholder='Street'
                         variant='outlined'
                         size='small'
                         fullWidth
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'street')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'street')}
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <TextField
                         label='ZIP'
-                        value={clientData?.residence?.zip || ''}
+                        value={clientData?.domicile?.zip || ''}
                         placeholder='ZIP'
                         variant='outlined'
                         size='small'
                         fullWidth
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'zip')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'zip')}
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <TextField
                         label='City'
-                        value={clientData?.residence?.city}
+                        value={clientData?.domicile?.city}
                         placeholder='City'
                         variant='outlined'
                         size='small'
                         fullWidth
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'city')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'city')}
                     />
                 </Grid>
             </Grid>
@@ -55,23 +55,23 @@ const Residence = ({ handleInputChange, clientData }) => {
                 <Grid item xs={6}>
                     <TextField
                         label='Province'
-                        value={clientData?.residence?.province || ''}
+                        value={clientData?.domicile?.province || ''}
                         placeholder='Province'
                         variant='outlined'
                         fullWidth
                         size='small'
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'province')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'province')}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
                         label='Country'
-                        value={clientData?.residence?.country || ''}
+                        value={clientData?.domicile?.country || ''}
                         placeholder='Country'
                         variant='outlined'
                         size='small'
                         fullWidth
-                        onChange={(e) => handleInputChange('residence', e.target.value, 'country')}
+                        onChange={(e) => handleInputChange('domicile', e.target.value, 'country')}
                     />
                 </Grid>
             </Grid>
@@ -79,4 +79,4 @@ const Residence = ({ handleInputChange, clientData }) => {
     );
 };
 
-export default Residence;
+export default Domicile;

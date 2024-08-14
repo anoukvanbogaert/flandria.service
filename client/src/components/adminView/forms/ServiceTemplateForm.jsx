@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Grid, TextField, Typography, Box, Button } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../../stores/AppStore';
-import { FormStore } from '../../stores/FormStore';
-import { editInCollection, addToCollection } from '../../utils/getData';
+import { AppStore } from '../../../stores/AppStore';
+import { FormStore } from '../../../stores/FormStore';
+import { addToCollection } from '../../../utils/getData';
 
 const ServiceTemplateForm = ({ setOpenAddService }) => {
     const { clients, boats, services } = useStoreState(AppStore);
-    const { editId, serviceData, serviceTemplateData } = useStoreState(FormStore);
+    const { editId, serviceData } = useStoreState(FormStore);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -44,7 +44,7 @@ const ServiceTemplateForm = ({ setOpenAddService }) => {
                 s.serviceData = editData || {};
             });
         }
-    }, [editId, clients, boats, services]);
+    }, [editId, clients, boats, services, serviceData]);
 
     const handleFieldChange = (field) => (event) => {
         setFormData({

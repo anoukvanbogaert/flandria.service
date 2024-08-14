@@ -11,14 +11,14 @@ import {
 } from '@mui/icons-material';
 import { TextField, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../../../stores/AppStore';
-import { FormStore } from '../../../stores/FormStore';
+import { AppStore } from '../../../../stores/AppStore';
+import { FormStore } from '../../../../stores/FormStore';
 import Residence from './Residence';
 import Domicile from './Domicile';
 import Cellphones from './Cellphones';
 import ICE from './ICE';
 import Identity from './Identity';
-import Subtitle from '../../Subtitle';
+import Subtitle from '../../../Subtitle';
 
 const ClientForm = ({ handleInputChange }) => {
     const [loading, setLoading] = useState(true);

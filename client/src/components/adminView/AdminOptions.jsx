@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Box } from '@mui/material';
-import CustomAnimatedButton from './CustomAnimatedButton';
+import CustomAnimatedButton from './../CustomAnimatedButton';
 
 const AdminOptions = ({ setSelection }) => {
     return (
