@@ -12,3 +12,9 @@
 .app {
     height: 100vh;
 }
+
+@media (max-width: 600px) {
+    .nav-block {
+        height: 80px;
+    }
+}
