@@ -40,6 +40,7 @@ export const getSetUserDoc = async (user) => {
             s.user = user;
             s.userDoc = userDoc;
         });
+        return userDoc;
     } catch (error) {
         console.error(error);
     }

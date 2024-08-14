@@ -7,9 +7,9 @@ export const AppStore = new Store({
     clients: [],
     boats: [],
     services: [],
+    userServices: [],
     appBarHeight: 64,
     overview: null,
     individualData: { collection: '', id: '' },
     userBoats: null,
-    userServices: null,
 });
