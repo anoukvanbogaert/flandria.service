@@ -71,17 +71,6 @@ function App() {
                 lineHeight: '41px',
             },
         },
-
-        // overrides: {
-        //     MuiButton: {
-        //         root: {
-        //             fontSize: '1rem', // Default font size for buttons
-        //             [theme.breakpoints.down('sm')]: {
-        //                 fontSize: '0.875rem', // Smaller font size on mobile devices
-        //             },
-        //         },
-        //     },
-        // },
     });
     const root = document.documentElement;
     root.style.setProperty('--primary-color', theme.palette.primary.main);
@@ -90,6 +79,7 @@ function App() {
 
     useEffect(() => {
         onAuthStateChanged(getAuth(), async (fbUser) => {
+            console.log('fbUser', fbUser);
             if (fbUser) {
                 setUser(fbUser);
                 AppStore.update((s) => {
