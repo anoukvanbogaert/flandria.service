@@ -27,6 +27,7 @@ const Login = () => {
             } else {
                 await handleEmailLogin(email, password);
             }
+            console.log('info', info);
             navigate('/admin' || '/home');
         } catch (error) {
             console.error('Login error:', error);

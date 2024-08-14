@@ -4,9 +4,12 @@ import './OverviewList.scss';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../../stores/AppStore';
 import MUIDataTable from 'mui-datatables';
+import { Box } from '@mui/material';
+import { getBoatNameById } from '../../utils/getData';
 
 const OverviewList = () => {
     const { userServices } = useStoreState(AppStore);
+    console.log('userServices', userServices);
 
     const columns = [
         {
@@ -27,6 +30,12 @@ const OverviewList = () => {
         {
             name: 'boatName',
             label: 'Boat Name',
+            options: {
+                customBodyRenderLite: (dataIndex) => {
+                    // return <Box>{getBoatNameById(userServices.boat[0])} (</Box>;
+                    return <Box />;
+                },
+            },
         },
     ];
 
