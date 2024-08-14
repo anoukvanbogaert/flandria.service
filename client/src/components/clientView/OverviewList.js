@@ -9,8 +9,6 @@ import { getBoatNameById } from '../../utils/getData';
 
 const OverviewList = () => {
     const { userServices, boats } = useStoreState(AppStore);
-    console.log('userServices', userServices);
-    console.log('boats', boats);
 
     const columns = [
         {
@@ -18,7 +16,6 @@ const OverviewList = () => {
             label: 'Date',
             options: {
                 customBodyRender: (value) => {
-                    console.log('value', value);
                     if (value) {
                         const date = new Date(value.seconds * 1000);
 
@@ -36,12 +33,26 @@ const OverviewList = () => {
                 customBodyRenderLite: (dataIndex) => {
                     const userBoat = userServices[dataIndex];
                     const boatId = userBoat.boat[0];
-                    console.log('userBoat', userBoat);
-                    console.log('boatId', boatId);
 
                     return <Box>{getBoatNameById(boatId, boats)} </Box>;
                 },
             },
+        },
+        {
+            name: 'services',
+            label: 'Service',
+            options: {
+                customBodyRender: (value) => {
+                    if (Array.isArray(value)) {
+                        return value.join(', ');
+                    }
+                    return value;
+                },
+            },
+        },
+        {
+            name: 'remark',
+            label: 'Remarks',
         },
     ];
 
