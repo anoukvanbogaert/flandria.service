@@ -8,8 +8,9 @@ import { Box } from '@mui/material';
 import { getBoatNameById } from '../../utils/getData';
 
 const OverviewList = () => {
-    const { userServices } = useStoreState(AppStore);
+    const { userServices, boats } = useStoreState(AppStore);
     console.log('userServices', userServices);
+    console.log('boats', boats);
 
     const columns = [
         {
@@ -17,6 +18,7 @@ const OverviewList = () => {
             label: 'Date',
             options: {
                 customBodyRender: (value) => {
+                    console.log('value', value);
                     if (value) {
                         const date = new Date(value.seconds * 1000);
 
@@ -29,11 +31,15 @@ const OverviewList = () => {
         },
         {
             name: 'boatName',
-            label: 'Boat Name',
+            label: 'Boat',
             options: {
                 customBodyRenderLite: (dataIndex) => {
-                    // return <Box>{getBoatNameById(userServices.boat[0])} (</Box>;
-                    return <Box />;
+                    const userBoat = userServices[dataIndex];
+                    const boatId = userBoat.boat[0];
+                    console.log('userBoat', userBoat);
+                    console.log('boatId', boatId);
+
+                    return <Box>{getBoatNameById(boatId, boats)} </Box>;
                 },
             },
         },
