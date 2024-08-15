@@ -6,9 +6,14 @@ import {
     sendPasswordResetEmail,
     registerWithEmailPassword,
 } from '../firebase';
+import { getAuth } from 'firebase/auth';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Logo from '../assets/images/logo1.png';
 import googleLogo from '../assets/images/google-icon.webp';
 import { Container, Box, Typography, TextField, Button, Link, Alert, Divider } from '@mui/material';
+import { getSetUserDoc } from '../utils/getData';
+import { useStoreState } from 'pullstate';
+import { AppStore } from '../stores/AppStore';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -16,23 +21,35 @@ const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { userDoc } = useStoreState(AppStore);
 
     const handleAction = async (event) => {
         event.preventDefault();
         setError('');
+        setLoading(true);
         try {
             if (isSignUp) {
                 await registerWithEmailPassword(email, password);
             } else {
                 await handleEmailLogin(email, password);
             }
-            console.log('info', info);
-            navigate('/admin' || '/home');
+
+            const fbUser = getAuth().currentUser;
+            const userDoc = await getSetUserDoc(fbUser);
+
+            if (userDoc?.superAdmin) {
+                navigate('/admin');
+            } else {
+                navigate('/home');
+            }
         } catch (error) {
             console.error('Login error:', error);
             setInfo('');
             setError('An error occurred. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -212,8 +229,9 @@ const Login = () => {
                             Forgot password?
                         </Link>
                     )}
-                    <Button
+                    <LoadingButton
                         onClick={handleAction}
+                        loading={loading}
                         fullWidth
                         variant='contained'
                         color='primary'
@@ -227,7 +245,7 @@ const Login = () => {
                         }}
                     >
                         {isSignUp ? 'Sign Up' : 'Log In'}
-                    </Button>
+                    </LoadingButton>
 
                     <Link
                         component='button'

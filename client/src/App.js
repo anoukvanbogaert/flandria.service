@@ -2,7 +2,7 @@ import './App.scss';
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider, CircularProgress, Box } from '@mui/material';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -23,7 +23,10 @@ import { useStoreState } from 'pullstate';
 
 function App() {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true); // Add loading state
+
     const { userDoc } = useStoreState(AppStore);
+    console.log('userDoc App.js', userDoc);
 
     const theme = createTheme({
         breakpoints: {
@@ -82,10 +85,10 @@ function App() {
             console.log('fbUser', fbUser);
             if (fbUser) {
                 setUser(fbUser);
+                await getSetUserDoc(fbUser);
                 AppStore.update((s) => {
                     s.user = fbUser;
                 });
-                const userDoc = getSetUserDoc(fbUser);
                 if (userDoc && !userDoc.superAdmin) {
                     await getUserBoats(fbUser.uid);
                     await getUserServices(fbUser.uid);
@@ -95,8 +98,24 @@ function App() {
                 getClients();
                 getBoats();
             }
+            setLoading(false);
         });
-    }, [user]);
+    }, []);
+
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
         <main className='app'>
@@ -110,7 +129,15 @@ function App() {
                         />
                         <Route
                             path='/admin'
-                            element={userDoc.superAdmin ? <AdminWithNavbar /> : <HomeWithNavbar />}
+                            element={
+                                userDoc?.superAdmin ? (
+                                    <AdminWithNavbar />
+                                ) : user ? (
+                                    <HomeWithNavbar />
+                                ) : (
+                                    <Navigate to='/login' replace />
+                                )
+                            }
                         />
                         <Route
                             path='/'
