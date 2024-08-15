@@ -2,7 +2,7 @@ import './App.scss';
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { createTheme, ThemeProvider, CircularProgress, Box } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -23,7 +23,7 @@ import { useStoreState } from 'pullstate';
 
 function App() {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); // Add loading state
+    // const [loading, setLoading] = useState(true);
 
     const { userDoc } = useStoreState(AppStore);
 
@@ -107,24 +107,9 @@ function App() {
                 });
             }
 
-            setLoading(false);
+            // setLoading(false);
         });
     }, []);
-
-    if (loading) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100vh',
-                }}
-            >
-                <CircularProgress />
-            </Box>
-        );
-    }
 
     return (
         <main className='app'>
