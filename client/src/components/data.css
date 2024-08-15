@@ -28,3 +28,12 @@
     background-color: #f34b4b;
     transition: background-color 2s ease-in-out;
 }
+
+@media (max-width: 600px) {
+    .css-1y51ctb-MuiTableCell-root {
+        padding: 6px 8px !important;
+    }
+    .css-dp13ad-MuiTableCell-root {
+        padding: 0 8px !important;
+    }
+}

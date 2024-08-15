@@ -34,3 +34,36 @@
         justify-content: flex-end;
     }
 }
+
+@media (max-width: 600px) {
+    .navbar {
+        height: 80px;
+        width: 100vw;
+        background-color: #032433;
+        padding: 0 !important;
+        img {
+            max-height: 50px;
+        }
+
+        .navbar__contact {
+            display: flex;
+            flex-direction: column;
+            font-weight: bolder;
+            color: white;
+            font-size: 0.75rem;
+            min-width: min-content;
+            overflow: visible;
+            white-space: nowrap;
+            p {
+                margin: 0rem 0.75rem;
+            }
+        }
+
+        .navbar__right {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-end;
+        }
+    }
+}
