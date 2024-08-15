@@ -132,7 +132,9 @@ const ServiceData = ({ setOpenModal }) => {
             options: {
                 customBodyRender: (value) => {
                     if (value) {
-                        const date = new Date(value.seconds * 1000);
+                        const date = value.seconds
+                            ? new Date(value.seconds * 1000)
+                            : new Date(value);
 
                         const options = { year: 'numeric', month: 'long', day: 'numeric' };
                         return date.toLocaleDateString('en-US', options);

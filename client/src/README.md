@@ -11,5 +11,5 @@ This project contains the following:
 ## Watch the demo
 
 <a href= "" target="\_blank">
-<img src="" alt="" width="" height="180"/>
+<img src="https://www.loom.com/share/a310550a22f0497680d38fc278998a7a?sid=cd8c8ad9-543d-48ea-9822-83ce54db0e6d" alt="" width="" height="180"/>
 </a>
