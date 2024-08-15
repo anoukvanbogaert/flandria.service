@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
-import { IconButton, Box, Chip } from '@mui/material';
+import { IconButton, Box, Chip, CircularProgress } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
@@ -18,7 +18,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
-    const { boats, clients } = useStoreState(AppStore);
+    const { boats, clients, loadingData } = useStoreState(AppStore);
 
     const onEditClick = (boatId) => {
         FormStore.update((s) => {
@@ -186,7 +186,20 @@ const BoatData = ({ setOpenModal, setSelection }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={boats} columns={columns} options={options} />
+            {loadingData ? (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '50vh',
+                    }}
+                >
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <MUIDataTable data={boats} columns={columns} options={options} />
+            )}
         </div>
     );
 };

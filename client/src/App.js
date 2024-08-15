@@ -83,6 +83,9 @@ function App() {
         onAuthStateChanged(getAuth(), async (fbUser) => {
             if (fbUser) {
                 setUser(fbUser);
+                AppStore.update((s) => {
+                    s.loadingData = true;
+                });
                 await getSetUserDoc(fbUser);
                 AppStore.update((s) => {
                     s.user = fbUser;
@@ -90,12 +93,20 @@ function App() {
                 if (userDoc && !userDoc.superAdmin) {
                     await getUserBoats(fbUser.uid);
                     await getUserServices(fbUser.uid);
+                    AppStore.update((s) => {
+                        s.loadingData = false;
+                    });
                 }
-                getServices(fbUser);
-                getServiceTemplates();
-                getClients();
-                getBoats();
+                await getServices(fbUser);
+                await getServiceTemplates();
+                await getClients();
+                await getBoats();
+
+                AppStore.update((s) => {
+                    s.loadingData = false;
+                });
             }
+
             setLoading(false);
         });
     }, []);
