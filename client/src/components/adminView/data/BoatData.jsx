@@ -96,7 +96,7 @@ const BoatData = ({ setOpenModal, setSelection }) => {
                                 backgroundColor: '#ceeefd',
                                 color: '#045174',
                                 cursor: 'pointer',
-                                fontSize: '15px',
+                                fontSize: '16px',
                             }}
                         />
                     ) : (

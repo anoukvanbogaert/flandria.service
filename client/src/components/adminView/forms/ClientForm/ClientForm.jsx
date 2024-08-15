@@ -99,7 +99,6 @@ const ClientForm = ({ handleInputChange }) => {
                         label='Select vessel'
                         multiple
                         onChange={(event) => handleInputChange('boat', event.target.value)}
-                        hiddenlabel
                     >
                         {boats.map((boat) => (
                             <MenuItem
