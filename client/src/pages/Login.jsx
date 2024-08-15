@@ -92,10 +92,15 @@ const Login = () => {
                 justifyContent: 'center',
             }}
         >
-            <img
+            <Box
+                component='img'
                 src={Logo}
                 alt='Flandria Yachts'
-                style={{ width: '15rem', height: 'auto', margin: '4rem 0' }}
+                sx={{
+                    width: { xs: '10rem', sm: '15rem' },
+                    height: 'auto',
+                    margin: { xs: '2rem 0', sm: '4rem 0' },
+                }}
             />
             <Box
                 sx={{
@@ -107,7 +112,8 @@ const Login = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
-                    padding: 4,
+                    padding: { xs: 4, sm: 4 },
+                    margin: '1rem',
                     borderRadius: '10px',
                     boxShadow: 3,
                     bgcolor: 'background.paper',
@@ -121,9 +127,12 @@ const Login = () => {
                 <Typography
                     component='h1'
                     variant='h5'
-                    marginBottom={'2rem'}
-                    fontSize={'2rem'}
                     fontWeight={'bold'}
+                    sx={{
+                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                        color: 'primary.main',
+                        marginBottom: { xs: '2rem', sm: '2rem' },
+                    }}
                 >
                     {isSignUp ? 'Sign Up' : 'Log In to My Flandria'}
                 </Typography>

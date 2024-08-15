@@ -2,7 +2,7 @@ import './App.scss';
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { createTheme, ThemeProvider, CircularProgress, Box } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -23,7 +23,7 @@ import { useStoreState } from 'pullstate';
 
 function App() {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); // Add loading state
+    // const [loading, setLoading] = useState(true);
 
     const { userDoc } = useStoreState(AppStore);
 
@@ -83,6 +83,9 @@ function App() {
         onAuthStateChanged(getAuth(), async (fbUser) => {
             if (fbUser) {
                 setUser(fbUser);
+                AppStore.update((s) => {
+                    s.loadingData = true;
+                });
                 await getSetUserDoc(fbUser);
                 AppStore.update((s) => {
                     s.user = fbUser;
@@ -90,30 +93,23 @@ function App() {
                 if (userDoc && !userDoc.superAdmin) {
                     await getUserBoats(fbUser.uid);
                     await getUserServices(fbUser.uid);
+                    AppStore.update((s) => {
+                        s.loadingData = false;
+                    });
                 }
-                getServices(fbUser);
-                getServiceTemplates();
-                getClients();
-                getBoats();
+                await getServices(fbUser);
+                await getServiceTemplates();
+                await getClients();
+                await getBoats();
+
+                AppStore.update((s) => {
+                    s.loadingData = false;
+                });
             }
-            setLoading(false);
+
+            // setLoading(false);
         });
     }, []);
-
-    if (loading) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100vh',
-                }}
-            >
-                <CircularProgress />
-            </Box>
-        );
-    }
 
     return (
         <main className='app'>

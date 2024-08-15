@@ -12,4 +12,5 @@ export const AppStore = new Store({
     overview: null,
     individualData: { collection: '', id: '' },
     userBoats: null,
+    loadingData: true,
 });

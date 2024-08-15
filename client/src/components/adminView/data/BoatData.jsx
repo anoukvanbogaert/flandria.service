@@ -12,13 +12,14 @@ import {
     getClientNameById,
     handleRowClick,
 } from '../../../utils/getData';
+import CustomLoader from '../../CustomLoader';
 import { FormStore } from '../../../stores/FormStore';
 
 const BoatData = ({ setOpenModal, setSelection }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
-    const { boats, clients } = useStoreState(AppStore);
+    const { boats, clients, loadingData } = useStoreState(AppStore);
 
     const onEditClick = (boatId) => {
         FormStore.update((s) => {
@@ -186,7 +187,11 @@ const BoatData = ({ setOpenModal, setSelection }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={boats} columns={columns} options={options} />
+            {loadingData || !boats.length ? (
+                <CustomLoader />
+            ) : (
+                <MUIDataTable data={boats} columns={columns} options={options} />
+            )}
         </div>
     );
 };

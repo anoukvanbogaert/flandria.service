@@ -25,7 +25,7 @@
 }
 
 .background-red {
-    background-color: #f34b4b;
+    background-color: #f34b4b !important;
     transition: background-color 2s ease-in-out;
 }
 

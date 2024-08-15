@@ -12,13 +12,14 @@ import {
     getClientNameById,
     handleRowClick,
 } from '../../../utils/getData';
+import CustomLoader from '../../CustomLoader';
 import { FormStore } from '../../../stores/FormStore';
 
 const ServiceData = ({ setOpenModal }) => {
     const [highlightedRow, setHighlightedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
-    const { boats, clients, services } = useStoreState(AppStore);
+    const { boats, clients, services, loadingData } = useStoreState(AppStore);
 
     const getInfoById = (id, items, property) => {
         const item = items.find((item) => item.id === id);
@@ -131,7 +132,9 @@ const ServiceData = ({ setOpenModal }) => {
             options: {
                 customBodyRender: (value) => {
                     if (value) {
-                        const date = new Date(value.seconds * 1000);
+                        const date = value.seconds
+                            ? new Date(value.seconds * 1000)
+                            : new Date(value);
 
                         const options = { year: 'numeric', month: 'long', day: 'numeric' };
                         return date.toLocaleDateString('en-US', options);
@@ -228,7 +231,11 @@ const ServiceData = ({ setOpenModal }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={services} columns={columns} options={options} />
+            {loadingData || !services.length ? (
+                <CustomLoader />
+            ) : (
+                <MUIDataTable data={services} columns={columns} options={options} />
+            )}
         </div>
     );
 };

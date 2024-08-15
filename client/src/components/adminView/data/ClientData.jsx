@@ -12,10 +12,11 @@ import {
     getBoatNameById,
     closeIndividualData,
 } from '../../../utils/getData';
+import CustomLoader from '../../CustomLoader';
 import { FormStore } from '../../../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
-    const { boats, clients } = useStoreState(AppStore);
+    const { boats, clients, loadingData } = useStoreState(AppStore);
     const [highlightedRow, setHighlightedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
@@ -162,7 +163,11 @@ const ClientData = ({ setOpenModal }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={clients} columns={columns} options={options} />
+            {loadingData || !clients.length ? (
+                <CustomLoader />
+            ) : (
+                <MUIDataTable data={clients} columns={columns} options={options} />
+            )}
         </div>
     );
 };

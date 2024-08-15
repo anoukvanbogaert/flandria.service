@@ -6,9 +6,10 @@ import { AppStore } from '../../stores/AppStore';
 import MUIDataTable from 'mui-datatables';
 import { Box } from '@mui/material';
 import { getBoatNameById } from '../../utils/getData';
+import CustomLoader from '../CustomLoader';
 
 const OverviewList = () => {
-    const { userServices, boats } = useStoreState(AppStore);
+    const { userServices, boats, loadingData } = useStoreState(AppStore);
 
     const columns = [
         {
@@ -77,7 +78,11 @@ const OverviewList = () => {
     };
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            <MUIDataTable data={userServices} columns={columns} options={options} />
+            {loadingData || !userServices.length ? (
+                <CustomLoader />
+            ) : (
+                <MUIDataTable data={userServices} columns={columns} options={options} />
+            )}
         </div>
     );
 };
