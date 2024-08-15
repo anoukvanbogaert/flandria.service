@@ -4,20 +4,18 @@ import { Autocomplete, TextField, Grid } from '@mui/material';
 import { AccountCircle, DirectionsBoat, Badge, Comment, Flag } from '@mui/icons-material';
 import { useStoreState } from 'pullstate';
 
-import { AppStore } from '../../../stores/AppStore';
-import { FormStore } from '../../../stores/FormStore';
+import { AppStore } from '../../../../stores/AppStore';
+import { FormStore } from '../../../../stores/FormStore';
 
-import Subtitle from '../../Subtitle';
+import Subtitle from '../../../Subtitle';
 import BrandModel from './BrandModel';
 import PortFlag from './PortFlag';
-import ClientData from '../../ClientData';
 
 const BoatForm = ({ handleInputChange }) => {
     const { clients, boats } = useStoreState(AppStore);
     const { editId, boatData } = useStoreState(FormStore);
     const [clientValue, setClientValue] = useState(null);
-    console.log('boatData', boatData);
-    console.log('clientValue', clientValue);
+
     useEffect(() => {
         if (editId) {
             const editData = boats.find((boat) => boat.id === editId) || boatData;
@@ -32,7 +30,7 @@ const BoatForm = ({ handleInputChange }) => {
                 s.boatData = editData || {};
             });
         }
-    }, [editId, boats]);
+    }, [editId, boats, boatData, clients]);
 
     useEffect(() => {
         if (!editId) {

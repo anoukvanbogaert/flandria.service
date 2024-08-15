@@ -26,7 +26,6 @@ function App() {
     const [loading, setLoading] = useState(true); // Add loading state
 
     const { userDoc } = useStoreState(AppStore);
-    console.log('userDoc App.js', userDoc);
 
     const theme = createTheme({
         breakpoints: {
@@ -82,7 +81,6 @@ function App() {
 
     useEffect(() => {
         onAuthStateChanged(getAuth(), async (fbUser) => {
-            console.log('fbUser', fbUser);
             if (fbUser) {
                 setUser(fbUser);
                 await getSetUserDoc(fbUser);

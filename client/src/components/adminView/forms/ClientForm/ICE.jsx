@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, Grid, Box, Typography } from '@mui/material';
+import { TextField, Grid, Box } from '@mui/material';
 
 const ICE = ({ handleInputChange, clientData }) => {
     return (

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './Admin.scss';
-import BoatData from '../components/BoatData';
-import ClientData from '../components/ClientData';
-import ServiceData from '../components/ServiceData';
-import AdminOptions from '../components/AdminOptions';
-import AdminForms from '../components/AdminForms';
+import BoatData from '../components/adminView/data/BoatData';
+import ClientData from '../components/adminView/data/ClientData';
+import ServiceData from '../components/adminView/data/ServiceData';
+import AdminOptions from '../components/adminView/AdminOptions';
+import AdminForms from '../components/adminView/AdminForms';
 import { Button, Box } from '@mui/material';
 
 import { Add } from '@mui/icons-material/';
-import IndividualData from '../components/IndividualData';
+import IndividualData from '../components/adminView/data/IndividualData';
 import { useStoreState } from 'pullstate';
 import { AppStore } from '../stores/AppStore';
 

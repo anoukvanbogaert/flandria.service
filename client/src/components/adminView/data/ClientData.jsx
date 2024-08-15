@@ -4,15 +4,15 @@ import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
-import { AppStore } from '../stores/AppStore';
+import { AppStore } from '../../../stores/AppStore';
 import './data.css';
 import {
     deleteFromCollection,
     handleRowClick,
     getBoatNameById,
     closeIndividualData,
-} from '../utils/getData';
-import { FormStore } from '../stores/FormStore';
+} from '../../../utils/getData';
+import { FormStore } from '../../../stores/FormStore';
 
 const ClientData = ({ setOpenModal }) => {
     const { boats, clients } = useStoreState(AppStore);

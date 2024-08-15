@@ -17,9 +17,9 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useStoreState } from 'pullstate';
 import ServiceTemplateForm from './ServiceTemplateForm';
-import { AppStore } from '../../stores/AppStore';
-import { FormStore } from '../../stores/FormStore';
-import { getBoatNameById } from '../../utils/getData';
+import { AppStore } from '../../../stores/AppStore';
+import { FormStore } from '../../../stores/FormStore';
+import { getBoatNameById } from '../../../utils/getData';
 
 const ServiceForm = ({ handleInputChange }) => {
     const { clients, boats, services, serviceTemplates } = useStoreState(AppStore);
