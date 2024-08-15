@@ -11,5 +11,5 @@ This project contains the following:
 ## Watch the demo
 
 <a href= "https://www.loom.com/share/a310550a22f0497680d38fc278998a7a?sid=cd8c8ad9-543d-48ea-9822-83ce54db0e6d" target="\_blank">
-<img src="" alt="" width="" height="180"/>
+<img src="https://cdn.loom.com/sessions/thumbnails/a310550a22f0497680d38fc278998a7a-38459f1ce96e4380-full.jpg" alt="thumbnail" width="320" height="180"/>
 </a>
