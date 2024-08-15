@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './forms/form.scss';
 import { Button, CircularProgress, Backdrop, Box, Typography, Modal } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
@@ -13,7 +13,20 @@ import { FormStore } from '../../stores/FormStore';
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
     const [loading, setLoading] = useState(false);
+    const [disableSave, setDisableSave] = useState(true);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
+    console.log('disableSave', disableSave);
+    console.log('boatData', boatData);
+    console.log('selection', selection);
+    useEffect(() => {
+        if (selection === 'boat') {
+            if (boatData.client && boatData.boatName) {
+                setDisableSave(false);
+            } else {
+                setDisableSave(true);
+            }
+        }
+    }, [boatData.client, boatData.boatName]);
 
     const handleInputChange = (section) => (field, value, subField) => {
         FormStore.update((s) => {
@@ -167,7 +180,7 @@ const AdminForms = ({ selection, setOpenModal }) => {
                 >
                     <Button
                         onClick={handleSave}
-                        disabled={loading || operationStatus !== 'idle'}
+                        disabled={loading || operationStatus !== 'idle' || disableSave}
                         variant='contained'
                         sx={{ mt: '2rem', fontWeight: 'bold', width: 'fit-content' }}
                         color='primary'
