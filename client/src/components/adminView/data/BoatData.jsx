@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import MUIDataTable from 'mui-datatables';
-import { IconButton, Box, Chip, CircularProgress } from '@mui/material';
+import { IconButton, Box, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useStoreState } from 'pullstate';
@@ -12,6 +12,7 @@ import {
     getClientNameById,
     handleRowClick,
 } from '../../../utils/getData';
+import CustomLoader from '../../CustomLoader';
 import { FormStore } from '../../../stores/FormStore';
 
 const BoatData = ({ setOpenModal, setSelection }) => {
@@ -186,17 +187,8 @@ const BoatData = ({ setOpenModal, setSelection }) => {
 
     return (
         <div style={{ width: '100%', marginTop: '2rem' }}>
-            {loadingData ? (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '50vh',
-                    }}
-                >
-                    <CircularProgress />
-                </Box>
+            {loadingData || !boats.length ? (
+                <CustomLoader />
             ) : (
                 <MUIDataTable data={boats} columns={columns} options={options} />
             )}
