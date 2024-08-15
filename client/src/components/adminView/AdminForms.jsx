@@ -9,24 +9,32 @@ import ClientForm from './forms/ClientForm/ClientForm';
 import BoatForm from './forms/BoatForm/BoatForm';
 import ServiceForm from './forms/ServiceForm';
 import { FormStore } from '../../stores/FormStore';
+import CustomTooltip from './CustomTooltip';
 
 const AdminForms = ({ selection, setOpenModal }) => {
     const [operationStatus, setOperationStatus] = useState('idle');
     const [loading, setLoading] = useState(false);
     const [disableSave, setDisableSave] = useState(true);
     const { boatData, serviceData, clientData } = useStoreState(FormStore);
-    console.log('disableSave', disableSave);
-    console.log('boatData', boatData);
-    console.log('selection', selection);
+
     useEffect(() => {
-        if (selection === 'boat') {
-            if (boatData.client && boatData.boatName) {
-                setDisableSave(false);
-            } else {
-                setDisableSave(true);
+        const checkDisableSave = () => {
+            if (selection === 'boat') {
+                return !(boatData.client && boatData.boatName);
+            } else if (selection === 'client') {
+                return !(clientData.name && clientData.email);
+            } else if (selection === 'service') {
+                return !(
+                    serviceData?.boat?.length > 0 &&
+                    serviceData.client &&
+                    serviceData.services.length > 0
+                );
             }
-        }
-    }, [boatData.client, boatData.boatName]);
+            return true;
+        };
+
+        setDisableSave(checkDisableSave());
+    }, [boatData, clientData, serviceData, selection]);
 
     const handleInputChange = (section) => (field, value, subField) => {
         FormStore.update((s) => {
@@ -178,15 +186,36 @@ const AdminForms = ({ selection, setOpenModal }) => {
                         justifyContent: 'flex-end',
                     }}
                 >
-                    <Button
-                        onClick={handleSave}
-                        disabled={loading || operationStatus !== 'idle' || disableSave}
-                        variant='contained'
-                        sx={{ mt: '2rem', fontWeight: 'bold', width: 'fit-content' }}
-                        color='primary'
+                    <CustomTooltip
+                        title={
+                            loading
+                                ? 'Saving in progress...'
+                                : operationStatus !== 'idle'
+                                ? 'Operation in progress...'
+                                : disableSave && selection === 'boat'
+                                ? 'Please make sure you select a client and fill in a boat name'
+                                : disableSave && selection === 'client'
+                                ? 'Please make sure you fill in a name and an email address'
+                                : disableSave && selection === 'service'
+                                ? 'Please make sure you select a client, a vessel, and at least one service'
+                                : ''
+                        }
+                        disableHoverListener={
+                            !loading && operationStatus === 'idle' && !disableSave
+                        }
                     >
-                        Save
-                    </Button>
+                        <span>
+                            <Button
+                                onClick={handleSave}
+                                disabled={loading || operationStatus !== 'idle' || disableSave}
+                                variant='contained'
+                                sx={{ mt: '2rem', fontWeight: 'bold', width: 'fit-content' }}
+                                color='primary'
+                            >
+                                Save
+                            </Button>
+                        </span>
+                    </CustomTooltip>
                 </Box>
             </Box>
         </Modal>

@@ -54,7 +54,7 @@ function App() {
         },
         typography: {
             fontFamily: 'Open Sans, sans-serif',
-            fontSize: 15,
+            fontSize: 16,
             h1: {
                 fontSize: '31px',
                 lineHeight: '64px',
@@ -64,12 +64,12 @@ function App() {
                 lineHeight: '56px',
             },
             h3: {
-                fontSize: '19px',
+                fontSize: '22px',
                 lineHeight: '47px',
             },
 
             body1: {
-                fontSize: '15px',
+                fontSize: '16px',
                 lineHeight: '41px',
             },
         },

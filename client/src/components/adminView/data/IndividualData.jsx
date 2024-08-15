@@ -112,7 +112,7 @@ const IndividualData = () => {
                                         backgroundColor: '#ceeefd',
                                         color: '#045174',
                                         cursor: 'pointer',
-                                        fontSize: '15px',
+                                        fontSize: '16px',
                                     }}
                                 />
                             ) : key === 'boat' ? (
